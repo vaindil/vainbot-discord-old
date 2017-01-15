@@ -22,19 +22,20 @@ namespace VainBot
 
     public class KeyValue
     {
-        public DbKey Key { get; set; }
-
-        public string KeyString
+        public DbKey Key
         {
             get
             {
-                return Key.ToString();
+                return (DbKey)Enum.Parse(typeof(DbKey), KeyString);
             }
             set
             {
-                Key = (DbKey)Enum.Parse(typeof(DbKey), value);
+                KeyString = value.ToString();
             }
         }
+
+        public string KeyString { get; set; }
+        
 
         public string Value { get; set; }
     }
