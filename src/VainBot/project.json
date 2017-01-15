@@ -8,6 +8,7 @@
     "Discord.Net": "1.0.0-rc-00546",
     "Discord.Net.Commands": "1.0.0-rc-00546",
     "Discord.Net.WebSocket": "1.0.0-rc-00546",
+    "Microsoft.EntityFrameworkCore.Sqlite": "1.1.0",
     "Microsoft.NETCore.App": {
       "type": "platform",
       "version": "1.1.0"
@@ -18,5 +19,8 @@
     "netcoreapp1.0": {
       "imports": "dnxcore50"
     }
+  },
+  "tools": {
+    "Microsoft.EntityFrameworkCore.Tools.DotNet":  "1.1.0-preview4"
   }
 }

@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace VainBot
@@ -12,9 +13,14 @@ namespace VainBot
 
         public async Task Run()
         {
-            client = new DiscordSocketClient();
+            string apiToken;
 
-            var token = "MTYyMzU2Mzk4ODU0ODk3NjY0.C1x6Ug.vjYR0YEXsi40NtVfi6QnDCl7DYE";
+            using (var db = new VbContext())
+            {
+                apiToken = db.KeyValues.First(kv => kv.Key == DbKey.DiscordApiKey).Value;
+            }
+
+            client = new DiscordSocketClient();
 
             client.MessageReceived += async (message) =>
             {
@@ -22,7 +28,7 @@ namespace VainBot
                     await message.Channel.SendMessageAsync("pong");
             };
 
-            await client.LoginAsync(TokenType.Bot, token);
+            await client.LoginAsync(TokenType.Bot, apiToken);
 
             await client.ConnectAsync();
 
