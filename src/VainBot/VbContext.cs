@@ -42,10 +42,9 @@ namespace VainBot
             modelBuilder.Entity<KeyValue>(e =>
             {
                 e.ForSqliteToTable("kv");
-                e.HasKey(kv => kv.KeyString);
+                e.HasKey(kv => kv.Key);
 
-                e.Ignore(kv => kv.Key);
-                e.Property(kv => kv.KeyString).ForSqliteHasColumnName("key").ForSqliteHasColumnType("TEXT");
+                e.Property(kv => kv.Key).ForSqliteHasColumnName("key").ForSqliteHasColumnType("TEXT");
                 e.Property(kv => kv.Value).ForSqliteHasColumnName("value").ForSqliteHasColumnType("TEXT");
             });
         }

@@ -8,7 +8,7 @@ namespace VainBot
 
         public ulong UserId { get; set; }
 
-        public double Points { get; set; }
+        public decimal Points { get; set; }
 
         public bool Allow { get; set; }
     }
@@ -22,20 +22,7 @@ namespace VainBot
 
     public class KeyValue
     {
-        public DbKey Key
-        {
-            get
-            {
-                return (DbKey)Enum.Parse(typeof(DbKey), KeyString);
-            }
-            set
-            {
-                KeyString = value.ToString();
-            }
-        }
-
-        public string KeyString { get; set; }
-        
+        public string Key { get; set; }
 
         public string Value { get; set; }
     }
