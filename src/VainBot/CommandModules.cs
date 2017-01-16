@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VainBot
 {
-    [Group("slothies")]
+    [Group("1slothies")]
     public class PointsModule : ModuleBase
     {
         readonly VbContext _context;
@@ -57,6 +58,22 @@ namespace VainBot
             reply = reply.TrimEnd('\\', 'n');
 
             await ReplyAsync(reply);
+        }
+
+        [Command]
+        public async Task GetUser(IUser user)
+        {
+            decimal points;
+
+            var userPoint = await _context.UserPoints
+                .FirstOrDefaultAsync(up => up.ServerId == Context.Guild.Id && up.UserId == user.Id);
+
+            if (userPoint == null)
+                points = 0;
+            else
+                points = userPoint.Points;
+
+            await ReplyAsync(user.Username + " has " + (await points.GetCorrectPluralityAsync(_context)) + ".");
         }
     }
 }
