@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VainBot
+﻿namespace VainBot
 {
     public class UserPoints
     {

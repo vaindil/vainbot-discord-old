@@ -2,13 +2,12 @@
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace VainBot
 {
-    [Group("1slothies")]
+    [Group("slothies")]
     public class PointsModule : ModuleBase
     {
         readonly VbContext _context;
