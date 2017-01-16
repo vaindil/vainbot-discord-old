@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -32,6 +33,8 @@ namespace VainBot
             map.Add(commands);
             map.Add(new VbContext());
 
+            client.UserLeft += UserLeaves;
+
             await InstallCommands();
 
             await client.LoginAsync(TokenType.Bot, apiToken);
@@ -39,6 +42,24 @@ namespace VainBot
             await client.ConnectAsync();
 
             await Task.Delay(-1);
+        }
+
+        public async Task UserLeaves(SocketGuildUser user)
+        {
+            using (var db = new VbContext())
+            {
+                var target = await db.UserPoints
+                    .FirstOrDefaultAsync(up => up.ServerId == user.Guild.Id && up.UserId == user.Id);
+                if (target != null)
+                    db.UserPoints.Remove(target);
+
+                var targetAdmin = await db.Admins
+                    .FirstOrDefaultAsync(a => a.ServerId == user.Guild.Id && a.UserId == user.Id);
+                if (targetAdmin != null)
+                    db.Admins.Remove(targetAdmin);
+
+                await db.SaveChangesAsync();
+            }
         }
 
         public async Task InstallCommands()

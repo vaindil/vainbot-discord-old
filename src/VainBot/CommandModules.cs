@@ -76,11 +76,12 @@ namespace VainBot
             await ReplyAsync(user.Username + " has " + (await points.GetCorrectPluralityAsync(_context)) + ".");
         }
 
-        // TODO check admin for overrides
-
         [Command]
         public async Task AddPoints(IUser user, decimal points)
         {
+            var curIsAdmin = await _context.Admins
+                .AnyAsync(a => a.ServerId == Context.Guild.Id && a.UserId == Context.User.Id);
+
             var curUser = await _context.UserPoints
                 .FirstOrDefaultAsync(up => up.ServerId == Context.Guild.Id && up.UserId == Context.User.Id);
 
@@ -90,7 +91,7 @@ namespace VainBot
                 return;
             }
 
-            if (user.Id == Context.User.Id)
+            if (user.Id == Context.User.Id && !curIsAdmin)
             {
                 await ReplyAsync("You can't edit your own points, that would be cheating.");
                 return;
@@ -148,6 +149,59 @@ namespace VainBot
             await _context.SaveChangesAsync();
 
             await ReplyAsync(user.Username + " now has " + (await userPoint.Points.GetCorrectPluralityAsync(_context)) + ".");
+        }
+
+        [Command("allow")]
+        public async Task ToggleAllow(IUser user)
+        {
+            var curIsAdmin = await _context.Admins
+                .AnyAsync(a => a.ServerId == Context.Guild.Id && a.UserId == Context.User.Id);
+            var targetIsAdmin = await _context.Admins
+                .AnyAsync(a => a.ServerId == Context.Guild.Id && a.UserId == user.Id);
+
+            if (!curIsAdmin)
+            {
+                await ReplyAsync("You can't do that, silly.");
+                return;
+            }
+
+            if (targetIsAdmin)
+            {
+                await ReplyAsync(user.Username + " is an admin, you nerd.");
+                return;
+            }
+
+            var target = await _context.UserPoints
+                .FirstOrDefaultAsync(up => up.ServerId == Context.Guild.Id && up.UserId == user.Id);
+
+            if (target == null || !target.Allow)
+            {
+                if (target == null)
+                {
+                    target = new UserPoints
+                    {
+                        ServerId = Context.Guild.Id,
+                        UserId = user.Id,
+                        Points = 0,
+                        Allow = true
+                    };
+
+                    _context.UserPoints.Add(target);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    target.Allow = true;
+                }
+
+                await ReplyAsync(user.Username + " is now allowed to edit slothies.");
+                return;
+            }
+            
+            target.Allow = false;
+            await _context.SaveChangesAsync();
+
+            await ReplyAsync(user.Username + " is now disallowed from editing slothies.");
         }
     }
 }
