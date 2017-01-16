@@ -75,5 +75,32 @@ namespace VainBot
 
             await ReplyAsync(user.Username + " has " + (await points.GetCorrectPluralityAsync(_context)) + ".");
         }
+
+        // TODO check allowed to edit points
+        // TODO don't allow editing own points
+        // TODO don't allow editing vaindil points
+        // TODO add limits
+
+        [Command]
+        public async Task AddPoints(IUser user, decimal points)
+        {
+            var userPoint = await _context.UserPoints
+                .FirstOrDefaultAsync(up => up.ServerId == Context.Guild.Id && up.UserId == user.Id);
+
+            if (userPoint == null)
+                userPoint = new UserPoints
+                {
+                    ServerId = Context.Guild.Id,
+                    UserId = user.Id,
+                    Allow = false,
+                    Points = 0
+                };
+
+            userPoint.Points += Math.Round(points, 2);
+
+            await _context.SaveChangesAsync();
+
+            await ReplyAsync(user.Username + " now has " + (await userPoint.Points.GetCorrectPluralityAsync(_context)) + ".");
+        }
     }
 }
