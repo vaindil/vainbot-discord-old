@@ -76,18 +76,37 @@ namespace VainBot
             await ReplyAsync(user.Username + " has " + (await points.GetCorrectPluralityAsync(_context)) + ".");
         }
 
-        // TODO check allowed to edit points
-        // TODO don't allow editing own points
-        // TODO don't allow editing vaindil points
-        // TODO add limits
+        // TODO check admin for overrides
 
         [Command]
         public async Task AddPoints(IUser user, decimal points)
         {
+            var curUser = await _context.UserPoints
+                .FirstOrDefaultAsync(up => up.ServerId == Context.Guild.Id && up.UserId == Context.User.Id);
+
+            if (curUser == null || !curUser.Allow)
+            {
+                await ReplyAsync(">implying you can edit points");
+                return;
+            }
+
+            if (user.Id == Context.User.Id)
+            {
+                await ReplyAsync("You can't edit your own points, that would be cheating.");
+                return;
+            }
+
+            if (user.Id == 132714099241910273 && Context.User.Id != 132714099241910273)
+            {
+                await ReplyAsync("Editing vaindil's points is not allowed. Teehee.");
+                return;
+            }
+
             var userPoint = await _context.UserPoints
                 .FirstOrDefaultAsync(up => up.ServerId == Context.Guild.Id && up.UserId == user.Id);
 
             if (userPoint == null)
+            {
                 userPoint = new UserPoints
                 {
                     ServerId = Context.Guild.Id,
@@ -96,7 +115,35 @@ namespace VainBot
                     Points = 0
                 };
 
+                _context.UserPoints.Add(userPoint);
+                await _context.SaveChangesAsync();
+            }
+
+            if (points > 99999 || points < -99999)
+            {
+                await ReplyAsync("Let's not go overboard. Not altered, currently " + userPoint.Points + ".");
+                return;
+            }
+
             userPoint.Points += Math.Round(points, 2);
+
+            if (userPoint.Points > 10000000)
+            {
+                await ReplyAsync("That's a bit much. Untouched, reset to max of 10000000.");
+
+                userPoint.Points = 10000000;
+                await _context.SaveChangesAsync();
+                return;
+            }
+
+            if (userPoint.Points < -10000000)
+            {
+                await ReplyAsync("That's a bit much. Untouched, reset to min of -10000000.");
+
+                userPoint.Points = -10000000;
+                await _context.SaveChangesAsync();
+                return;
+            }
 
             await _context.SaveChangesAsync();
 
