@@ -122,7 +122,7 @@ namespace VainBot
 
             if (points > 99999 || points < -99999)
             {
-                await ReplyAsync("Let's not go overboard. Not altered, currently " + userPoint.Points + ".");
+                await ReplyAsync("Let's not go overboard. Not altered, currently " + userPoint.Points.GetNumberString() + ".");
                 return;
             }
 

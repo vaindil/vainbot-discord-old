@@ -13,12 +13,7 @@ namespace VainBot
 
         public static async Task<string> GetCorrectPluralityAsync(this decimal num, VbContext context)
         {
-            string msg;
-
-            if ((int)num == num)
-                msg = ((int)num).ToString();
-            else
-                msg = num.ToString();
+            var msg = num.GetNumberString();
 
             msg += " ";
 
@@ -26,6 +21,18 @@ namespace VainBot
                 msg += await context.KeyValues.GetValueAsync(DbKey.PointsNameSingular);
             else
                 msg += await context.KeyValues.GetValueAsync(DbKey.PointsNamePlural);
+
+            return msg;
+        }
+
+        public static string GetNumberString(this decimal num)
+        {
+            string msg;
+
+            if ((int)num == num)
+                msg = ((int)num).ToString();
+            else
+                msg = num.ToString();
 
             return msg;
         }
