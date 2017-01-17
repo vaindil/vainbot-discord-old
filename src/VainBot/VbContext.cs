@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.IO;
 
 namespace VainBot
 {
@@ -10,7 +12,15 @@ namespace VainBot
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Filename=./discord.db");
+            var dbPath = Environment.GetEnvironmentVariable("VAINBOT_DB_PATH");
+
+            if (string.IsNullOrEmpty(dbPath))
+                throw new ArgumentNullException(nameof(dbPath), "DB path environment variable not found");
+
+            if (!File.Exists(dbPath))
+                throw new ArgumentNullException(nameof(dbPath), "DB file does not exist at path " + dbPath);
+
+            optionsBuilder.UseSqlite("Filename=" + dbPath);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
