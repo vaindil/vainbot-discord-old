@@ -51,10 +51,15 @@ namespace VainBot
 
             // 132714099241910273
             
-            if (msg.Author.Id != 110878826136907776)
-                return;
-
-            await msg.AddReactionAsync("LUL:232582021493424128");
+            if (msg.Author.Id == 110878826136907776)
+            {
+                await msg.AddReactionAsync("🇮");
+                await msg.AddReactionAsync("🇸");
+                await msg.AddReactionAsync("🇺");
+                await msg.AddReactionAsync("🇨");
+                await msg.AddReactionAsync("🇰");
+                await msg.AddReactionAsync("LUL:232582021493424128");
+            }
         }
 
         public async Task UserLeaves(SocketGuildUser user)
