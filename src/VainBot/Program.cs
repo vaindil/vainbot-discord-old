@@ -33,7 +33,7 @@ namespace VainBot
             map.Add(commands);
             map.Add(new VbContext());
 
-            client.MessageReceived += AddReactionToUser;
+            //client.MessageReceived += AddReactionToUser;
             client.UserLeft += UserLeaves;
 
             await InstallCommands();
