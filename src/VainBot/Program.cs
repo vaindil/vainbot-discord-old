@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -32,6 +33,7 @@ namespace VainBot
             map.Add(commands);
             map.Add(new VbContext());
 
+            client.MessageReceived += AddReactionToUser;
             client.UserLeft += UserLeaves;
 
             await InstallCommands();
@@ -41,6 +43,18 @@ namespace VainBot
             await client.ConnectAsync();
 
             await Task.Delay(-1);
+        }
+
+        public async Task AddReactionToUser(SocketMessage inMsg)
+        {
+            var msg = inMsg as SocketUserMessage;
+
+            // 132714099241910273
+            
+            if (msg.Author.Id != 110878826136907776)
+                return;
+
+            await msg.AddReactionAsync("LUL:232582021493424128");
         }
 
         public async Task UserLeaves(SocketGuildUser user)
