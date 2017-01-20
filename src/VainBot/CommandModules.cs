@@ -58,6 +58,13 @@ namespace VainBot
                 return;
             }
 
+            if ((msgOnly && msg.Length > 100) || (!msgOnly && !diceOnly && dice[1].Length > 100))
+            {
+                await ReplyAsync("If you're depending on randomness to help you with that much, then you need way " +
+                    "more help than I can give you.");
+                return;
+            }
+
             var numDice = 1;
             var numSides = 20;
 
