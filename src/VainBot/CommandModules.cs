@@ -81,16 +81,16 @@ namespace VainBot
 
             if (msgOnly)
             {
-                await ReplyAsync(Context.User.Username + " rolled 1d20 **" + msg + "** and got **" + total + "**.");
+                await ReplyAsync(Context.User.Username + " rolled 1d20 " + msg + " and got " + total + ".");
                 return;
             }
             else if (diceOnly)
             {
-                await ReplyAsync(Context.User.Username + " rolled " + dice[0] + " and got **" + total + "**.");
+                await ReplyAsync(Context.User.Username + " rolled " + dice[0] + " and got " + total + ".");
                 return;
             }
 
-            await ReplyAsync(Context.User.Username + " rolled " + dice[0] + " **" + dice[1] + "** and got **" + total + "**.");
+            await ReplyAsync(Context.User.Username + " rolled " + dice[0] + " " + dice[1] + " and got " + total + ".");
         }
     }
 
