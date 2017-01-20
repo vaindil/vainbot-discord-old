@@ -54,9 +54,19 @@ namespace VainBot
 
                 if (string.IsNullOrEmpty(deezNuts[0]))
                     numDice = 1;
+                else if (deezNuts[0].Length > 8)
+                {
+                    await ReplyAsync("You tryin' to overflow me? I'm better than that.");
+                    return;
+                }
                 else
                     numDice = int.Parse(deezNuts[0]);
 
+                if (deezNuts[1].Length > 8)
+                {
+                    await ReplyAsync("You tryin' to overflow me? I'm better than that.");
+                    return;
+                }
                 var numSides = int.Parse(deezNuts[1]);
 
                 if (numDice < 1 || numDice > 20)
