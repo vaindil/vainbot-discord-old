@@ -27,6 +27,91 @@ namespace VainBot
         }
 
         [Command]
+        public async Task RollSingle([Remainder]string msg)
+        {
+            var customDice = false;
+            var diceOnly = false;
+            var msgOnly = false;
+            var total = 0;
+
+            var dice = msg.Split(new char[] { ' ' }, 2);
+
+            string validString;
+
+            if (validDie.IsMatch(dice[0]))
+            {
+                validString = Extensions.ValidateDiceRoll(dice[0], false);
+                customDice = true;
+
+                if (dice.Length == 1)
+                    diceOnly = true;
+            }
+            else
+            {
+                validString = string.Empty;
+                msgOnly = true;
+            }
+
+            if (validString != string.Empty)
+            {
+                await ReplyAsync(validString);
+                return;
+            }
+
+            var numDice = 1;
+            var numSides = 20;
+
+            if (customDice)
+            {
+                var deezNuts = dice[0].Split('d');
+
+                if (string.IsNullOrEmpty(deezNuts[0]))
+                    numDice = 1;
+                else
+                    numDice = int.Parse(deezNuts[0]);
+
+                numSides = int.Parse(deezNuts[1]);
+            }
+            
+            for (var i = 0; i < numDice; i++)
+            {
+                var datBoi = _rng.Next(1, numSides + 1);
+                total += datBoi;
+            }
+
+            if (msgOnly)
+            {
+                await ReplyAsync(Context.User.Username + " rolled 1d20 **" + msg + "** and got **" + total + "**.");
+                return;
+            }
+            else if (diceOnly)
+            {
+                await ReplyAsync(Context.User.Username + " rolled " + dice[0] + " and got **" + total + "**.");
+                return;
+            }
+
+            await ReplyAsync(Context.User.Username + " rolled " + dice[0] + " **" + dice[1] + "** and got **" + total + "**.");
+        }
+    }
+
+    [Group("rollmulti")]
+    public class RollMultiModule : ModuleBase
+    {
+        readonly Random _rng;
+
+        public RollMultiModule(Random rng)
+        {
+            _rng = rng;
+        }
+
+        [Command]
+        public async Task Rolld20()
+        {
+            var num = _rng.Next(1, 21);
+            await ReplyAsync(Context.User.Username + " rolled 1d20 and got **" + num + "**.");
+        }
+
+        [Command]
         public async Task Roll([Remainder]string inDice)
         {
             inDice = inDice.Trim();
@@ -43,9 +128,11 @@ namespace VainBot
 
             foreach (var d in dice)
             {
-                if (!validDie.IsMatch(d))
+                var validString = Extensions.ValidateDiceRoll(d, true);
+
+                if (validString != string.Empty)
                 {
-                    await ReplyAsync(d + " isn't a die, you nerd.");
+                    await ReplyAsync(validString);
                     return;
                 }
 
@@ -54,32 +141,10 @@ namespace VainBot
 
                 if (string.IsNullOrEmpty(deezNuts[0]))
                     numDice = 1;
-                else if (deezNuts[0].Length > 8)
-                {
-                    await ReplyAsync("You tryin' to overflow me? I'm better than that.");
-                    return;
-                }
                 else
                     numDice = int.Parse(deezNuts[0]);
-
-                if (deezNuts[1].Length > 8)
-                {
-                    await ReplyAsync("You tryin' to overflow me? I'm better than that.");
-                    return;
-                }
+                
                 var numSides = int.Parse(deezNuts[1]);
-
-                if (numDice < 1 || numDice > 20)
-                {
-                    await ReplyAsync("I'd like to see you try to roll " + numDice + " dice at once.");
-                    return;
-                }
-
-                if (numSides < 2 || numSides > 100)
-                {
-                    await ReplyAsync("You actually think " + GetAOrAn(numSides) + " " + numSides + "-sided die exists?");
-                    return;
-                }
 
                 reply += d + ": ";
 
@@ -96,17 +161,6 @@ namespace VainBot
 
             reply += "\n**Total**: " + total;
             await ReplyAsync(reply);
-        }
-
-        static string GetAOrAn(int num)
-        {
-            while (num >= 10)
-                num /= 10;
-
-            if (num == 8)
-                return "an";
-
-            return "a";
         }
     }
 
