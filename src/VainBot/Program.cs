@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace VainBot
             map.Add(client);
             map.Add(commands);
             map.Add(new VbContext());
+            map.Add(new Random());
 
             //client.MessageReceived += AddReactionToUser;
             client.UserLeft += UserLeaves;

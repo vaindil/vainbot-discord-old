@@ -3,10 +3,103 @@ using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace VainBot
 {
+    [Group("roll")]
+    public class RollModule : ModuleBase
+    {
+        readonly Random _rng;
+        static Regex validDie = new Regex(@"^-?\d*d-?\d+$", RegexOptions.IgnoreCase);
+
+        public RollModule(Random rng)
+        {
+            _rng = rng;
+        }
+
+        [Command]
+        public async Task Rolld20()
+        {
+            var num = _rng.Next(1, 21);
+            await ReplyAsync(Context.User.Username + " rolled 1d20 and got **" + num + "**.");
+        }
+
+        [Command]
+        public async Task Roll([Remainder]string inDice)
+        {
+            inDice = inDice.Trim();
+
+            var dice = inDice.Split(' ');
+            if (dice.Length == 0)
+            {
+                await ReplyAsync("You didn't provide any dice, you nerd.");
+                return;
+            }
+
+            var total = 0;
+            var reply = "__Results__\n";
+
+            foreach (var d in dice)
+            {
+                if (!validDie.IsMatch(d))
+                {
+                    await ReplyAsync(d + " isn't a die, you nerd.");
+                    return;
+                }
+
+                int numDice;
+                var deezNuts = d.Split('d');
+
+                if (string.IsNullOrEmpty(deezNuts[0]))
+                    numDice = 1;
+                else
+                    numDice = int.Parse(deezNuts[0]);
+
+                var numSides = int.Parse(deezNuts[1]);
+
+                if (numDice < 1 || numDice > 20)
+                {
+                    await ReplyAsync("I'd like to see you try to roll " + numDice + " dice at once.");
+                    return;
+                }
+
+                if (numSides < 2 || numSides > 100)
+                {
+                    await ReplyAsync("You actually think " + GetAOrAn(numSides) + " " + numSides + "-sided die exists?");
+                    return;
+                }
+
+                reply += d + ": ";
+
+                for (var i = 0; i < numDice; i++)
+                {
+                    var datBoi = _rng.Next(1, numSides + 1);
+                    reply += datBoi + ", ";
+                    total += datBoi;
+                }
+
+                reply = reply.Substring(0, reply.Length - 2);
+                reply += "\n";
+            }
+
+            reply += "\n**Total**: " + total;
+            await ReplyAsync(reply);
+        }
+
+        static string GetAOrAn(int num)
+        {
+            while (num >= 10)
+                num /= 10;
+
+            if (num == 8)
+                return "an";
+
+            return "a";
+        }
+    }
+
     [Group("slothies")]
     public class PointsModule : ModuleBase
     {
