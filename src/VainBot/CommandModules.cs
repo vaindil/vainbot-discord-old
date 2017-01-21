@@ -314,6 +314,62 @@ namespace VainBot
             await ReplyAsync(user.Username + " now has " + (await userPoint.Points.GetCorrectPluralityAsync(_context)) + ".");
         }
 
+        [Command("hard")]
+        public async Task HardPoints(IUser user, decimal points)
+        {
+            var curIsAdmin = await _context.Admins
+                .AnyAsync(a => a.ServerId == Context.Guild.Id && a.UserId == Context.User.Id);
+
+            var curUser = await _context.UserPoints
+                .FirstOrDefaultAsync(up => up.ServerId == Context.Guild.Id && up.UserId == Context.User.Id);
+
+            if (curUser == null || !curUser.Allow)
+            {
+                await ReplyAsync(">implying you can edit points");
+                return;
+            }
+
+            if (user.Id == Context.User.Id && !curIsAdmin)
+            {
+                await ReplyAsync("You can't edit your own points, that would be cheating.");
+                return;
+            }
+
+            if (user.Id == 132714099241910273 && Context.User.Id != 132714099241910273)
+            {
+                await ReplyAsync("Editing vaindil's points is not allowed. Teehee.");
+                return;
+            }
+
+            if (points > 10000000 || points < -10000000)
+            {
+                await ReplyAsync("That's a bit much. Not altered.");
+                return;
+            }
+
+            var userPoint = await _context.UserPoints
+                .FirstOrDefaultAsync(up => up.ServerId == Context.Guild.Id && up.UserId == user.Id);
+
+            if (userPoint == null)
+            {
+                userPoint = new UserPoints
+                {
+                    ServerId = Context.Guild.Id,
+                    UserId = user.Id,
+                    Allow = false,
+                    Points = points
+                };
+
+                _context.UserPoints.Add(userPoint);
+            }
+            else
+                userPoint.Points = points;
+
+            await _context.SaveChangesAsync();
+
+            await ReplyAsync(user.Username + " now has " + (await userPoint.Points.GetCorrectPluralityAsync(_context)) + ".");
+        }
+
         [Command("allow")]
         public async Task ToggleAllow(IUser user)
         {
