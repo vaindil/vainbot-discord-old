@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -78,6 +80,24 @@ namespace VainBot
                 msg = num.ToString();
 
             return msg;
+        }
+
+        public static JsonSerializerSettings GetJsonSettings()
+        {
+            var settings = new JsonSerializerSettings();
+
+            var contractResolver = new DefaultContractResolver();
+            contractResolver.NamingStrategy = new SnakeCaseNamingStrategy(true, false);
+
+            settings.ContractResolver = contractResolver;
+            settings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+            settings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+            settings.Formatting = Formatting.Indented;
+            settings.MissingMemberHandling = MissingMemberHandling.Ignore;
+            settings.NullValueHandling = NullValueHandling.Ignore;
+            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+            return settings;
         }
     }
 }

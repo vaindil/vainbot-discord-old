@@ -3,7 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -14,6 +14,7 @@ namespace VainBot
         DiscordSocketClient client;
         CommandService commands;
         DependencyMap map;
+        static HttpClient httpClient;
 
         static void Main(string[] args) => new Program().Run().GetAwaiter().GetResult();
         
@@ -28,10 +29,13 @@ namespace VainBot
 
             client = new DiscordSocketClient();
             commands = new CommandService();
+            httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("VainBot/1.0");
 
             map = new DependencyMap();
             map.Add(client);
             map.Add(commands);
+            map.Add(httpClient);
             map.Add(new VbContext());
             map.Add(new Random());
 
