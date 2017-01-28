@@ -8,8 +8,8 @@ using VainBot.OverwatchModels;
 
 namespace VainBot
 {
-    [Group("overwatch")]
-    [Alias("ow")]
+    //[Group("overwatch")]
+    //[Alias("ow")]
     public class OverwatchModule : ModuleBase
     {
         readonly HttpClient _client;
@@ -22,7 +22,7 @@ namespace VainBot
             _client = client;
         }
 
-        [Command]
+        //[Command]
         public async Task UserStats(string bTag)
         {
             if (!_validBTag.IsMatch(bTag))

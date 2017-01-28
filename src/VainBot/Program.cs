@@ -14,7 +14,7 @@ namespace VainBot
         DiscordSocketClient client;
         CommandService commands;
         DependencyMap map;
-        static HttpClient httpClient;
+        //static HttpClient httpClient;
 
         static void Main(string[] args) => new Program().Run().GetAwaiter().GetResult();
         
@@ -29,13 +29,13 @@ namespace VainBot
 
             client = new DiscordSocketClient();
             commands = new CommandService();
-            httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("VainBot/1.0");
+            //httpClient = new HttpClient();
+            //httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("VainBot/1.0");
 
             map = new DependencyMap();
             map.Add(client);
             map.Add(commands);
-            map.Add(httpClient);
+            //map.Add(httpClient);
             map.Add(new VbContext());
             map.Add(new Random());
 
