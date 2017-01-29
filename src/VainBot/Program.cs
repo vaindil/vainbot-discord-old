@@ -97,7 +97,7 @@ namespace VainBot
                 return;
 
             var content = msg.Content.ToLower();
-            if (content != "lol" && !content.Contains(" lol "))
+            if (content != "lol" && !content.Contains(" lol ") && !content.EndsWith(" lol") && !content.StartsWith("lol "))
                 return;
 
             int count;
