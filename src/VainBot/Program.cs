@@ -124,6 +124,8 @@ namespace VainBot
                 await db.SaveChangesAsync();
             }
 
+            await msg.AddReactionAsync("LUL:232582021493424128");
+
             if (count % 5 == 0)
                 await msg.Channel.SendMessageAsync(msg.Author.Username + " lol counter: " + count);
         }
