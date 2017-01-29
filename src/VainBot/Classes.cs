@@ -30,6 +30,7 @@
         DiscordApiKey,
         CrendorServerId,
         PointsNameSingular,
-        PointsNamePlural
+        PointsNamePlural,
+        LolCounter
     }
 }

@@ -3,9 +3,11 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Net.Http;
+//using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+
+// vaindil: 132714099241910273
 
 namespace VainBot
 {
@@ -40,12 +42,12 @@ namespace VainBot
             map.Add(new Random());
 
             //client.MessageReceived += AddReactionToUser;
+            client.MessageReceived += LolCounter;
             client.UserLeft += UserLeaves;
 
             await InstallCommands();
 
             await client.LoginAsync(TokenType.Bot, apiToken);
-
             await client.ConnectAsync();
 
             await Task.Delay(-1);
@@ -84,6 +86,46 @@ namespace VainBot
 
                 await db.SaveChangesAsync();
             }
+        }
+
+        public async Task LolCounter(SocketMessage inMsg)
+        {
+            var msg = inMsg as SocketUserMessage;
+
+            // 110878826136907776
+            if (msg.Author.Id != 110878826136907776)
+                return;
+
+            var content = msg.Content.ToLower();
+            if (content != "lol" && !content.Contains(" lol "))
+                return;
+
+            int count;
+
+            using (var db = new VbContext())
+            {
+                var countKv = await db.KeyValues.FirstOrDefaultAsync(k => k.Key == DbKey.LolCounter.ToString());
+                if (countKv == null)
+                {
+                    countKv = new KeyValue
+                    {
+                        Key = DbKey.LolCounter.ToString(),
+                        Value = "0"
+                    };
+
+                    db.KeyValues.Add(countKv);
+                    await db.SaveChangesAsync();
+                }
+
+                count = int.Parse(countKv.Value);
+                count += 1;
+                countKv.Value = count.ToString();
+
+                await db.SaveChangesAsync();
+            }
+
+            if (count % 5 == 0)
+                await msg.Channel.SendMessageAsync(msg.Author.Username + " lol counter: " + count);
         }
 
         public async Task InstallCommands()
