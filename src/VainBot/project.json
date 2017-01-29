@@ -5,12 +5,10 @@
   },
 
   "dependencies": {
-    "Discord.Net": "1.0.0-rc-00546",
-    "Discord.Net.Commands": "1.0.0-rc-00546",
-    "Discord.Net.WebSocket": "1.0.0-rc-00546",
+    "Discord.Net": "1.0.0-rc-00585",
+    "Discord.Net.Commands": "1.0.0-rc-00585",
+    "Discord.Net.WebSocket": "1.0.0-rc-00585",
     "Microsoft.EntityFrameworkCore.Sqlite": "1.1.0",
-    "microsoft.extensions.logging.console": "1.1.0",
-    "microsoft.extensions.logging.debug": "1.1.0",
     "Microsoft.NETCore.App": {
       "type": "platform",
       "version": "1.1.0"
