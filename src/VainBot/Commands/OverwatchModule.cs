@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using VainBot.OverwatchModels;
 
-namespace VainBot
+namespace VainBot.Commands
 {
     //[Group("overwatch")]
     //[Alias("ow")]
