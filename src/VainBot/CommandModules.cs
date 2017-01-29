@@ -101,6 +101,26 @@ namespace VainBot
         }
     }
 
+    [Group("lol")]
+    public class LolModule : ModuleBase
+    {
+        readonly VbContext _context;
+
+        public LolModule(VbContext context)
+        {
+            _context = context;
+        }
+
+        [Command]
+        public async Task LolCount()
+        {
+            var count = int.Parse(await _context.KeyValues.GetValueAsync(DbKey.LolCounter));
+            var user = await Context.Client.GetUserAsync(110878826136907776);
+
+            await ReplyAsync(user.Username + " lol counter: " + count);
+        }
+    }
+
     [Group("rollmulti")]
     public class RollMultiModule : ModuleBase
     {
