@@ -1,4 +1,6 @@
-﻿namespace VainBot
+﻿using System.Collections.Generic;
+
+namespace VainBot
 {
     public class UserPoints
     {
@@ -23,6 +25,11 @@
         public string Key { get; set; }
 
         public string Value { get; set; }
+    }
+
+    public class CatFacts
+    {
+        public List<string> Facts { get; set; }
     }
 
     public enum DbKey
