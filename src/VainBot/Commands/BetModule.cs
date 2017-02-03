@@ -92,10 +92,12 @@ namespace VainBot.Commands
             }
 
             if (success)
-                await msg.ModifyAsync(async m => m.Content = $" You won! Gained {await amount.GetCorrectPluralityAsync(_context)} " +
+                await msg.ModifyAsync(async m => m.Content = baseMsg +
+                    $" You won! Gained {await amount.GetCorrectPluralityAsync(_context)} " +
                     $"and now have {user.Points.GetNumberString()}.");
             else
-                await msg.ModifyAsync(async m => m.Content = $" You failed! Lost {await amount.GetCorrectPluralityAsync(_context)} " +
+                await msg.ModifyAsync(async m => m.Content = baseMsg +
+                    $" You failed! Lost {await amount.GetCorrectPluralityAsync(_context)} " +
                     $"and now have {user.Points.GetNumberString()}.");
 
             if (trick)
