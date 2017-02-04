@@ -69,6 +69,7 @@ namespace VainBot
         CrendorServerId,
         PointsNameSingular,
         PointsNamePlural,
-        LolCounter
+        LolCounter,
+        BettingAllowed
     }
 }

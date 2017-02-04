@@ -27,6 +27,19 @@ namespace VainBot
             using (var db = new VbContext())
             {
                 apiToken = await db.KeyValues.GetValueAsync(DbKey.DiscordApiKey);
+                var bettingAllowedExists = await db.KeyValues
+                    .FirstOrDefaultAsync(kv => kv.Key == DbKey.BettingAllowed.ToString());
+                if (bettingAllowedExists == null)
+                {
+                    var bet = new KeyValue
+                    {
+                        Key = DbKey.BettingAllowed.ToString(),
+                        Value = false.ToString()
+                    };
+
+                    db.KeyValues.Add(bet);
+                    await db.SaveChangesAsync();
+                }
             }
 
             client = new DiscordSocketClient();

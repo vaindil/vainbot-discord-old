@@ -21,6 +21,14 @@ namespace VainBot.Commands
         [Command]
         public async Task Bet(decimal amount)
         {
+            var betKey = await _context.KeyValues.GetValueAsync(DbKey.BettingAllowed);
+            var allowed = bool.Parse(betKey);
+            if (!allowed)
+            {
+                await ReplyAsync("Betting is currently disabled. Sorry!");
+                return;
+            }
+
             amount = Math.Round(amount, 2);
 
             if (amount <= 0)
@@ -54,7 +62,7 @@ namespace VainBot.Commands
 
             if (user.Points < -20)
             {
-                await ReplyAsync("You have too few slothies. Sorry! :HeyGuys:231512066937192448");
+                await ReplyAsync("You have too few slothies. Sorry! :HeyGuys:");
                 return;
             }
 
@@ -108,6 +116,25 @@ namespace VainBot.Commands
 
             if (trick)
                 await msg.AddReactionAsync("LUL:232582021493424128");
+        }
+
+        [Command("toggle")]
+        public async Task Toggle()
+        {
+            var betKey = await _context.KeyValues.FirstAsync(kv => kv.Key == DbKey.BettingAllowed.ToString());
+            var allowed = bool.Parse(betKey.Value);
+            if (!allowed)
+            {
+                betKey.Value = true.ToString();
+                await ReplyAsync("Betting is now enabled.");
+            }
+            else
+            {
+                betKey.Value = false.ToString();
+                await ReplyAsync("Betting is now disabled.");
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }
