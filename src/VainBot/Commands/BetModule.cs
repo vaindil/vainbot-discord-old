@@ -23,7 +23,7 @@ namespace VainBot.Commands
         {
             amount = Math.Round(amount, 2);
 
-            if (amount < 0)
+            if (amount <= 0)
             {
                 await ReplyAsync("Hmm, vaindil totally didn't think of that one, you sure got 'em!");
                 return;
