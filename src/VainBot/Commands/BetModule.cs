@@ -121,6 +121,14 @@ namespace VainBot.Commands
         [Command("toggle")]
         public async Task Toggle()
         {
+            var isAdmin = await _context.Admins
+                .AnyAsync(a => a.ServerId == Context.Guild.Id && a.UserId == Context.Message.Author.Id);
+            if (!isAdmin)
+            {
+                await ReplyAsync("You can't do that, you nerd.");
+                return;
+            }
+
             var betKey = await _context.KeyValues.FirstAsync(kv => kv.Key == DbKey.BettingAllowed.ToString());
             var allowed = bool.Parse(betKey.Value);
             if (!allowed)
