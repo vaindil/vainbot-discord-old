@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 // vaindil: 132714099241910273
 
-namespace VainBot
+namespace VainBotDiscord
 {
     public class Program
     {

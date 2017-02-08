@@ -4,7 +4,7 @@ using Newtonsoft.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace VainBot
+namespace VainBotDiscord
 {
     public static class Extensions
     {

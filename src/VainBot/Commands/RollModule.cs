@@ -3,7 +3,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace VainBot.Commands
+namespace VainBotDiscord.Commands
 {
     [Group("roll")]
     public class RollModule : ModuleBase

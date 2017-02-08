@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace VainBot.Commands
+namespace VainBotDiscord.Commands
 {
     [Group("points")]
     [Alias("slothies", "point", "slothy")]

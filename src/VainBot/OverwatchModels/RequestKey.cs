@@ -1,4 +1,4 @@
-﻿namespace VainBot.OverwatchModels
+﻿namespace VainBotDiscord.OverwatchModels
 {
     public class RequestKey
     {

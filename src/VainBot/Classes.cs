@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VainBot
+namespace VainBotDiscord
 {
     public class UserPoints
     {

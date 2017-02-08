@@ -4,7 +4,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace VainBot.Commands
+namespace VainBotDiscord.Commands
 {
     [Group("catfact")]
     [Alias("catfacts")]

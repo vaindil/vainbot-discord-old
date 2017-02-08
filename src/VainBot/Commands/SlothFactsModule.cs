@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace VainBot.Commands
+namespace VainBotDiscord.Commands
 {
     [Group("slothfact")]
     [Alias("slothfacts")]

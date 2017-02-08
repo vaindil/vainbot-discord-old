@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace VainBot
+namespace VainBotDiscord
 {
     public class VbContext : DbContext
     {

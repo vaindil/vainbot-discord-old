@@ -4,9 +4,9 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using VainBot.OverwatchModels;
+using VainBotDiscord.OverwatchModels;
 
-namespace VainBot.Commands
+namespace VainBotDiscord.Commands
 {
     //[Group("overwatch")]
     //[Alias("ow")]

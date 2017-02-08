@@ -4,7 +4,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace VainBot.Commands
+namespace VainBotDiscord.Commands
 {
     [Group("bet")]
     public class BetModule : ModuleBase
