@@ -73,8 +73,18 @@ namespace VainBotDiscord.Commands
                 points = 0;
             else
                 points = userPoint.Points;
+            
+            var msgText = user.Username + " has " + (await points.GetCorrectPluralityAsync(_context)) + ".";
 
-            await ReplyAsync(user.Username + " has " + (await points.GetCorrectPluralityAsync(_context)) + ".");
+            if (userPoint.Points == 3.14M)
+            {
+                await Context.Channel.SendFileAsync(
+                    Extensions.GetImagePath("SoDoge.png"),
+                    msgText);
+                return;
+            }
+
+            await ReplyAsync(msgText);
         }
 
         [Command]
@@ -149,7 +159,17 @@ namespace VainBotDiscord.Commands
 
             await _context.SaveChangesAsync();
 
-            await ReplyAsync(user.Username + " now has " + (await userPoint.Points.GetCorrectPluralityAsync(_context)) + ".");
+            var msgText = user.Username + " now has " + (await userPoint.Points.GetCorrectPluralityAsync(_context)) + ".";
+
+            if (userPoint.Points == 3.14M)
+            {
+                await Context.Channel.SendFileAsync(
+                    Extensions.GetImagePath("SoDoge.png"),
+                    msgText);
+                return;
+            }
+
+            await ReplyAsync(msgText);
         }
 
         [Command("hard")]
@@ -205,7 +225,17 @@ namespace VainBotDiscord.Commands
 
             await _context.SaveChangesAsync();
 
-            await ReplyAsync(user.Username + " now has " + (await userPoint.Points.GetCorrectPluralityAsync(_context)) + ".");
+            var msgText = user.Username + " now has " + (await userPoint.Points.GetCorrectPluralityAsync(_context)) + ".";
+
+            if (userPoint.Points == 3.14M)
+            {
+                await Context.Channel.SendFileAsync(
+                    Extensions.GetImagePath("SoDoge.png"),
+                    msgText);
+                return;
+            }
+
+            await ReplyAsync(msgText);
         }
 
         [Command("allow")]

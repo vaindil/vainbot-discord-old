@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -82,6 +83,11 @@ namespace VainBotDiscord
                 msg = num.ToString();
 
             return msg;
+        }
+
+        public static string GetImagePath(string filename)
+        {
+            return $"Images{Path.DirectorySeparatorChar}{filename}";
         }
 
         public static JsonSerializerSettings GetJsonSettings()
