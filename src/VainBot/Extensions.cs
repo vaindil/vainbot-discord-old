@@ -76,6 +76,8 @@ namespace VainBotDiscord
 
             if ((int)num == num)
                 msg = ((int)num).ToString();
+            else if (num == 3.14M)
+                msg = "π";
             else
                 msg = num.ToString();
 
