@@ -26,7 +26,7 @@ namespace VainBotDiscord.Commands
             await audioClient.DisconnectAsync();
         }
 
-        [Command("tts", RunMode = RunMode.Async)]
+        [Command("tts2", RunMode = RunMode.Async)]
         public async Task TextToSpeech([Remainder]string message)
         {
             var channel = (Context.Message.Author as IGuildUser).VoiceChannel;
@@ -47,7 +47,7 @@ namespace VainBotDiscord.Commands
             var createWav = new ProcessStartInfo
             {
                 FileName = "pico2wave",
-                Arguments = $"--wave={filePath} {message}",
+                Arguments = $"--wave={filePath} \"{message}\"",
                 UseShellExecute = false,
                 RedirectStandardOutput = false
             };
