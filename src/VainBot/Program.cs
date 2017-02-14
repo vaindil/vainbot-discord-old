@@ -1,9 +1,9 @@
 ﻿using Discord;
+using Discord.Audio;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -23,6 +23,8 @@ namespace VainBotDiscord
         
         public async Task Run()
         {
+            var isDev = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VAINBOT_ISDEV"));
+
             string apiToken;
 
             using (var db = new VbContext())
@@ -80,7 +82,14 @@ namespace VainBotDiscord
                 }
             }
 
-            client = new DiscordSocketClient();
+            var clientConfig = new DiscordSocketConfig
+            {
+                AudioMode = AudioMode.Outgoing,
+                LogLevel = LogSeverity.Info
+            };
+
+            client = new DiscordSocketClient(clientConfig);
+
             commands = new CommandService();
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("VainBot/1.0");
@@ -95,6 +104,15 @@ namespace VainBotDiscord
             //client.MessageReceived += AddReactionToUser;
             client.MessageReceived += LolCounter;
             client.UserLeft += UserLeaves;
+
+            if (isDev)
+            {
+                client.Log += (message) =>
+                {
+                    Console.WriteLine($"{message.ToString()}");
+                    return Task.CompletedTask;
+                };
+            }
 
             await InstallCommands();
 
