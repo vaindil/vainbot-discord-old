@@ -26,7 +26,7 @@ namespace VainBotDiscord.Commands
             await audioClient.DisconnectAsync();
         }
 
-        [Command("tts2", RunMode = RunMode.Async)]
+        [Command("tts", RunMode = RunMode.Async)]
         public async Task TextToSpeech([Remainder]string message)
         {
             var channel = (Context.Message.Author as IGuildUser).VoiceChannel;
