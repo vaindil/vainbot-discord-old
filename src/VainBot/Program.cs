@@ -4,6 +4,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -26,6 +27,9 @@ namespace VainBotDiscord
             var isDev = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VAINBOT_ISDEV"));
 
             string apiToken;
+
+            if (!Directory.Exists("TTSTemp"))
+                Directory.CreateDirectory("TTSTemp");
 
             using (var db = new VbContext())
             {
