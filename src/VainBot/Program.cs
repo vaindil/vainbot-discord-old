@@ -85,7 +85,7 @@ namespace VainBotDiscord
             var clientConfig = new DiscordSocketConfig
             {
                 AudioMode = AudioMode.Outgoing,
-                LogLevel = LogSeverity.Info
+                LogLevel = isDev ? LogSeverity.Info : LogSeverity.Warning
             };
 
             client = new DiscordSocketClient(clientConfig);
@@ -104,15 +104,12 @@ namespace VainBotDiscord
             //client.MessageReceived += AddReactionToUser;
             client.MessageReceived += LolCounter;
             client.UserLeft += UserLeaves;
-
-            if (isDev)
+            
+            client.Log += (message) =>
             {
-                client.Log += (message) =>
-                {
-                    Console.WriteLine($"{message.ToString()}");
-                    return Task.CompletedTask;
-                };
-            }
+                Console.WriteLine($"{message.ToString()}");
+                return Task.CompletedTask;
+            };
 
             await InstallCommands();
 
