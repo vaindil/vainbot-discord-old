@@ -5,9 +5,9 @@
   },
 
   "dependencies": {
-    "Discord.Net.Commands": "1.0.0-rc-00593",
-    "Discord.Net.Core": "1.0.0-rc-00593",
-    "Discord.Net.WebSocket": "1.0.0-rc-00593",
+    "Discord.Net.Commands": "1.0.0-rc-00595",
+    "Discord.Net.Core": "1.0.0-rc-00595",
+    "Discord.Net.WebSocket": "1.0.0-rc-00595",
     "Microsoft.EntityFrameworkCore.Sqlite": "1.1.0",
     "Microsoft.NETCore.App": {
       "type": "platform",
