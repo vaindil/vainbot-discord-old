@@ -8,8 +8,8 @@ namespace VainBotDiscord.Commands
 {
     public class AudioModule : ModuleBase
     {
-        [Command("rainbow", RunMode = RunMode.Async)]
-        [Alias("readingrainbow")]
+        [Command("airhorn", RunMode = RunMode.Async)]
+        //[Alias("readingrainbow")]
         public async Task PlayReadingRainbow()
         {
             var channel = (Context.Message.Author as IGuildUser).VoiceChannel;
@@ -20,7 +20,7 @@ namespace VainBotDiscord.Commands
             }
 
             var audioClient = await channel.ConnectAsync();
-            var ffmpeg = CreateStream($"Audio{Path.DirectorySeparatorChar}readingrainbow.mp3");
+            var ffmpeg = CreateStream($"Audio{Path.DirectorySeparatorChar}airhorn.wav");
             var output = ffmpeg.StandardOutput.BaseStream;
             var discord = audioClient.CreatePCMStream(1920);
 
