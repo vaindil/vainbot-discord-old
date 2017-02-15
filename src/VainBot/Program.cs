@@ -26,65 +26,12 @@ namespace VainBotDiscord
         {
             var isDev = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VAINBOT_ISDEV"));
 
-            string apiToken;
-
             if (!Directory.Exists("TTSTemp"))
                 Directory.CreateDirectory("TTSTemp");
 
-            using (var db = new VbContext())
-            {
-                apiToken = await db.KeyValues.GetValueAsync(DbKey.DiscordApiKey);
-
-                var bettingAllowedExists = await db.KeyValues
-                    .FirstOrDefaultAsync(kv => kv.Key == DbKey.BettingAllowed.ToString());
-                if (bettingAllowedExists == null)
-                {
-                    var bet = new KeyValue
-                    {
-                        Key = DbKey.BettingAllowed.ToString(),
-                        Value = false.ToString()
-                    };
-
-                    db.KeyValues.Add(bet);
-                    await db.SaveChangesAsync();
-                }
-
-                var lastTokenUpdateExists = await db.KeyValues
-                    .FirstOrDefaultAsync(kv => kv.Key == DbKey.LastNaTokenUpdate.ToString());
-                if (lastTokenUpdateExists == null)
-                {
-                    var dtNa = new KeyValue
-                    {
-                        Key = DbKey.LastNaTokenUpdate.ToString(),
-                        Value = DateTime.UtcNow.AddMinutes(-20).ToString()
-                    };
-
-                    var dtEu = new KeyValue
-                    {
-                        Key = DbKey.LastEuTokenUpdate.ToString(),
-                        Value = DateTime.UtcNow.AddMinutes(-20).ToString()
-                    };
-
-                    var eu = new KeyValue
-                    {
-                        Key = DbKey.LastEuTokenPrice.ToString(),
-                        Value = "N/A"
-                    };
-
-                    var na = new KeyValue
-                    {
-                        Key = DbKey.LastNaTokenPrice.ToString(),
-                        Value = "N/A"
-                    };
-
-                    db.KeyValues.Add(dtNa);
-                    db.KeyValues.Add(dtEu);
-                    db.KeyValues.Add(eu);
-                    db.KeyValues.Add(na);
-
-                    await db.SaveChangesAsync();
-                }
-            }
+            var apiToken = await DbInitAsync();
+            if (string.IsNullOrEmpty(apiToken))
+                throw new ArgumentNullException(nameof(apiToken), "Discord API token not found");
 
             var clientConfig = new DiscordSocketConfig
             {
@@ -119,6 +66,7 @@ namespace VainBotDiscord
 
             await client.LoginAsync(TokenType.Bot, apiToken);
             await client.ConnectAsync();
+            await client.SetGameAsync("Euro Truck Simulator 2018");
 
             await Task.Delay(-1);
         }
@@ -220,6 +168,66 @@ namespace VainBotDiscord
             var context = new CommandContext(client, message);
 
             var result = await commands.ExecuteAsync(context, argPos, map);
+        }
+
+        async Task<string> DbInitAsync()
+        {
+            using (var db = new VbContext())
+            {
+                var apiToken = await db.KeyValues.GetValueAsync(DbKey.DiscordApiKey);
+
+                var bettingAllowedExists = await db.KeyValues
+                    .FirstOrDefaultAsync(kv => kv.Key == DbKey.BettingAllowed.ToString());
+                if (bettingAllowedExists == null)
+                {
+                    var bet = new KeyValue
+                    {
+                        Key = DbKey.BettingAllowed.ToString(),
+                        Value = false.ToString()
+                    };
+
+                    db.KeyValues.Add(bet);
+                    await db.SaveChangesAsync();
+                }
+
+                var lastTokenUpdateExists = await db.KeyValues
+                    .FirstOrDefaultAsync(kv => kv.Key == DbKey.LastNaTokenUpdate.ToString());
+                if (lastTokenUpdateExists == null)
+                {
+                    var dtNa = new KeyValue
+                    {
+                        Key = DbKey.LastNaTokenUpdate.ToString(),
+                        Value = DateTime.UtcNow.AddMinutes(-20).ToString()
+                    };
+
+                    var dtEu = new KeyValue
+                    {
+                        Key = DbKey.LastEuTokenUpdate.ToString(),
+                        Value = DateTime.UtcNow.AddMinutes(-20).ToString()
+                    };
+
+                    var eu = new KeyValue
+                    {
+                        Key = DbKey.LastEuTokenPrice.ToString(),
+                        Value = "N/A"
+                    };
+
+                    var na = new KeyValue
+                    {
+                        Key = DbKey.LastNaTokenPrice.ToString(),
+                        Value = "N/A"
+                    };
+
+                    db.KeyValues.Add(dtNa);
+                    db.KeyValues.Add(dtEu);
+                    db.KeyValues.Add(eu);
+                    db.KeyValues.Add(na);
+
+                    await db.SaveChangesAsync();
+                }
+
+                return apiToken;
+            }
         }
     }
 }
