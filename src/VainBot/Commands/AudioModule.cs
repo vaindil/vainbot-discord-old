@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
@@ -27,16 +28,17 @@ namespace VainBotDiscord.Commands
         }
 
         [Command("tts", RunMode = RunMode.Async)]
-        public async Task TextToSpeech([Remainder]string message)
+        public async Task TextToSpeech([Remainder]string words)
         {
             var channel = (Context.Message.Author as IGuildUser).VoiceChannel;
+
             if (channel == null)
             {
                 await ReplyAsync("You're not in a voice channel, you nerd.");
                 return;
             }
 
-            if (message.Length > 200)
+            if (words.Length > 200)
             {
                 await ReplyAsync("That's a little too long, sorry.");
                 return;
@@ -44,22 +46,48 @@ namespace VainBotDiscord.Commands
 
             var filePath = $"TTSTemp{Path.DirectorySeparatorChar}{DateTime.UtcNow.Ticks.ToString()}.wav";
 
-            var createWav = new ProcessStartInfo
-            {
-                FileName = "pico2wave",
-                Arguments = $"--wave={filePath} \"{message}\"",
-                UseShellExecute = false,
-                RedirectStandardOutput = false
-            };
-
-            var cwProc = Process.Start(createWav);
-            cwProc.Dispose();
+            CreateTtsFile(filePath, words);
 
             var audioClient = await channel.ConnectAsync();
             await SendAudioAsync(audioClient, filePath);
             await audioClient.DisconnectAsync();
 
             File.Delete(filePath);
+        }
+
+        [IsAdmin]
+        [Command("tts", RunMode = RunMode.Async)]
+        public async Task TextToSpeechWithChannel(IVoiceChannel channel, [Remainder]string words)
+        {
+            if (words.Length > 400)
+            {
+                await ReplyAsync("That's a little too long, sorry.");
+                return;
+            }
+
+            var filePath = $"TTSTemp{Path.DirectorySeparatorChar}{DateTime.UtcNow.Ticks.ToString()}.wav";
+
+            CreateTtsFile(filePath, words);
+
+            var audioClient = await channel.ConnectAsync();
+            await SendAudioAsync(audioClient, filePath);
+            await audioClient.DisconnectAsync();
+
+            File.Delete(filePath);
+        }
+
+        void CreateTtsFile(string filePath, string words)
+        {
+            var createWav = new ProcessStartInfo
+            {
+                FileName = "pico2wave",
+                Arguments = $"--wave={filePath} \"{words}\"",
+                UseShellExecute = false,
+                RedirectStandardOutput = false
+            };
+
+            var cwProc = Process.Start(createWav);
+            cwProc.Dispose();
         }
 
         async Task SendAudioAsync(IAudioClient audioClient, string path)
