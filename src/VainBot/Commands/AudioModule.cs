@@ -78,6 +78,8 @@ namespace VainBotDiscord.Commands
 
         void CreateTtsFile(string filePath, string words)
         {
+            words = words.Replace("\"", "").Replace("'", "");
+
             var createWav = new ProcessStartInfo
             {
                 FileName = "pico2wave",
