@@ -154,7 +154,7 @@ namespace VainBotDiscord.Twitch
         {
             var response = await _twitchClient.GetAsync(userId.ToString());
             var responseString = await response.Content.ReadAsStringAsync();
-            var streamResponse = JsonConvert.DeserializeObject<TwitchStreamResponse>(responseString, GetJsonSettings());
+            var streamResponse = JsonConvert.DeserializeObject<TwitchStreamResponse>(responseString, Extensions.GetJsonSettings());
 
             return streamResponse.Stream;
         }
@@ -195,24 +195,6 @@ namespace VainBotDiscord.Twitch
             embed.AddField(streamViewersField);
 
             return embed.Build();
-        }
-
-        static JsonSerializerSettings GetJsonSettings()
-        {
-            var settings = new JsonSerializerSettings();
-
-            var contractResolver = new DefaultContractResolver();
-            contractResolver.NamingStrategy = new SnakeCaseNamingStrategy(true, false);
-
-            settings.ContractResolver = contractResolver;
-            settings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-            settings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-            settings.Formatting = Formatting.Indented;
-            settings.MissingMemberHandling = MissingMemberHandling.Ignore;
-            settings.NullValueHandling = NullValueHandling.Ignore;
-            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-            return settings;
         }
     }
 }
