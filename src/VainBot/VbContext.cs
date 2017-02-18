@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
+using VainBotDiscord.Twitch;
 
 namespace VainBotDiscord
 {
@@ -9,6 +10,8 @@ namespace VainBotDiscord
         public DbSet<UserPoints> UserPoints { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
+        public DbSet<StreamToCheck> StreamsToCheck { get; set; }
+        public DbSet<StreamRecord> StreamRecords { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -52,6 +55,30 @@ namespace VainBotDiscord
 
                 e.Property(kv => kv.Key).ForSqliteHasColumnName("key").ForSqliteHasColumnType("TEXT");
                 e.Property(kv => kv.Value).ForSqliteHasColumnName("value").ForSqliteHasColumnType("TEXT");
+            });
+
+            modelBuilder.Entity<StreamToCheck>(e =>
+            {
+                e.ForSqliteToTable("stream_to_check");
+                e.HasKey(s => s.UserId);
+
+                e.Property(s => s.UserId).ForSqliteHasColumnName("user_id").ForSqliteHasColumnType("INTEGER");
+                e.Property(s => s.DiscordChannelId).ForSqliteHasColumnName("discord_channel_id").ForSqliteHasColumnType("INTEGER");
+                e.Property(s => s.DiscordServerId).ForSqliteHasColumnName("discord_server_id").ForSqliteHasColumnType("INTEGER");
+                e.Property(s => s.DiscordMessage).ForSqliteHasColumnName("discord_message").ForSqliteHasColumnType("TEXT");
+                e.Property(s => s.Frequency).ForSqliteHasColumnName("frequency").ForSqliteHasColumnType("INTEGER");
+                e.Property(s => s.DeleteDiscordMessage).ForSqliteHasColumnName("delete_discord_message").ForSqliteHasColumnType("INTEGER");
+                e.Property(s => s.EmbedColor).ForSqliteHasColumnName("embed_color").ForSqliteHasColumnType("INTEGER");
+            });
+
+            modelBuilder.Entity<StreamRecord>(e =>
+            {
+                e.ForSqliteToTable("stream_record");
+                e.HasKey(s => s.StreamId);
+
+                e.Property(s => s.StreamId).ForSqliteHasColumnName("stream_id").ForSqliteHasColumnType("INTEGER");
+                e.Property(s => s.UserId).ForSqliteHasColumnName("user_id").ForSqliteHasColumnType("INTEGER");
+                e.Property(s => s.DiscordMessageId).ForSqliteHasColumnName("discord_message_id").ForSqliteHasColumnType("INTEGER");
             });
         }
     }

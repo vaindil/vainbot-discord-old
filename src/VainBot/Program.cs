@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using VainBotDiscord.Twitch;
 
 // vaindil: 132714099241910273
 
@@ -32,6 +33,10 @@ namespace VainBotDiscord
             var apiToken = await DbInitAsync();
             if (string.IsNullOrEmpty(apiToken))
                 throw new ArgumentNullException(nameof(apiToken), "Discord API token not found");
+
+            var twitchClientId = Environment.GetEnvironmentVariable("TWITCH_CLIENT_ID");
+            if (twitchClientId == null)
+                throw new ArgumentNullException(nameof(twitchClientId), "Twitch Client ID env var not found");
 
             var clientConfig = new DiscordSocketConfig
             {
@@ -67,6 +72,9 @@ namespace VainBotDiscord
             await client.LoginAsync(TokenType.Bot, apiToken);
             await client.ConnectAsync();
             await client.SetGameAsync("Euro Truck Simulator 2018");
+
+            var twitchSvc = new TwitchService(client);
+            await twitchSvc.InitTwitchService();
 
             await Task.Delay(-1);
         }
