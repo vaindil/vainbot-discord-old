@@ -11,14 +11,14 @@ namespace VainBotDiscord.Events
 
             // 132714099241910273
 
-            if (msg.Author.Id == 110878826136907776)
+            if (msg.Author.Id == 252869311545212928)
             {
                 await msg.AddReactionAsync("🇮");
                 await msg.AddReactionAsync("🇸");
                 await msg.AddReactionAsync("🇺");
                 await msg.AddReactionAsync("🇨");
                 await msg.AddReactionAsync("🇰");
-                await msg.AddReactionAsync("LUL:232582021493424128");
+                await msg.AddReactionAsync("LUL:268561496554864640");
             }
         }
     }
