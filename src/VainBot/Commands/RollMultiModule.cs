@@ -76,8 +76,7 @@ namespace VainBotDiscord.Commands
             if (reply.Length > 1950)
                 reply = "You asked for so many dice that Discord had to step in and say no. Great job! 👍";
 
-            var rep = await ReplyAsync(reply);
-            var c = 0;
+            await ReplyAsync(reply);
         }
     }
 }
