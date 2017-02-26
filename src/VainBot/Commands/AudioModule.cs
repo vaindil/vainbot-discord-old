@@ -24,7 +24,7 @@ namespace VainBotDiscord.Commands
 
             var audioClient = await channel.ConnectAsync();
             await SendAudioAsync(audioClient, $"Audio{Path.DirectorySeparatorChar}readingrainbow.mp3");
-            await audioClient.DisconnectAsync();
+            await audioClient.StopAsync();
         }
 
         [Command("tts", RunMode = RunMode.Async)]
@@ -50,7 +50,7 @@ namespace VainBotDiscord.Commands
 
             var audioClient = await channel.ConnectAsync();
             await SendAudioAsync(audioClient, filePath);
-            await audioClient.DisconnectAsync();
+            await audioClient.StopAsync();
 
             File.Delete(filePath);
         }
@@ -71,7 +71,7 @@ namespace VainBotDiscord.Commands
 
             var audioClient = await channel.ConnectAsync();
             await SendAudioAsync(audioClient, filePath);
-            await audioClient.DisconnectAsync();
+            await audioClient.StopAsync();
 
             File.Delete(filePath);
         }

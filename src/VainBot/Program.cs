@@ -70,7 +70,7 @@ namespace VainBotDiscord
             await InstallCommands();
 
             await client.LoginAsync(TokenType.Bot, apiToken);
-            await client.ConnectAsync();
+            await client.StartAsync();
             await client.SetGameAsync("Euro Truck Simulator 2018");
 
             var twitchSvc = new TwitchService(client);
