@@ -57,7 +57,7 @@ namespace VainBotDiscord
             map.Add(new VbContext());
             map.Add(new Random());
 
-            //client.MessageReceived += UserReactionEvent.AddReactionToUserAsync;
+            client.MessageReceived += UserReactionEvent.AddReactionToUserAsync;
             client.MessageReceived += LolCounterEvent.LolCounterAsync;
             client.UserLeft += UserLeavesEvent.UserLeavesAsync;
             client.Connected += async () =>
