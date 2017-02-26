@@ -101,6 +101,8 @@ namespace VainBotDiscord.Commands
             await output.CopyToAsync(discord);
             await discord.FlushAsync();
 
+            ffmpeg.Kill();
+            ffmpeg.WaitForExit();
             ffmpeg.Dispose();
         }
         
