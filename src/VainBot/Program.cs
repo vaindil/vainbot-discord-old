@@ -60,7 +60,7 @@ namespace VainBotDiscord
             //client.MessageReceived += UserReactionEvent.AddReactionToUserAsync;
             client.MessageReceived += LolCounterEvent.LolCounterAsync;
             client.UserLeft += UserLeavesEvent.UserLeavesAsync;
-            client.Ready += async () =>
+            client.Connected += async () =>
             {
                 await client.SetGameAsync("Euro Truck Simulator 2018");
             };
