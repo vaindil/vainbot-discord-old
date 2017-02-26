@@ -1,16 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{47B6C10E-9B21-4D7D-94D8-AA3E427243C2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{747C2FCA-6546-423B-BCFF-C9EAE095E0CB}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "VainBotDiscord", "src\VainBot\VainBotDiscord.xproj", "{37EAD810-ECA0-4712-B26F-49765F6B120F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VainBot", "src\VainBot\VainBot.csproj", "{37EAD810-ECA0-4712-B26F-49765F6B120F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
