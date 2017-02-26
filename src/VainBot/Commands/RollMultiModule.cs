@@ -1,6 +1,5 @@
 ﻿using Discord.Commands;
 using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -77,7 +76,8 @@ namespace VainBotDiscord.Commands
             if (reply.Length > 1950)
                 reply = "You asked for so many dice that Discord had to step in and say no. Great job! 👍";
 
-            await ReplyAsync(reply);
+            var rep = await ReplyAsync(reply);
+            var c = 0;
         }
     }
 }

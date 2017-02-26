@@ -60,6 +60,10 @@ namespace VainBotDiscord
             //client.MessageReceived += UserReactionEvent.AddReactionToUserAsync;
             client.MessageReceived += LolCounterEvent.LolCounterAsync;
             client.UserLeft += UserLeavesEvent.UserLeavesAsync;
+            client.Connected += async () =>
+            {
+                await client.SetGameAsync("Euro Truck Simulator 2018");
+            };
             
             client.Log += (message) =>
             {
@@ -71,7 +75,6 @@ namespace VainBotDiscord
 
             await client.LoginAsync(TokenType.Bot, apiToken);
             await client.StartAsync();
-            await client.SetGameAsync("Euro Truck Simulator 2018");
 
             var twitchSvc = new TwitchService(client);
             await twitchSvc.InitTwitchService();
