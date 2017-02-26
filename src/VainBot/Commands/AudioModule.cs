@@ -96,7 +96,7 @@ namespace VainBotDiscord.Commands
         {
             var ffmpeg = CreateStream(path);
             var output = ffmpeg.StandardOutput.BaseStream;
-            var discord = audioClient.CreatePCMStream(1920);
+            var discord = audioClient.CreatePCMStream(AudioApplication.Voice, 1920);
 
             await output.CopyToAsync(discord);
             await discord.FlushAsync();
