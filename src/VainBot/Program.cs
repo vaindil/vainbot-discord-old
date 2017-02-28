@@ -91,7 +91,7 @@ namespace VainBotDiscord
         public async Task HandleCommand(SocketMessage messageParam)
         {
             var message = messageParam as SocketUserMessage;
-            if (message == null)
+            if (message == null || message.Author.Id == client.CurrentUser.Id)
                 return;
 
             var argPos = 0;
