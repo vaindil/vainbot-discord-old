@@ -77,7 +77,9 @@ namespace VainBotDiscord
             await client.StartAsync();
 
             var twitchSvc = new TwitchService(client);
-            await twitchSvc.InitTwitchService();
+
+            if (!isDev)
+                await twitchSvc.InitTwitchService();
 
             await Task.Delay(-1);
         }

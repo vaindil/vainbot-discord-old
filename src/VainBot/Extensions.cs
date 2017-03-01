@@ -23,6 +23,7 @@ namespace VainBotDiscord
                 return d + " isn't a die, you nerd.";
 
             int numDice;
+            d = d.ToLower();
             var deezNuts = d.Split('d');
 
             if (string.IsNullOrEmpty(deezNuts[0]))
