@@ -37,7 +37,7 @@ namespace VainBotDiscord.Commands
 
             if (validDie.IsMatch(dice[0]))
             {
-                validString = Extensions.ValidateDiceRoll(dice[0], false);
+                validString = Extensions.ValidateDiceRoll(dice[0], false, 1000);
                 customDice = true;
 
                 if (dice.Length == 1)

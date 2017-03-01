@@ -17,7 +17,7 @@ namespace VainBotDiscord
             return keyValue.Value;
         }
 
-        public static string ValidateDiceRoll(string d, bool checkRegex)
+        public static string ValidateDiceRoll(string d, bool checkRegex, int maxDice = 30)
         {
             if (checkRegex && !validDie.IsMatch(d))
                 return d + " isn't a die, you nerd.";
@@ -38,10 +38,10 @@ namespace VainBotDiscord
 
             var numSides = int.Parse(deezNuts[1]);
 
-            if (numDice < 1 || numDice > 20)
+            if (numDice < 1 || numDice > maxDice)
                 return "I'd like to see you try to roll " + numDice + " dice at once.";
 
-            if (numSides < 2 || numSides > 100)
+            if (numSides < 2 || numSides > 10000)
                 return "You actually think " + GetAOrAn(numSides) + " " + numSides + "-sided die exists?";
 
             return string.Empty;
