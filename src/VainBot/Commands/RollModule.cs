@@ -20,7 +20,7 @@ namespace VainBotDiscord.Commands
         public async Task Rolld20()
         {
             var num = _rng.Next(1, 21);
-            await ReplyAsync(Context.User.Username + " rolled 1d20 and got **" + num + "**.");
+            await ReplyAsync(Context.User.Username + " rolled 1d20 and got " + num + ".");
         }
 
         [Command]
@@ -67,7 +67,8 @@ namespace VainBotDiscord.Commands
 
             if (customDice)
             {
-                var deezNuts = dice[0].Split('d');
+                var dL = dice[0].ToLower();
+                var deezNuts = dL.Split('d');
 
                 if (string.IsNullOrEmpty(deezNuts[0]))
                     numDice = 1;

@@ -49,7 +49,8 @@ namespace VainBotDiscord.Commands
                 }
 
                 int numDice;
-                var deezNuts = d.Split('d');
+                var dL = d.ToLower();
+                var deezNuts = dL.Split('d');
 
                 if (string.IsNullOrEmpty(deezNuts[0]))
                     numDice = 1;
