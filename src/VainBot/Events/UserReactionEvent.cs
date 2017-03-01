@@ -16,7 +16,7 @@ namespace VainBotDiscord.Events
 
             if (msg.Author.Id == 149716909556891648)
             {
-                if (_rng.Next(4) != 1)
+                if (_rng.Next(16) != 1)
                     return;
 
                 await msg.AddReactionAsync("🇩");
