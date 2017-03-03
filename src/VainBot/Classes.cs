@@ -34,6 +34,17 @@ namespace VainBotDiscord
         public List<string> Facts { get; set; }
     }
 
+    public class MemeResult
+    {
+        public List<Meme> Result { get; set; }
+    }
+
+    public class Meme
+    {
+        [JsonProperty(PropertyName = "instanceImageUrl")]
+        public string InstanceImageUrl { get; set; }
+    }
+
     public class TwitchUserResponse
     {
         [JsonProperty(PropertyName = "_total")]
