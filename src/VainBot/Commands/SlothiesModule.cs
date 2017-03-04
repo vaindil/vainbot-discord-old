@@ -36,25 +36,31 @@ namespace VainBotDiscord.Commands
 
             var reply = "**__Top on the Server__**\n";
 
-            foreach (var t in top)
-            {
-                var user = await Context.Guild.GetUserAsync(t.UserId);
-                var rank = top.IndexOf(t) + 1;
-                var result = await t.Points.GetCorrectPluralityAsync(_context);
+            if (top.Count == 0)
+                reply += "_No one has a positive number of slothies._\n";
+            else
+                foreach (var t in top)
+                {
+                    var user = await Context.Guild.GetUserAsync(t.UserId);
+                    var rank = top.IndexOf(t) + 1;
+                    var result = await t.Points.GetCorrectPluralityAsync(_context);
 
-                reply += rank + ". " + user.Username + ": " + result + "\n";
-            }
+                    reply += rank + ". " + user.Username + ": " + result + "\n";
+                }
 
             reply += "\n**__Bottom on the Server__**\n";
 
-            foreach (var b in bottom)
-            {
-                var user = await Context.Guild.GetUserAsync(b.UserId);
-                var rank = bottom.IndexOf(b) + 1;
-                var result = await b.Points.GetCorrectPluralityAsync(_context);
+            if (bottom.Count == 0)
+                reply += "_No one has a negative number of slothies._";
+            else
+                foreach (var b in bottom)
+                {
+                    var user = await Context.Guild.GetUserAsync(b.UserId);
+                    var rank = bottom.IndexOf(b) + 1;
+                    var result = await b.Points.GetCorrectPluralityAsync(_context);
 
-                reply += rank + ". " + user.Username + ": " + result + "\n";
-            }
+                    reply += rank + ". " + user.Username + ": " + result + "\n";
+                }
 
             reply = reply.TrimEnd('\\', 'n');
 
