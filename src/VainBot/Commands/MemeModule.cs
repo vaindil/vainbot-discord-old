@@ -8,7 +8,7 @@ using VainBotDiscord;
 
 namespace VainBot.Commands
 {
-    [Group("meme")]
+    //[Group("meme")]
     public class MemeModule : ModuleBase
     {
         readonly HttpClient _client;
@@ -20,7 +20,7 @@ namespace VainBot.Commands
             _rng = rng;
         }
 
-        [Command]
+        //[Command]
         public async Task RandomMeme()
         {
             var pageIndex = _rng.Next(0, 3);
