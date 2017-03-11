@@ -2,15 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
     [Group("token")]
     [Alias("wowtoken")]
+    [CrendorServerOnly]
     public class WowTokenModule : ModuleBase
     {
         readonly HttpClient _client;

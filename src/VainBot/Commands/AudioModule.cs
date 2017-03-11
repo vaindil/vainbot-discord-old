@@ -13,6 +13,7 @@ namespace VainBotDiscord.Commands
     {
         [Command("rainbow", RunMode = RunMode.Async)]
         [Alias("readingrainbow")]
+        [CrendorServerOnly]
         public async Task PlayReadingRainbow()
         {
             var channel = (Context.Message.Author as IGuildUser).VoiceChannel;

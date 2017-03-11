@@ -2,10 +2,12 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
     [Group("roll")]
+    [CrendorServerOnly]
     public class RollModule : ModuleBase
     {
         readonly Random _rng;

@@ -2,11 +2,13 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
     [Group("rollmulti")]
     [Alias("multiroll")]
+    [CrendorServerOnly]
     public class RollMultiModule : ModuleBase
     {
         readonly Random _rng;

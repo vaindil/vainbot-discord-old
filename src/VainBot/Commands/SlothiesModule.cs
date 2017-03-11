@@ -5,11 +5,13 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
     [Group("points")]
     [Alias("slothies", "point", "slothy")]
+    [CrendorServerOnly]
     public class PointsModule : ModuleBase
     {
         readonly VbContext _context;

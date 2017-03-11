@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
     [Group("bet")]
+    [CrendorServerOnly]
     public class BetModule : ModuleBase
     {
         readonly VbContext _context;

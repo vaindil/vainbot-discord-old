@@ -3,11 +3,13 @@ using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
     [Group("catfact")]
     [Alias("catfacts")]
+    [CrendorServerOnly]
     public class CatFactsModule : ModuleBase
     {
         readonly HttpClient _client;

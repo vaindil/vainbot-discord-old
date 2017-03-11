@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
     [Group("mathfact")]
     [Alias("mathfacts")]
+    [CrendorServerOnly]
     public class MathFactsModule : ModuleBase
     {
         readonly Random _rng;

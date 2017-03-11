@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
     [Group("slothfact")]
     [Alias("slothfacts")]
+    [CrendorServerOnly]
     public class SlothFactsModule : ModuleBase
     {
         readonly Random _rng;
