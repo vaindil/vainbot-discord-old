@@ -38,6 +38,10 @@ namespace VainBotDiscord
             if (twitchClientId == null)
                 throw new ArgumentNullException(nameof(twitchClientId), "Twitch Client ID env var not found");
 
+            var ytApiKey = Environment.GetEnvironmentVariable("YOUTUBE_API_KEY");
+            if (ytApiKey == null)
+                throw new ArgumentNullException(nameof(ytApiKey), "YouTube API key env var not found");
+
             var clientConfig = new DiscordSocketConfig
             {
                 AudioMode = AudioMode.Outgoing,

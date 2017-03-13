@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using VainBotDiscord;
 
-namespace VainBot.Commands
+namespace VainBotDiscord.Commands
 {
     //[Group("meme")]
     public class MemeModule : ModuleBase

@@ -2,6 +2,7 @@
 using MySQL.Data.Entity.Extensions;
 using System;
 using VainBotDiscord.Twitch;
+using VainBotDiscord.YouTube;
 
 namespace VainBotDiscord
 {
@@ -76,6 +77,29 @@ namespace VainBotDiscord
                 e.Property(s => s.StreamId).HasColumnName("stream_id");
                 e.Property(s => s.UserId).IsRequired().HasColumnName("user_id");
                 e.Property(s => s.DiscordMessageId).IsRequired().HasColumnName("discord_message_id");
+            });
+
+            modelBuilder.Entity<YouTubeToCheck>(e =>
+            {
+                e.ToTable("youtube_to_check");
+                e.HasKey(y => y.PlaylistId);
+
+                e.Property(y => y.PlaylistId).HasMaxLength(30).HasColumnName("playlist_id");
+                e.Property(y => y.ChannelName).HasMaxLength(60).IsRequired().HasColumnName("channel_name");
+                e.Property(y => y.Frequency).IsRequired().HasColumnName("frequency");
+                e.Property(y => y.DiscordServerId).IsRequired().HasColumnName("discord_server_id");
+                e.Property(y => y.DiscordChannelId).IsRequired().HasColumnName("discord_channel_id");
+                e.Property(y => y.DiscordMessage).IsRequired().HasMaxLength(500).HasColumnName("discord_message");
+            });
+
+            modelBuilder.Entity<YouTubeRecord>(e =>
+            {
+                e.ToTable("youtube_record");
+                e.HasKey(y => y.PlaylistId);
+
+                e.Property(y => y.PlaylistId).HasMaxLength(30).HasColumnName("playlist_id");
+                e.Property(y => y.VideoId).IsRequired().HasMaxLength(20).HasColumnName("video_id");
+                e.Property(y => y.PublishedAt).IsRequired().HasColumnName("published_at");
             });
         }
     }

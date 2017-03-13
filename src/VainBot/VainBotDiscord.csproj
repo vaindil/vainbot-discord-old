@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <AssemblyName>VainBot</AssemblyName>
+    <AssemblyName>VainBotDiscord</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>VainBot</PackageId>
+    <PackageId>VainBotDiscord</PackageId>
     <RuntimeFrameworkVersion>1.1.0</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
