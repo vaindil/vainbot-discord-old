@@ -14,7 +14,7 @@ namespace VainBotDiscord.Events
             
             if (msg.Author.Id == 149716909556891648)
             {
-                if (_rng.Next(3) != 1)
+                if (_rng.Next(11) != 1)
                     return;
 
                 var channel = msg.Channel as SocketGuildChannel;
@@ -28,7 +28,7 @@ namespace VainBotDiscord.Events
                 await msg.AddReactionAsync("🇴");
                 await msg.AddReactionAsync("🇬");
                 await msg.AddReactionAsync(frankerZString);
-                await msg.AddReactionAsync("🇧");
+                await msg.AddReactionAsync("🅱");
                 await msg.AddReactionAsync("🇦");
                 await msg.AddReactionAsync("🇾");
             }
