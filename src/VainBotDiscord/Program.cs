@@ -67,7 +67,7 @@ namespace VainBotDiscord
             client.UserLeft += UserLeavesEvent.UserLeavesAsync;
             client.Connected += async () =>
             {
-                await client.SetGameAsync("Euro Truck Simulator 2018");
+                await client.SetGameAsync("with ur mom :^)");
             };
             
             client.Log += (message) =>
