@@ -13,6 +13,8 @@ namespace VainBotDiscord
         public DbSet<KeyValue> KeyValues { get; set; }
         public DbSet<StreamToCheck> StreamsToCheck { get; set; }
         public DbSet<StreamRecord> StreamRecords { get; set; }
+        public DbSet<YouTubeToCheck> YouTubesToCheck { get; set; }
+        public DbSet<YouTubeRecord> YouTubeRecords { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -85,11 +87,10 @@ namespace VainBotDiscord
                 e.HasKey(y => y.PlaylistId);
 
                 e.Property(y => y.PlaylistId).HasMaxLength(30).HasColumnName("playlist_id");
-                e.Property(y => y.ChannelName).HasMaxLength(60).IsRequired().HasColumnName("channel_name");
+                e.Property(y => y.ChannelId).HasMaxLength(200).IsRequired().HasColumnName("channel_id");
                 e.Property(y => y.Frequency).IsRequired().HasColumnName("frequency");
                 e.Property(y => y.DiscordServerId).IsRequired().HasColumnName("discord_server_id");
                 e.Property(y => y.DiscordChannelId).IsRequired().HasColumnName("discord_channel_id");
-                e.Property(y => y.DiscordMessage).IsRequired().HasMaxLength(500).HasColumnName("discord_message");
             });
 
             modelBuilder.Entity<YouTubeRecord>(e =>

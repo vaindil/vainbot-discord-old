@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using VainBotDiscord.Events;
 using VainBotDiscord.Twitch;
+using VainBotDiscord.YouTube;
 
 // vaindil: 132714099241910273
 
@@ -81,9 +82,12 @@ namespace VainBotDiscord
             await client.StartAsync();
 
             var twitchSvc = new TwitchService(client);
+            var youTubeSvc = new YouTubeService(client);
 
             if (!isDev)
                 await twitchSvc.InitTwitchService();
+
+            await youTubeSvc.InitYouTubeService();
 
             await Task.Delay(-1);
         }

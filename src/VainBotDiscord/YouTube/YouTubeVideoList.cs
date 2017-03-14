@@ -21,6 +21,7 @@ namespace VainBotDiscord.YouTube
         [JsonProperty(PropertyName = "publishedAt")]
         public DateTime PublishedAt { get; set; }
 
+        [JsonProperty(PropertyName = "channelId")]
         public string ChannelId { get; set; }
 
         public string Title { get; set; }
