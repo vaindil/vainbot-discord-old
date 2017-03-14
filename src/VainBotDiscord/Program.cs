@@ -88,9 +88,7 @@ namespace VainBotDiscord
 
             await client.LoginAsync(TokenType.Bot, apiToken);
             await client.StartAsync();
-
             
-
             await Task.Delay(-1);
         }
         

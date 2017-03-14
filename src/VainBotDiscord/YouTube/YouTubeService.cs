@@ -186,7 +186,7 @@ namespace VainBotDiscord.YouTube
             embed.Author = author;
             embed.Color = new Color(205, 32, 31);
             embed.ImageUrl = video.Snippet.Thumbnails.Standard.Url;
-            embed.Title = "New YouTube video from " + channel.Snippet.Title;
+            embed.Title = video.Snippet.Title;
             embed.Url = author.Url;
 
             embed.AddField(descriptionField);
