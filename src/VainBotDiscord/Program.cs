@@ -68,6 +68,14 @@ namespace VainBotDiscord
             client.Connected += async () =>
             {
                 await client.SetGameAsync("with ur mom :^)");
+
+                var twitchSvc = new TwitchService(client);
+                var youTubeSvc = new YouTubeService(client);
+
+                if (!isDev)
+                    await twitchSvc.InitTwitchService();
+
+                await youTubeSvc.InitYouTubeService();
             };
             
             client.Log += (message) =>
@@ -81,13 +89,7 @@ namespace VainBotDiscord
             await client.LoginAsync(TokenType.Bot, apiToken);
             await client.StartAsync();
 
-            var twitchSvc = new TwitchService(client);
-            var youTubeSvc = new YouTubeService(client);
-
-            if (!isDev)
-                await twitchSvc.InitTwitchService();
-
-            await youTubeSvc.InitYouTubeService();
+            
 
             await Task.Delay(-1);
         }
