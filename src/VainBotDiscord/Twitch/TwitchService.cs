@@ -81,15 +81,20 @@ namespace VainBotDiscord.Twitch
                 var msgId = await SendMessageAsync(streamToCheck, stream);
                 using (var db = new VbContext())
                 {
-                    var record = new StreamRecord
+                    db.StreamRecords.Add(new StreamRecord
                     {
                         UserId = stream.Channel.Id,
                         StreamId = stream.Id,
                         DiscordMessageId = msgId,
                         CurrentGame = stream.Game
-                    };
+                    });
 
-                    db.StreamRecords.Add(record);
+                    db.StreamGames.Add(new StreamGame
+                    {
+                        Game = stream.Game,
+                        StreamId = stream.Id
+                    });
+
                     await db.SaveChangesAsync();
                 }
 
