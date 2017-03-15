@@ -16,7 +16,7 @@
     <PackageReference Include="Discord.Net.Commands" Version="1.0.0-rc-00621" />
     <PackageReference Include="Discord.Net.Core" Version="1.0.0-rc-00621" />
     <PackageReference Include="Discord.Net.WebSocket" Version="1.0.0-rc-00621" />
-    <PackageReference Include="SapientGuardian.EntityFrameworkCore.MySql" Version="7.1.19" />
+    <PackageReference Include="SapientGuardian.EntityFrameworkCore.MySql" Version="7.1.21" />
   </ItemGroup>
 
 </Project>
