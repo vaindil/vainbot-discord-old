@@ -249,8 +249,7 @@ namespace VainBotDiscord.Twitch
             author.Url = stream.Channel.Url;
             author.IconUrl = stream.Channel.Logo;
 
-            if (stream.Channel.Id == 18074328)
-                author.Url = "https://www.destiny.gg/bigscreen";
+            
 
             var streamPlayingField = new EmbedFieldBuilder
             {
@@ -265,12 +264,19 @@ namespace VainBotDiscord.Twitch
                 Value = stream.Viewers.ToString(),
                 IsInline = true
             };
-
-            embed.Author = author;
+            
             embed.Color = color;
             embed.ImageUrl = imgUrl;
             embed.Title = stream.Channel.Status;
             embed.Url = stream.Channel.Url;
+
+            if (stream.Channel.Id == 18074328)
+            {
+                author.Url = "https://www.destiny.gg/bigscreen";
+                embed.Url = "https://www.destiny.gg/bigscreen";
+            }
+
+            embed.Author = author;
 
             embed.AddField(streamPlayingField);
             embed.AddField(streamViewersField);
