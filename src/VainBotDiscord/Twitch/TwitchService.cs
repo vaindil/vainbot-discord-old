@@ -42,10 +42,12 @@ namespace VainBotDiscord.Twitch
             _twitchClient.Timeout = new TimeSpan(0, 0, 8);
 
             var streamsToCheck = new List<StreamToCheck>();
+            var streamRecords = new List<StreamRecord>();
 
             using (var db = new VbContext())
             {
                 streamsToCheck = await db.StreamsToCheck.ToListAsync();
+                streamRecords = await db.StreamRecords.ToListAsync();
             }
 
             if (streamsToCheck == null || streamsToCheck.Count == 0)
@@ -56,6 +58,18 @@ namespace VainBotDiscord.Twitch
                 var t = new Timer(CheckTwitchAsync, stream, new TimeSpan(0, 0, 20), new TimeSpan(0, 0, stream.Frequency));
                 var checkTimer = new TwitchCheckTimer(stream.UserId, t);
                 _checkTimerList.Add(checkTimer);
+            }
+
+            foreach (var record in streamRecords)
+            {
+                var thisStreamToCheck = streamsToCheck.FirstOrDefault(s => s.UserId == record.UserId);
+
+                if (thisStreamToCheck.EmbedColor != 0)
+                {
+                    var ut = new Timer(UpdateEmbedAsync, thisStreamToCheck, new TimeSpan(0, 0, 30), new TimeSpan(0, 1, 0));
+                    var updateTimer = new TwitchUpdateTimer(record.StreamId, ut);
+                    _updateTimerList.Add(updateTimer);
+                }
             }
         }
 
