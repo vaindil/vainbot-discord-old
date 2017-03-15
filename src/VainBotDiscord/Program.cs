@@ -73,7 +73,7 @@ namespace VainBotDiscord
                 var youTubeSvc = new YouTubeService(client);
 
                 if (!isDev)
-                    await twitchSvc.InitTwitchService();
+                    await twitchSvc.InitTwitchServiceAsync();
 
                 await youTubeSvc.InitYouTubeService();
             };

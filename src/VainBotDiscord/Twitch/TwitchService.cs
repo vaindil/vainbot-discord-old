@@ -18,16 +18,18 @@ namespace VainBotDiscord.Twitch
     {
         readonly DiscordSocketClient _client;
         static HttpClient _twitchClient = new HttpClient();
-        List<Timer> _timerList;
+        List<TwitchCheckTimer> _checkTimerList;
+        List<TwitchUpdateTimer> _updateTimerList;
 
         public TwitchService(DiscordSocketClient client)
         {
             _client = client;
         }
 
-        public async Task InitTwitchService()
+        public async Task InitTwitchServiceAsync()
         {
-            _timerList = new List<Timer>();
+            _checkTimerList = new List<TwitchCheckTimer>();
+            _updateTimerList = new List<TwitchUpdateTimer>();
 
             // verified to exist in Program.Run()
             var twitchClientId = Environment.GetEnvironmentVariable("TWITCH_CLIENT_ID");
@@ -52,13 +54,8 @@ namespace VainBotDiscord.Twitch
             foreach (var stream in streamsToCheck)
             {
                 var t = new Timer(CheckTwitchAsync, stream, new TimeSpan(0, 0, 20), new TimeSpan(0, 0, stream.Frequency));
-                _timerList.Add(t);
-
-                if (stream.EmbedColor != 0)
-                {
-                    var ut = new Timer(UpdateEmbedAsync, stream, new TimeSpan(0, 0, 30), new TimeSpan(0, 1, 0));
-                    _timerList.Add(ut);
-                }
+                var checkTimer = new TwitchCheckTimer(stream.UserId, t);
+                _checkTimerList.Add(checkTimer);
             }
         }
 
@@ -100,6 +97,13 @@ namespace VainBotDiscord.Twitch
                     await db.SaveChangesAsync();
                 }
 
+                if (streamToCheck.EmbedColor != 0)
+                {
+                    var ut = new Timer(UpdateEmbedAsync, streamToCheck, new TimeSpan(0, 0, 30), new TimeSpan(0, 1, 0));
+                    var updateTimer = new TwitchUpdateTimer(stream.Id, ut);
+                    _updateTimerList.Add(updateTimer);
+                }
+
                 return;
             }
 
@@ -128,6 +132,13 @@ namespace VainBotDiscord.Twitch
                     db.StreamRecords.Remove(existingRecord);
                     await db.SaveChangesAsync();
                 }
+
+                var updateTimer = _updateTimerList.FirstOrDefault(t => t.StreamId == existingRecord.StreamId);
+                if (updateTimer == null)
+                    return;
+
+                updateTimer.Timer.Dispose();
+                _updateTimerList.Remove(updateTimer);
             }
         }
 
