@@ -121,6 +121,10 @@ namespace VainBotDiscord.Twitch
 
                 using (var db = new VbContext())
                 {
+                    var games = db.StreamGames.Where(g => g.StreamId == existingRecord.StreamId);
+                    db.StreamGames.RemoveRange(games);
+                    await db.SaveChangesAsync();
+
                     db.StreamRecords.Remove(existingRecord);
                     await db.SaveChangesAsync();
                 }
@@ -199,9 +203,6 @@ namespace VainBotDiscord.Twitch
                 await db.SaveChangesAsync();
 
                 games = await db.StreamGames.Where(g => g.StreamId == record.StreamId).ToListAsync();
-
-                db.StreamGames.RemoveRange(games);
-                await db.SaveChangesAsync();
             }
 
             var streamDuration = DateTime.UtcNow - record.StartTime;
