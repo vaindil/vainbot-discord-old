@@ -161,6 +161,7 @@ namespace VainBotDiscord.Twitch
                 {
                     var streamGame = await db.StreamGames
                         .FirstOrDefaultAsync(g => g.StreamId == stream.Id && g.StopTime == null);
+                    var streamGames = await db.StreamGames.ToListAsync();
 
                     streamGame.StopTime = DateTime.UtcNow;
                     record.CurrentGame = stream.Game;

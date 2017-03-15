@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace VainBotDiscord.Twitch
 {
@@ -14,7 +13,5 @@ namespace VainBotDiscord.Twitch
         public DateTime StartTime { get; set; }
 
         public string CurrentGame { get; set; }
-
-        public ICollection<StreamGame> GamesPlayed { get; set; }
     }
 }

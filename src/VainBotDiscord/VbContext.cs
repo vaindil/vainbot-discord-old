@@ -83,10 +83,6 @@ namespace VainBotDiscord
                 e.Property(s => s.DiscordMessageId).IsRequired().HasColumnName("discord_message_id");
                 e.Property(s => s.StartTime).HasColumnName("start_time").ValueGeneratedOnAdd();
                 e.Property(s => s.CurrentGame).HasColumnName("current_game").IsRequired();
-
-                e.HasMany(s => s.GamesPlayed)
-                    .WithOne(g => g.StreamRecord)
-                    .HasForeignKey(g => g.StreamId);
             });
 
             modelBuilder.Entity<StreamGame>(e =>
