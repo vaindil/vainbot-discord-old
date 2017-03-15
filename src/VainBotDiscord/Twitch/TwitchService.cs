@@ -97,7 +97,8 @@ namespace VainBotDiscord.Twitch
                         UserId = stream.Channel.Id,
                         StreamId = stream.Id,
                         DiscordMessageId = msgId,
-                        CurrentGame = stream.Game
+                        CurrentGame = stream.Game,
+                        StartTime = DateTime.UtcNow
                     });
 
                     await db.SaveChangesAsync();
@@ -105,7 +106,8 @@ namespace VainBotDiscord.Twitch
                     db.StreamGames.Add(new StreamGame
                     {
                         Game = stream.Game,
-                        StreamId = stream.Id
+                        StreamId = stream.Id,
+                        StartTime = DateTime.UtcNow
                     });
 
                     await db.SaveChangesAsync();
@@ -199,7 +201,8 @@ namespace VainBotDiscord.Twitch
                     db.StreamGames.Add(new StreamGame
                     {
                         StreamId = stream.Id,
-                        Game = stream.Game
+                        Game = stream.Game,
+                        StartTime = DateTime.UtcNow
                     });
 
                     db.StreamRecords.Update(record);
@@ -239,9 +242,9 @@ namespace VainBotDiscord.Twitch
             var totalMinutes = streamDuration.ToString("%m");
 
             var msg = new StringBuilder(streamToCheck.FriendlyUsername + " was live.\n");
-            msg.Append("Started at: " + record.StartTime.ToString("HH:mm") + "\n");
-            msg.Append("Ended at: " + DateTime.UtcNow.ToString("HH:mm") + "\n");
-            msg.Append($"_(total of {totalHours} hours, {totalMinutes} minutes)_\n");
+            msg.Append("**Started at:** " + record.StartTime.ToString("HH:mm") + "\n");
+            msg.Append("**Ended at:** " + DateTime.UtcNow.ToString("HH:mm") + "\n");
+            msg.Append($"_(total of {totalHours} hours, {totalMinutes} minutes)_\n\n");
 
             msg.Append("__Games Played__");
 
@@ -250,13 +253,17 @@ namespace VainBotDiscord.Twitch
                 var duration = g.StopTime.Value - g.StartTime;
                 var hrs = duration.ToString("%h");
                 var mins = duration.ToString("%m");
-                msg.Append($"\n{g.Game}: {hrs} hrs, {mins} mins");
+                msg.Append($"\n**{g.Game}:** {hrs} hrs, {mins} mins");
             }
 
             var channel = (_client.GetChannel((ulong)streamToCheck.DiscordChannelId)) as SocketTextChannel;
             var existingMsg = await channel.GetMessageAsync((ulong)record.DiscordMessageId) as RestUserMessage;
 
-            await existingMsg.ModifyAsync(m => m.Content = msg.ToString());
+            await existingMsg.ModifyAsync(m =>
+            {
+                m.Content = msg.ToString();
+                m.Embed = null;
+            });
         }
 
         async Task<TwitchStream> GetTwitchStreamAsync(long userId)

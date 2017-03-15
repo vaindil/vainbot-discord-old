@@ -81,7 +81,7 @@ namespace VainBotDiscord
                 e.Property(s => s.StreamId).HasColumnName("stream_id");
                 e.Property(s => s.UserId).IsRequired().HasColumnName("user_id");
                 e.Property(s => s.DiscordMessageId).IsRequired().HasColumnName("discord_message_id");
-                e.Property(s => s.StartTime).HasColumnName("start_time").ValueGeneratedOnAdd();
+                e.Property(s => s.StartTime).HasColumnName("start_time").HasDefaultValue(DateTime.UtcNow).ValueGeneratedOnAdd();
                 e.Property(s => s.CurrentGame).HasColumnName("current_game").IsRequired();
             });
 
@@ -92,7 +92,7 @@ namespace VainBotDiscord
 
                 e.Property(g => g.StreamId).HasColumnName("stream_id").IsRequired();
                 e.Property(g => g.Game).HasColumnName("game").IsRequired().HasMaxLength(200);
-                e.Property(g => g.StartTime).HasColumnName("start_time").ValueGeneratedOnAdd();
+                e.Property(g => g.StartTime).HasColumnName("start_time").HasDefaultValue(DateTime.UtcNow).ValueGeneratedOnAdd();
                 e.Property(g => g.StopTime).HasColumnName("stop_time");
             });
 
