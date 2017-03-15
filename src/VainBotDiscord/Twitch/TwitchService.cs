@@ -241,7 +241,7 @@ namespace VainBotDiscord.Twitch
             var totalHours = streamDuration.ToString("%h");
             var totalMinutes = streamDuration.ToString("%m");
 
-            var msg = new StringBuilder(streamToCheck.FriendlyUsername + " was live.\n");
+            var msg = new StringBuilder(streamToCheck.FriendlyUsername + " was live.\n\n");
             msg.Append("**Started at:** " + record.StartTime.ToString("HH:mm") + "\n");
             msg.Append("**Ended at:** " + DateTime.UtcNow.ToString("HH:mm") + "\n");
             msg.Append($"_(total of {totalHours} hours, {totalMinutes} minutes)_\n\n");
