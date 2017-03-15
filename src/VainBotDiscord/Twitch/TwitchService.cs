@@ -89,6 +89,8 @@ namespace VainBotDiscord.Twitch
                         CurrentGame = stream.Game
                     });
 
+                    await db.SaveChangesAsync();
+
                     db.StreamGames.Add(new StreamGame
                     {
                         Game = stream.Game,
