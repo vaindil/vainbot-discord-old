@@ -222,11 +222,15 @@ namespace VainBotDiscord.Twitch
 
             using (var db = new VbContext())
             {
-                var latest = await db.StreamGames.FirstAsync(g => g.StreamId == record.StreamId && g.StopTime == null);
-                latest.StopTime = DateTime.UtcNow;
+                var latest = await db.StreamGames
+                    .FirstOrDefaultAsync(g => g.StreamId == record.StreamId && g.StopTime == null);
 
-                await db.SaveChangesAsync();
-
+                if (latest != null)
+                {
+                    latest.StopTime = DateTime.UtcNow;
+                    await db.SaveChangesAsync();
+                }
+                
                 games = await db.StreamGames.Where(g => g.StreamId == record.StreamId).ToListAsync();
             }
 
