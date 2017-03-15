@@ -232,11 +232,18 @@ namespace VainBotDiscord.Twitch
 
         Embed CreateEmbed(TwitchStream stream, uint inColor)
         {
+            var now = DateTime.UtcNow;
+            var cacheBuster =
+                now.Year.ToString() +
+                now.Month.ToString() +
+                now.Day.ToString() +
+                now.Hour.ToString() +
+                ((now.Minute / 10) % 10).ToString();
+
             var embed = new EmbedBuilder();
             var color = new Color(inColor);
             var author = new EmbedAuthorBuilder();
-            var imgUrl = stream.Preview.Template.Replace("{width}", "640").Replace("{height}", "360") + "?" +
-                DateTime.UtcNow.Ticks.ToString();
+            var imgUrl = stream.Preview.Template.Replace("{width}", "640").Replace("{height}", "360") + "?" + cacheBuster;
 
             author.Name = stream.Channel.DisplayName ?? stream.Channel.Name;
             author.Url = stream.Channel.Url;
