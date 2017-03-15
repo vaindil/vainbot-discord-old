@@ -4,6 +4,8 @@
     {
         public long UserId { get; set; }
 
+        public string FriendlyUsername { get; set; }
+
         public int Frequency { get; set; }
 
         public long DiscordServerId { get; set; }

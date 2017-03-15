@@ -13,6 +13,7 @@ namespace VainBotDiscord
         public DbSet<KeyValue> KeyValues { get; set; }
         public DbSet<StreamToCheck> StreamsToCheck { get; set; }
         public DbSet<StreamRecord> StreamRecords { get; set; }
+        public DbSet<StreamGame> StreamGames { get; set; }
         public DbSet<YouTubeToCheck> YouTubesToCheck { get; set; }
         public DbSet<YouTubeRecord> YouTubeRecords { get; set; }
 
@@ -63,6 +64,7 @@ namespace VainBotDiscord
                 e.HasKey(s => s.UserId);
 
                 e.Property(s => s.UserId).HasColumnName("user_id");
+                e.Property(s => s.FriendlyUsername).IsRequired().HasMaxLength(200).HasColumnName("friendly_username");
                 e.Property(s => s.DiscordChannelId).IsRequired().HasColumnName("discord_channel_id");
                 e.Property(s => s.DiscordServerId).IsRequired().HasColumnName("discord_server_id");
                 e.Property(s => s.DiscordMessage).IsRequired().HasColumnName("discord_message");
@@ -79,6 +81,23 @@ namespace VainBotDiscord
                 e.Property(s => s.StreamId).HasColumnName("stream_id");
                 e.Property(s => s.UserId).IsRequired().HasColumnName("user_id");
                 e.Property(s => s.DiscordMessageId).IsRequired().HasColumnName("discord_message_id");
+                e.Property(s => s.StartTime).HasColumnName("start_time").ValueGeneratedOnAdd();
+                e.Property(s => s.CurrentGame).HasColumnName("current_game").IsRequired();
+
+                e.HasMany(s => s.GamesPlayed)
+                    .WithOne(g => g.StreamRecord)
+                    .HasForeignKey(g => g.StreamId);
+            });
+
+            modelBuilder.Entity<StreamGame>(e =>
+            {
+                e.ToTable("stream_game");
+                e.HasKey(g => g.Id);
+
+                e.Property(g => g.StreamId).HasColumnName("stream_id").IsRequired();
+                e.Property(g => g.Game).HasColumnName("game").IsRequired().HasMaxLength(200);
+                e.Property(g => g.StartTime).HasColumnName("start_time").ValueGeneratedOnAdd();
+                e.Property(g => g.StopTime).HasColumnName("stop_time");
             });
 
             modelBuilder.Entity<YouTubeToCheck>(e =>

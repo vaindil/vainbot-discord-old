@@ -1,4 +1,7 @@
-﻿namespace VainBotDiscord.Twitch
+﻿using System;
+using System.Collections.Generic;
+
+namespace VainBotDiscord.Twitch
 {
     public class StreamRecord
     {
@@ -7,5 +10,11 @@
         public long StreamId { get; set; }
 
         public long DiscordMessageId { get; set; }
+
+        public DateTime StartTime { get; set; }
+
+        public string CurrentGame { get; set; }
+
+        public ICollection<StreamGame> GamesPlayed { get; set; }
     }
 }

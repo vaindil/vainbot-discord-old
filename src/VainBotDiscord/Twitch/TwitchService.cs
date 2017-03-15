@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -54,7 +56,7 @@ namespace VainBotDiscord.Twitch
 
                 if (stream.EmbedColor != 0)
                 {
-                    var ut = new Timer(UpdateEmbedAsync, stream, new TimeSpan(0, 0, 30), new TimeSpan(0, 20, 0));
+                    var ut = new Timer(UpdateEmbedAsync, stream, new TimeSpan(0, 0, 30), new TimeSpan(0, 1, 0));
                     _timerList.Add(ut);
                 }
             }
@@ -83,7 +85,8 @@ namespace VainBotDiscord.Twitch
                     {
                         UserId = stream.Channel.Id,
                         StreamId = stream.Id,
-                        DiscordMessageId = msgId
+                        DiscordMessageId = msgId,
+                        CurrentGame = stream.Game
                     };
 
                     db.StreamRecords.Add(record);
@@ -103,6 +106,10 @@ namespace VainBotDiscord.Twitch
                     var msg = (await channel.GetMessageAsync((ulong)existingRecord.DiscordMessageId)) as RestUserMessage;
 
                     await msg.DeleteAsync();
+                }
+                else if (!streamToCheck.DeleteDiscordMessage && streamToCheck.EmbedColor != 0 && existingRecord.DiscordMessageId != 0)
+                {
+                    await FinalMessageUpdateAsync(streamToCheck, existingRecord);
                 }
 
                 using (var db = new VbContext())
@@ -129,24 +136,84 @@ namespace VainBotDiscord.Twitch
         async void UpdateEmbedAsync(object streamToCheckIn)
         {
             var streamToCheck = (StreamToCheck)streamToCheckIn;
-            var stream = await GetTwitchStreamAsync(streamToCheck.UserId);
-            long msgId = 0;
+            StreamRecord record;
 
             using (var db = new VbContext())
             {
-                var record = await db.StreamRecords.FirstOrDefaultAsync(sr => sr.UserId == streamToCheck.UserId);
+                record = await db.StreamRecords.FirstOrDefaultAsync(sr => sr.UserId == streamToCheck.UserId);
                 if (record == null)
                     return;
+            }
 
-                msgId = record.DiscordMessageId;
+            var stream = await GetTwitchStreamAsync(streamToCheck.UserId);
+
+            if (string.IsNullOrEmpty(stream.Game))
+                stream.Game = "(no game)";
+
+            using (var db = new VbContext())
+            {
+                if (record.CurrentGame != stream.Game)
+                {
+                    var streamGame = await db.StreamGames
+                        .FirstAsync(g => g.StreamId == stream.Id && g.StopTime == null);
+
+                    streamGame.StopTime = DateTime.UtcNow;
+                    record.CurrentGame = stream.Game;
+
+                    db.StreamGames.Add(new StreamGame
+                    {
+                        StreamId = stream.Id,
+                        Game = stream.Game
+                    });
+
+                    await db.SaveChangesAsync();
+                }
             }
 
             var embed = CreateEmbed(stream, (uint)streamToCheck.EmbedColor);
 
             var channel = _client.GetChannel((ulong)streamToCheck.DiscordChannelId) as SocketTextChannel;
-            var msg = await channel.GetMessageAsync((ulong)msgId) as RestUserMessage;
+            var msg = await channel.GetMessageAsync((ulong)record.DiscordMessageId) as RestUserMessage;
 
             await msg.ModifyAsync(f => f.Embed = embed, null);
+        }
+
+        async Task FinalMessageUpdateAsync(StreamToCheck streamToCheck, StreamRecord record)
+        {
+            List<StreamGame> games;
+
+            using (var db = new VbContext())
+            {
+                var latest = await db.StreamGames.FirstAsync(g => g.StreamId == record.StreamId && g.StopTime == null);
+                latest.StopTime = DateTime.UtcNow;
+
+                await db.SaveChangesAsync();
+
+                games = await db.StreamGames.Where(g => g.StreamId == record.StreamId).ToListAsync();
+
+                db.StreamGames.RemoveRange(games);
+                await db.SaveChangesAsync();
+            }
+
+            var streamDuration = DateTime.UtcNow - record.StartTime;
+
+            var msg = new StringBuilder(streamToCheck.FriendlyUsername + " was live.\n");
+            msg.Append("Started at: " + record.StartTime.ToString("HH:mm") + "\n");
+            msg.Append("Ended at: " + DateTime.UtcNow.ToString("HH:mm") + "\n");
+            msg.Append("_(total of " + streamDuration.ToString("%h hrs, %m minutes") + ")_\n");
+
+            msg.Append("__Games Played__");
+
+            foreach (var g in games)
+            {
+                var duration = g.StopTime - g.StartTime;
+                msg.Append("\n" + g.Game + ": " + duration.ToString("%h hrs, %m mins"));
+            }
+
+            var channel = (_client.GetChannel((ulong)streamToCheck.DiscordChannelId)) as SocketTextChannel;
+            var existingMsg = await channel.GetMessageAsync((ulong)record.DiscordMessageId) as RestUserMessage;
+
+            await existingMsg.ModifyAsync(m => m.Content = msg.ToString());
         }
 
         async Task<TwitchStream> GetTwitchStreamAsync(long userId)
