@@ -262,7 +262,7 @@ namespace VainBotDiscord.Twitch
             await existingMsg.ModifyAsync(m =>
             {
                 m.Content = msg.ToString();
-                m.Embed = null;
+                //m.Embed = null;
             });
         }
 
