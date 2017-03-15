@@ -217,18 +217,22 @@ namespace VainBotDiscord.Twitch
             }
 
             var streamDuration = DateTime.UtcNow - record.StartTime;
+            var totalHours = streamDuration.ToString("%h");
+            var totalMinutes = streamDuration.ToString("%m");
 
             var msg = new StringBuilder(streamToCheck.FriendlyUsername + " was live.\n");
             msg.Append("Started at: " + record.StartTime.ToString("HH:mm") + "\n");
             msg.Append("Ended at: " + DateTime.UtcNow.ToString("HH:mm") + "\n");
-            msg.Append("_(total of " + streamDuration.ToString("%h hrs, %m minutes") + ")_\n");
+            msg.Append($"_(total of {totalHours} hours, {totalMinutes} minutes)_\n");
 
             msg.Append("__Games Played__");
 
             foreach (var g in games)
             {
                 var duration = g.StopTime.Value - g.StartTime;
-                msg.Append("\n" + g.Game + ": " + duration.ToString("%h hrs, %m mins"));
+                var hrs = duration.ToString("%h");
+                var mins = duration.ToString("%m");
+                msg.Append($"\n{g.Game}: {hrs} hrs, {mins} mins");
             }
 
             var channel = (_client.GetChannel((ulong)streamToCheck.DiscordChannelId)) as SocketTextChannel;
