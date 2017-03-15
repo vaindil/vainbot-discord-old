@@ -211,7 +211,7 @@ namespace VainBotDiscord.Twitch
 
             foreach (var g in games)
             {
-                var duration = g.StopTime - g.StartTime;
+                var duration = g.StopTime.Value - g.StartTime;
                 msg.Append("\n" + g.Game + ": " + duration.ToString("%h hrs, %m mins"));
             }
 

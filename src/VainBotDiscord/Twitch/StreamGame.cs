@@ -13,7 +13,7 @@ namespace VainBotDiscord.Twitch
 
         public DateTime StartTime { get; set; }
 
-        public DateTime StopTime { get; set; }
+        public DateTime? StopTime { get; set; }
 
         public StreamRecord StreamRecord { get; set; }
     }
