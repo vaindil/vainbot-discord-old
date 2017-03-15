@@ -154,10 +154,10 @@ namespace VainBotDiscord.Twitch
 
             if (string.IsNullOrEmpty(stream.Game))
                 stream.Game = "(no game)";
-
-            using (var db = new VbContext())
+            
+            if (record.CurrentGame != stream.Game)
             {
-                if (record.CurrentGame != stream.Game)
+                using (var db = new VbContext())
                 {
                     var streamGame = await db.StreamGames
                         .FirstOrDefaultAsync(g => g.StreamId == stream.Id && g.StopTime == null);
@@ -249,9 +249,7 @@ namespace VainBotDiscord.Twitch
             author.Name = stream.Channel.DisplayName ?? stream.Channel.Name;
             author.Url = stream.Channel.Url;
             author.IconUrl = stream.Channel.Logo;
-
             
-
             var streamPlayingField = new EmbedFieldBuilder
             {
                 Name = "Playing",
