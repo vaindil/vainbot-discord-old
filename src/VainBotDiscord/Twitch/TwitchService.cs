@@ -249,6 +249,9 @@ namespace VainBotDiscord.Twitch
             author.Url = stream.Channel.Url;
             author.IconUrl = stream.Channel.Logo;
 
+            if (stream.Channel.Id == 18074328)
+                author.Url = "https://www.destiny.gg/bigscreen";
+
             var streamPlayingField = new EmbedFieldBuilder
             {
                 Name = "Playing",
