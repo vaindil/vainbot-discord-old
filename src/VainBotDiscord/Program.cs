@@ -41,7 +41,6 @@ namespace VainBotDiscord
 
             var clientConfig = new DiscordSocketConfig
             {
-                AudioMode = AudioMode.Outgoing,
                 LogLevel = isDev ? LogSeverity.Info : LogSeverity.Warning
             };
 
