@@ -122,7 +122,7 @@ namespace VainBotDiscord.Twitter
 
         async Task<List<Tweet>> GetTwitterTimelineAsync(long userId)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, _path + "?user_id=" + userId + "&count=1&exclude_replies=true");
+            var request = new HttpRequestMessage(HttpMethod.Get, _path + "?user_id=" + userId + "&count=1");
             request.Headers.Authorization = new AuthenticationHeaderValue("OAuth", GenerateAuthHeader(userId));
 
             var response = await _httpClient.SendAsync(request);
@@ -208,7 +208,6 @@ namespace VainBotDiscord.Twitter
             {
                 { "user_id", userId.ToString() },
                 { "count", "1" },
-                { "exclude_replies", "true" },
                 { "oauth_consumer_key", _consumerKey },
                 { "oauth_nonce", nonce },
                 { "oauth_signature_method", "HMAC-SHA1" },
