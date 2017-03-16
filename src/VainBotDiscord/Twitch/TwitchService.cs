@@ -55,7 +55,7 @@ namespace VainBotDiscord.Twitch
 
             foreach (var stream in streamsToCheck)
             {
-                var t = new Timer(CheckTwitchAsync, stream, new TimeSpan(0, 0, 20), new TimeSpan(0, 0, stream.Frequency));
+                var t = new Timer(CheckTwitchAsync, stream, new TimeSpan(0, 0, 5), new TimeSpan(0, 0, stream.Frequency));
                 var checkTimer = new TwitchCheckTimer(stream.UserId, t);
                 _checkTimerList.Add(checkTimer);
             }
