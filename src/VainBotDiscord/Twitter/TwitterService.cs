@@ -103,6 +103,9 @@ namespace VainBotDiscord.Twitter
                 }
             }
 
+            if (tweets.Count == 0)
+                return;
+
             var latestTweet = tweets[tweets.Count - 1];
 
             using (var db = new VbContext())
