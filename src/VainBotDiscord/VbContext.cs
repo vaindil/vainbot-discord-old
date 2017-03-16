@@ -2,6 +2,7 @@
 using MySQL.Data.Entity.Extensions;
 using System;
 using VainBotDiscord.Twitch;
+using VainBotDiscord.Twitter;
 using VainBotDiscord.YouTube;
 
 namespace VainBotDiscord
@@ -122,6 +123,33 @@ namespace VainBotDiscord
                 e.Property(y => y.AuthorIconUrl).IsRequired().HasMaxLength(500).HasColumnName("author_icon_url");
                 e.Property(y => y.ImageUrl).IsRequired().HasMaxLength(500).HasColumnName("image_url");
                 e.Property(y => y.PublishedAt).IsRequired().HasColumnName("published_at");
+            });
+
+            modelBuilder.Entity<TwitterToCheck>(e =>
+            {
+                e.ToTable("twitter_to_check");
+                e.HasKey(t => t.UserId);
+
+                e.Property(t => t.UserId).HasColumnName("user_id");
+                e.Property(t => t.FriendlyUsername).HasColumnName("friendly_username").IsRequired().HasMaxLength(45);
+                e.Property(t => t.Frequency).HasColumnName("frequency").IsRequired();
+                e.Property(t => t.DiscordServerId).HasColumnName("discord_server_id").IsRequired();
+                e.Property(t => t.DiscordChannelId).HasColumnName("discord_channel_id").IsRequired();
+            });
+
+            modelBuilder.Entity<TweetRecord>(e =>
+            {
+                e.ToTable("tweet_record");
+                e.HasKey(r => r.UserId);
+
+                e.Property(r => r.UserId).HasColumnName("user_id");
+                e.Property(r => r.TweetId).HasColumnName("tweet_id").IsRequired();
+                e.Property(r => r.Text).HasColumnName("text").IsRequired().HasMaxLength(200);
+                e.Property(r => r.TweetUrl).HasColumnName("tweet_url").IsRequired().HasMaxLength(500);
+                e.Property(r => r.AuthorName).HasColumnName("author_name").IsRequired().HasMaxLength(150);
+                e.Property(r => r.AuthorUsername).HasColumnName("author_username").IsRequired().HasMaxLength(100);
+                e.Property(r => r.ProfileImageUrl).HasColumnName("profile_image_url").IsRequired().HasMaxLength(500);
+                e.Property(r => r.CreatedAt).HasColumnName("created_at").IsRequired();
             });
         }
     }
