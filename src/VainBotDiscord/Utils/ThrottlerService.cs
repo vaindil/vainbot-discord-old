@@ -1,50 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace VainBotDiscord.Utils
 {
     public class ThrottlerService
     {
-        Timer _ytThrottleTimer;
-        Timer _liveThrottleTimer;
+        List<ChannelThrottler> _ytThrottles;
+        List<ChannelThrottler> _liveThrottles;
 
-        bool _ytAllowed = true;
-        bool _liveAllowed = true;
-
-        public bool YouTubeAllowed()
+        public ThrottlerService()
         {
-            return _ytAllowed;
+            _ytThrottles = new List<ChannelThrottler>();
+            _liveThrottles = new List<ChannelThrottler>();
         }
 
-        public bool LiveAllowed()
+        public bool YouTubeAllowed(ulong channelId)
         {
-            return _liveAllowed;
+            return !_ytThrottles.Exists(t => t.ChannelId == channelId);
         }
 
-        public void ThrottleYouTube()
+        public bool LiveAllowed(ulong channelId)
         {
-            _ytAllowed = false;
-            _ytThrottleTimer = new Timer(ClearYouTubeThrottler, null, TimeSpan.FromSeconds(60), Timeout.InfiniteTimeSpan);
+            return !_liveThrottles.Exists(t => t.ChannelId == channelId);
         }
 
-        public void ThrottleLive()
+        public void ThrottleYouTube(ulong channelId)
         {
-            _liveAllowed = false;
-            _liveThrottleTimer = new Timer(ClearLiveThrottler, null, TimeSpan.FromSeconds(30), Timeout.InfiniteTimeSpan);
+            var t = new Timer(UnthrottleYouTube, channelId, TimeSpan.FromSeconds(60), Timeout.InfiniteTimeSpan);
+            _ytThrottles.Add(new ChannelThrottler(channelId, t));
         }
 
-        void ClearYouTubeThrottler(object unused)
+        public void ThrottleLive(ulong channelId)
         {
-            _ytAllowed = true;
-            _ytThrottleTimer.Dispose();
+            var t = new Timer(UnthrottleLive, channelId, TimeSpan.FromSeconds(30), Timeout.InfiniteTimeSpan);
+            _liveThrottles.Add(new ChannelThrottler(channelId, t));
         }
 
-        void ClearLiveThrottler(object unused)
+        void UnthrottleYouTube(object channelId)
         {
-            _liveAllowed = true;
-            _liveThrottleTimer.Dispose();
+            var item = _ytThrottles.Find(t => t.ChannelId == (ulong)channelId);
+            if (item == null)
+                return;
+
+            item.Timer.Dispose();
+            _ytThrottles.Remove(item);
         }
+
+        void UnthrottleLive(object channelId)
+        {
+            var item = _liveThrottles.Find(t => t.ChannelId == (ulong)channelId);
+            if (item == null)
+                return;
+
+            item.Timer.Dispose();
+            _liveThrottles.Remove(item);
+        }
+    }
+
+    class ChannelThrottler
+    {
+        public ChannelThrottler(ulong channelId, Timer timer)
+        {
+            ChannelId = channelId;
+            Timer = timer;
+        }
+
+        public ulong ChannelId { get; set; }
+
+        public Timer Timer { get; set; }
     }
 }
