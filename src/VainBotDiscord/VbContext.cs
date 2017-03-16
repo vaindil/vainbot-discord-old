@@ -73,6 +73,7 @@ namespace VainBotDiscord
                 e.Property(s => s.DiscordMessage).IsRequired().HasColumnName("discord_message");
                 e.Property(s => s.Frequency).IsRequired().HasColumnName("frequency");
                 e.Property(s => s.DeleteDiscordMessage).IsRequired().HasColumnName("delete_discord_message");
+                e.Property(s => s.PinMessage).IsRequired().HasColumnName("pin_message");
                 e.Property(s => s.EmbedColor).IsRequired().HasColumnName("embed_color");
             });
 

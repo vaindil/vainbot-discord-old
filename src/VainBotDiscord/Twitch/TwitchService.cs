@@ -126,10 +126,11 @@ namespace VainBotDiscord.Twitch
             // not live and was previously live
             if (stream == null && existingRecord != null)
             {
+                var channel = _client.GetChannel((ulong)streamToCheck.DiscordChannelId) as SocketTextChannel;
                 var msgId = existingRecord.DiscordMessageId;
+
                 if (streamToCheck.DeleteDiscordMessage && existingRecord.DiscordMessageId != 0)
                 {
-                    var channel = _client.GetChannel((ulong)streamToCheck.DiscordChannelId) as SocketTextChannel;
                     var msg = (await channel.GetMessageAsync((ulong)existingRecord.DiscordMessageId)) as RestUserMessage;
 
                     await msg.DeleteAsync();
@@ -137,6 +138,12 @@ namespace VainBotDiscord.Twitch
                 else if (!streamToCheck.DeleteDiscordMessage && streamToCheck.EmbedColor != 0 && existingRecord.DiscordMessageId != 0)
                 {
                     await FinalMessageUpdateAsync(streamToCheck, existingRecord);
+                }
+
+                if (streamToCheck.PinMessage && existingRecord.DiscordMessageId != 0)
+                {
+                    var msg = (await channel.GetMessageAsync((ulong)existingRecord.DiscordMessageId)) as RestUserMessage;
+                    await msg.UnpinAsync();
                 }
 
                 using (var db = new VbContext())
@@ -167,6 +174,9 @@ namespace VainBotDiscord.Twitch
 
             var channel = (_client.GetChannel((ulong)streamToCheck.DiscordChannelId)) as SocketTextChannel;
             var resp = await channel.SendMessageAsync(streamToCheck.DiscordMessage, embed: embed);
+
+            if (streamToCheck.PinMessage)
+                await resp.PinAsync();
 
             return (long)resp.Id;
         }

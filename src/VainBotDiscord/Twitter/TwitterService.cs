@@ -79,9 +79,6 @@ namespace VainBotDiscord.Twitter
             else
                 tweets = await GetTweetsAsync(twitterToCheck.UserId, existing.TweetId);
 
-            if (tweets.Count == 0)
-                return;
-
             for (var i = 0; i < tweets.Count; i++)
             {
                 var tweet = tweets[i];

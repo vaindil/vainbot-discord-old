@@ -16,6 +16,8 @@
 
         public bool DeleteDiscordMessage { get; set; }
 
+        public bool PinMessage { get; set; }
+
         /// <summary>
         /// Set to 0 to disable embedding
         /// </summary>
