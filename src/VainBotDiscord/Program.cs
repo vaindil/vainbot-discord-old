@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using VainBotDiscord.Events;
 using VainBotDiscord.Twitch;
+using VainBotDiscord.Twitter;
 using VainBotDiscord.Utils;
 using VainBotDiscord.YouTube;
 
@@ -36,13 +37,7 @@ namespace VainBotDiscord
             if (string.IsNullOrEmpty(apiToken))
                 throw new ArgumentNullException(nameof(apiToken), "Discord API token not found");
 
-            var twitchClientId = Environment.GetEnvironmentVariable("TWITCH_CLIENT_ID");
-            if (twitchClientId == null)
-                throw new ArgumentNullException(nameof(twitchClientId), "Twitch Client ID env var not found");
-
-            var ytApiKey = Environment.GetEnvironmentVariable("YOUTUBE_API_KEY");
-            if (ytApiKey == null)
-                throw new ArgumentNullException(nameof(ytApiKey), "YouTube API key env var not found");
+            VerifyEnvironmentVariables();
 
             var clientConfig = new DiscordSocketConfig
             {
@@ -70,6 +65,9 @@ namespace VainBotDiscord
             client.Connected += async () =>
             {
                 await client.SetGameAsync("with ur mom :^)");
+
+                var twitterSvc = new TwitterService(client);
+                await twitterSvc.InitTwitterServiceAsync();
 
                 if (!isDev)
                 {
@@ -115,6 +113,27 @@ namespace VainBotDiscord
             var context = new CommandContext(client, message);
 
             var result = await commands.ExecuteAsync(context, argPos, map);
+        }
+
+        void VerifyEnvironmentVariables()
+        {
+            if (Environment.GetEnvironmentVariable("TWITCH_CLIENT_ID") == null)
+                throw new ArgumentNullException("Twitch Client ID env var not found", innerException: null);
+
+            if (Environment.GetEnvironmentVariable("YOUTUBE_API_KEY") == null)
+                throw new ArgumentNullException("YouTube API key env var not found", innerException: null);
+
+            if (Environment.GetEnvironmentVariable("TWITTER_CONSUMER_KEY") == null)
+                throw new ArgumentNullException("Twitter consumer key env var not found", innerException: null);
+
+            if (Environment.GetEnvironmentVariable("TWITTER_CONSUMER_SECRET") == null)
+                throw new ArgumentNullException("Twitter consumer secret env var not found", innerException: null);
+
+            if (Environment.GetEnvironmentVariable("TWITTER_ACCESS_TOKEN") == null)
+                throw new ArgumentNullException("Twitter access token env var not found", innerException: null);
+
+            if (Environment.GetEnvironmentVariable("TWITTER_ACCESS_TOKEN_SECRET") == null)
+                throw new ArgumentNullException("Twitter access token secret env var not found", innerException: null);
         }
     }
 }

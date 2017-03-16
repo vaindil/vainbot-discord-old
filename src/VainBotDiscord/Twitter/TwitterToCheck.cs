@@ -2,7 +2,7 @@
 {
     public class TwitterToCheck
     {
-        public string UserId { get; set; }
+        public long UserId { get; set; }
 
         public string FriendlyUsername { get; set; }
 

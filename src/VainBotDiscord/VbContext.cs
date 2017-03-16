@@ -17,6 +17,8 @@ namespace VainBotDiscord
         public DbSet<StreamGame> StreamGames { get; set; }
         public DbSet<YouTubeToCheck> YouTubesToCheck { get; set; }
         public DbSet<YouTubeRecord> YouTubeRecords { get; set; }
+        public DbSet<TwitterToCheck> TwittersToCheck { get; set; }
+        public DbSet<TweetRecord> TweetRecords { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -145,7 +147,6 @@ namespace VainBotDiscord
                 e.Property(r => r.UserId).HasColumnName("user_id");
                 e.Property(r => r.TweetId).HasColumnName("tweet_id").IsRequired();
                 e.Property(r => r.Text).HasColumnName("text").IsRequired().HasMaxLength(200);
-                e.Property(r => r.TweetUrl).HasColumnName("tweet_url").IsRequired().HasMaxLength(500);
                 e.Property(r => r.AuthorName).HasColumnName("author_name").IsRequired().HasMaxLength(150);
                 e.Property(r => r.AuthorUsername).HasColumnName("author_username").IsRequired().HasMaxLength(100);
                 e.Property(r => r.ProfileImageUrl).HasColumnName("profile_image_url").IsRequired().HasMaxLength(500);

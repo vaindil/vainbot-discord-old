@@ -10,8 +10,6 @@ namespace VainBotDiscord.Twitter
 
         public string Text { get; set; }
 
-        public string TweetUrl { get; set; }
-
         public string AuthorName { get; set; }
 
         public string AuthorUsername { get; set; }

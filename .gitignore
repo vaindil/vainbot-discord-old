@@ -11,6 +11,7 @@
 *.userprefs
 libsodium.dll
 opus.dll
+launchSettings.json
 
 # Build results
 [Dd]ebug/
