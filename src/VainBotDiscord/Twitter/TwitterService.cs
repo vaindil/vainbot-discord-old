@@ -82,13 +82,6 @@ namespace VainBotDiscord.Twitter
             if (tweets.Count == 0)
                 return;
 
-            Tweet latestTweet;
-
-            if (existing == null)
-                latestTweet = tweets[0];
-            else
-                latestTweet = tweets[tweets.Count - 1];
-
             for (var i = 0; i < tweets.Count; i++)
             {
                 var tweet = tweets[i];
@@ -104,11 +97,16 @@ namespace VainBotDiscord.Twitter
                 await channel.SendMessageAsync("", embed: embed);
 
                 if (existing == null)
+                {
+                    tweets.Reverse();
                     break;
+                }
             }
 
-            if (tweets.Count == 0 || (existing != null && existing.TweetId == latestTweet.Id))
+            if (tweets.Count == 0)
                 return;
+
+            var latestTweet = tweets[tweets.Count - 1];
 
             using (var db = new VbContext())
             {
