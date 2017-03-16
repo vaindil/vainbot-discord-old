@@ -88,8 +88,10 @@ namespace VainBotDiscord.Twitter
                     continue;
 
                 var embed = CreateEmbed(tweet);
-
                 await channel.SendMessageAsync("", embed: embed);
+
+                if (existing == null)
+                    break;
             }
 
             var latestTweet = tweets[tweets.Count - 1];
@@ -129,11 +131,9 @@ namespace VainBotDiscord.Twitter
 
         async Task<List<Tweet>> GetTweetsAsync(long userId, long? sinceId)
         {
-            var path = _path + "?user_id=" + userId;
+            var path = _path + "?user_id=" + userId + "&count=100";
             if (sinceId.HasValue)
-                path += "&count=100&since_id=" + sinceId.Value.ToString();
-            else
-                path += "&count=1";
+                path += "&since_id=" + sinceId.Value.ToString();
 
             var request = new HttpRequestMessage(HttpMethod.Get, path);
             request.Headers.Authorization = new AuthenticationHeaderValue("OAuth", GenerateAuthHeader(userId, sinceId));
@@ -224,6 +224,7 @@ namespace VainBotDiscord.Twitter
             var keyValues = new SortedDictionary<string, string>
             {
                 { "user_id", userId.ToString() },
+                { "count", "100" },
                 { "oauth_consumer_key", _consumerKey },
                 { "oauth_nonce", nonce },
                 { "oauth_signature_method", "HMAC-SHA1" },
@@ -233,14 +234,7 @@ namespace VainBotDiscord.Twitter
             };
 
             if (sinceId.HasValue)
-            {
-                keyValues.Add("count", "100");
                 keyValues.Add("since_id", sinceId.Value.ToString());
-            }
-            else
-            {
-                keyValues.Add("count", "1");
-            }
 
             var sb = new StringBuilder();
 
