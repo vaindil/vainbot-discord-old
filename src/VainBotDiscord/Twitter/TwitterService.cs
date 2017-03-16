@@ -142,7 +142,8 @@ namespace VainBotDiscord.Twitter
             var responseString = await response.Content.ReadAsStringAsync();
             var tweets = JsonConvert.DeserializeObject<List<Tweet>>(responseString);
 
-            tweets.Reverse();
+            if (sinceId.HasValue)
+                tweets.Reverse();
 
             return tweets;
         }
