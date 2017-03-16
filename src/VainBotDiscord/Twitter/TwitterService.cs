@@ -64,15 +64,7 @@ namespace VainBotDiscord.Twitter
         {
             var twitterToCheck = (TwitterToCheck)twitterToCheckIn;
             var channel = (_client.GetChannel((ulong)twitterToCheck.DiscordChannelId)) as SocketTextChannel;
-            var tweets = await GetTwitterTimelineAsync(twitterToCheck.UserId);
 
-            if (tweets.Count != 1)
-            {
-                await channel.SendMessageAsync("Something went wrong trying to post a new tweet. Bug vaindil about it.");
-                return;
-            }
-
-            var tweet = tweets[0];
             TweetRecord existing;
 
             using (var db = new VbContext())
@@ -80,12 +72,24 @@ namespace VainBotDiscord.Twitter
                 existing = await db.TweetRecords.FirstOrDefaultAsync(r => r.UserId == twitterToCheck.UserId);
             }
 
-            if (existing != null && existing.TweetId == tweet.Id)
+            List<Tweet> tweets;
+
+            if (existing == null)
+                tweets = await GetTweetsAsync(twitterToCheck.UserId, null);
+            else
+                tweets = await GetTweetsAsync(twitterToCheck.UserId, existing.TweetId);
+
+            if (tweets.Count == 0)
                 return;
 
-            var embed = CreateEmbed(tweet);
+            foreach (var tweet in tweets)
+            {
+                var embed = CreateEmbed(tweet);
 
-            await channel.SendMessageAsync("", embed: embed);
+                await channel.SendMessageAsync("", embed: embed);
+            }
+
+            var latestTweet = tweets[tweets.Count - 1];
 
             using (var db = new VbContext())
             {
@@ -93,25 +97,25 @@ namespace VainBotDiscord.Twitter
                 {
                     existing = new TweetRecord
                     {
-                        UserId = tweet.User.Id,
-                        TweetId = tweet.Id,
-                        Text = tweet.Text,
-                        AuthorName = tweet.User.Name,
-                        AuthorUsername = tweet.User.Username,
-                        ProfileImageUrl = tweet.User.ProfileImageUrl,
-                        CreatedAt = tweet.CreatedAt.UtcDateTime
+                        UserId = latestTweet.User.Id,
+                        TweetId = latestTweet.Id,
+                        Text = latestTweet.Text,
+                        AuthorName = latestTweet.User.Name,
+                        AuthorUsername = latestTweet.User.Username,
+                        ProfileImageUrl = latestTweet.User.ProfileImageUrl,
+                        CreatedAt = latestTweet.CreatedAt.UtcDateTime
                     };
 
                     db.TweetRecords.Add(existing);
                 }
                 else
                 {
-                    existing.TweetId = tweet.Id;
-                    existing.Text = tweet.Text;
-                    existing.AuthorName = tweet.User.Name;
-                    existing.AuthorUsername = tweet.User.Username;
-                    existing.ProfileImageUrl = tweet.User.ProfileImageUrl;
-                    existing.CreatedAt = tweet.CreatedAt.UtcDateTime;
+                    existing.TweetId = latestTweet.Id;
+                    existing.Text = latestTweet.Text;
+                    existing.AuthorName = latestTweet.User.Name;
+                    existing.AuthorUsername = latestTweet.User.Username;
+                    existing.ProfileImageUrl = latestTweet.User.ProfileImageUrl;
+                    existing.CreatedAt = latestTweet.CreatedAt.UtcDateTime;
 
                     db.TweetRecords.Update(existing);
                 }
@@ -120,14 +124,24 @@ namespace VainBotDiscord.Twitter
             }
         }
 
-        async Task<List<Tweet>> GetTwitterTimelineAsync(long userId)
+        async Task<List<Tweet>> GetTweetsAsync(long userId, long? sinceId)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, _path + "?user_id=" + userId + "&count=1");
-            request.Headers.Authorization = new AuthenticationHeaderValue("OAuth", GenerateAuthHeader(userId));
+            var path = _path + "?user_id=" + userId;
+            if (sinceId.HasValue)
+                path += "&count=100&since_id=" + sinceId.Value.ToString();
+            else
+                path += "&count=1";
+
+            var request = new HttpRequestMessage(HttpMethod.Get, path);
+            request.Headers.Authorization = new AuthenticationHeaderValue("OAuth", GenerateAuthHeader(userId, sinceId));
 
             var response = await _httpClient.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<List<Tweet>>(responseString);
+            var tweets = JsonConvert.DeserializeObject<List<Tweet>>(responseString);
+
+            tweets.Reverse();
+
+            return tweets;
         }
 
         Embed CreateEmbed(Tweet tweet)
@@ -159,7 +173,7 @@ namespace VainBotDiscord.Twitter
             return embed.Build();
         }
 
-        string GenerateAuthHeader(long userId)
+        string GenerateAuthHeader(long userId, long? sinceId)
         {
             var nonce =
                 Convert.ToBase64String(new ASCIIEncoding().GetBytes(DateTime.UtcNow.Ticks.ToString(CultureInfo.InvariantCulture)));
@@ -167,7 +181,7 @@ namespace VainBotDiscord.Twitter
             var timespan = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0);
             var timestamp = Convert.ToInt64(timespan.TotalSeconds).ToString(CultureInfo.InvariantCulture);
 
-            var signature = GenerateSignature(userId, nonce, timestamp);
+            var signature = GenerateSignature(userId, sinceId, nonce, timestamp);
 
             var sb = new StringBuilder();
 
@@ -202,12 +216,11 @@ namespace VainBotDiscord.Twitter
             return sb.ToString();
         }
 
-        string GenerateSignature(long userId, string nonce, string timestamp)
+        string GenerateSignature(long userId, long? sinceId, string nonce, string timestamp)
         {
             var keyValues = new SortedDictionary<string, string>
             {
                 { "user_id", userId.ToString() },
-                { "count", "1" },
                 { "oauth_consumer_key", _consumerKey },
                 { "oauth_nonce", nonce },
                 { "oauth_signature_method", "HMAC-SHA1" },
@@ -215,6 +228,16 @@ namespace VainBotDiscord.Twitter
                 { "oauth_token", _accessToken },
                 { "oauth_version", "1.0" }
             };
+
+            if (sinceId.HasValue)
+            {
+                keyValues.Add("count", "100");
+                keyValues.Add("since_id", sinceId.Value.ToString());
+            }
+            else
+            {
+                keyValues.Add("count", "1");
+            }
 
             var sb = new StringBuilder();
 
