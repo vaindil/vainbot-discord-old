@@ -115,6 +115,12 @@ namespace VainBotDiscord
 
                 e.Property(y => y.PlaylistId).HasMaxLength(30).HasColumnName("playlist_id");
                 e.Property(y => y.VideoId).IsRequired().HasMaxLength(20).HasColumnName("video_id");
+                e.Property(y => y.VideoTitle).IsRequired().HasMaxLength(200).HasColumnName("video_title");
+                e.Property(y => y.VideoDescription).IsRequired().HasMaxLength(550).HasColumnName("video_description");
+                e.Property(y => y.AuthorName).IsRequired().HasMaxLength(200).HasColumnName("author_name");
+                e.Property(y => y.AuthorUrl).IsRequired().HasMaxLength(500).HasColumnName("author_url");
+                e.Property(y => y.AuthorIconUrl).IsRequired().HasMaxLength(500).HasColumnName("author_icon_url");
+                e.Property(y => y.ImageUrl).IsRequired().HasMaxLength(500).HasColumnName("image_url");
                 e.Property(y => y.PublishedAt).IsRequired().HasColumnName("published_at");
             });
         }

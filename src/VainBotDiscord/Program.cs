@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using VainBotDiscord.Events;
 using VainBotDiscord.Twitch;
+using VainBotDiscord.Utils;
 using VainBotDiscord.YouTube;
 
 // vaindil: 132714099241910273
@@ -54,11 +55,12 @@ namespace VainBotDiscord
             commands = new CommandService();
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("VainBot/1.0");
-
+            
             map = new DependencyMap();
             map.Add(client);
             map.Add(commands);
             map.Add(httpClient);
+            map.Add(new ThrottlerService());
             map.Add(new VbContext());
             map.Add(new Random());
 
@@ -69,13 +71,14 @@ namespace VainBotDiscord
             {
                 await client.SetGameAsync("with ur mom :^)");
 
-                var twitchSvc = new TwitchService(client);
-                var youTubeSvc = new YouTubeService(client);
-
                 if (!isDev)
+                {
+                    var twitchSvc = new TwitchService(client);
+                    var youTubeSvc = new YouTubeService(client);
+                    
                     await twitchSvc.InitTwitchServiceAsync();
-
-                await youTubeSvc.InitYouTubeService();
+                    await youTubeSvc.InitYouTubeService();
+                }
             };
             
             client.Log += (message) =>

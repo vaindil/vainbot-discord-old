@@ -19,7 +19,7 @@ namespace VainBotDiscord.YouTube
     public class YouTubeVideoSnippet
     {
         [JsonProperty(PropertyName = "publishedAt")]
-        public DateTime PublishedAt { get; set; }
+        public DateTimeOffset PublishedAt { get; set; }
 
         [JsonProperty(PropertyName = "channelId")]
         public string ChannelId { get; set; }

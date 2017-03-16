@@ -99,7 +99,7 @@ namespace VainBotDiscord.YouTube
                     {
                         PlaylistId = youTubeToCheck.PlaylistId,
                         VideoId = videoList.Items[0].Id,
-                        PublishedAt = videoList.Items[0].Snippet.PublishedAt
+                        PublishedAt = videoList.Items[0].Snippet.PublishedAt.UtcDateTime
                     };
 
                     db.YouTubeRecords.Add(existingRecord);
@@ -107,7 +107,7 @@ namespace VainBotDiscord.YouTube
                 else
                 {
                     existingRecord.VideoId = videoList.Items[0].Id;
-                    existingRecord.PublishedAt = videoList.Items[0].Snippet.PublishedAt;
+                    existingRecord.PublishedAt = videoList.Items[0].Snippet.PublishedAt.UtcDateTime;
 
                     db.YouTubeRecords.Update(existingRecord);
                 }
@@ -167,6 +167,14 @@ namespace VainBotDiscord.YouTube
                 IconUrl = channel.Snippet.Thumbnails.Default.Url
             };
 
+            var footer = new EmbedFooterBuilder
+            {
+                Text = "Posted on " +
+                video.Snippet.PublishedAt.ToString("MMM d, yyyy") +
+                " at " +
+                video.Snippet.PublishedAt.ToString("H:mm")
+            };
+
             var shortDescription = video.Snippet.Description;
 
             var lineBreakIndex = video.Snippet.Description.IndexOf("\n");
@@ -184,10 +192,11 @@ namespace VainBotDiscord.YouTube
             };
 
             embed.Author = author;
+            embed.Footer = footer;
             embed.Color = new Color(205, 32, 31);
             embed.ImageUrl = video.Snippet.Thumbnails.Standard.Url;
             embed.Title = video.Snippet.Title;
-            embed.Url = author.Url;
+            embed.Url = "https://www.youtube.com/watch?v=" + video.Id;
 
             embed.AddField(descriptionField);
 
