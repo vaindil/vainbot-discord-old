@@ -82,10 +82,16 @@ namespace VainBotDiscord.Twitter
             if (tweets.Count == 0)
                 return;
 
-            foreach (var tweet in tweets)
+            for (var i = 0; i < tweets.Count; i++)
             {
+                var tweet = tweets[i];
+
                 if (tweet.Text.StartsWith("@"))
+                {
+                    tweets.RemoveAt(i);
+                    i--;
                     continue;
+                }
 
                 var embed = CreateEmbed(tweet);
                 await channel.SendMessageAsync("", embed: embed);
