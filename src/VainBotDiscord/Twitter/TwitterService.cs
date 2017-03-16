@@ -97,7 +97,10 @@ namespace VainBotDiscord.Twitter
                 await channel.SendMessageAsync("", embed: embed);
 
                 if (existing == null)
+                {
+                    tweets.Reverse();
                     break;
+                }
             }
 
             var latestTweet = tweets[tweets.Count - 1];

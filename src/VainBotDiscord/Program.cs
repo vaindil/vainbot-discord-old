@@ -67,14 +67,14 @@ namespace VainBotDiscord
 
                 var twitterSvc = new TwitterService(client);
                 await twitterSvc.InitTwitterServiceAsync();
-
+                
                 if (!isDev)
                 {
-                    var twitchSvc = new TwitchService(client);
                     var youTubeSvc = new YouTubeService(client);
-                    
-                    await twitchSvc.InitTwitchServiceAsync();
+                    var twitchSvc = new TwitchService(client);
+
                     await youTubeSvc.InitYouTubeService();
+                    await twitchSvc.InitTwitchServiceAsync();
                 }
             };
             
