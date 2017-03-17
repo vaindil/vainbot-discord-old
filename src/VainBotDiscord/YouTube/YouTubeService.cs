@@ -90,8 +90,10 @@ namespace VainBotDiscord.YouTube
                 return;
             }
 
-            var success = await SendMessageAsync(youTubeToCheck, videoList.Items[0]);
-            if (!success)
+            var video = videoList.Items[0];
+
+            var embed = await SendMessageAsync(youTubeToCheck, video);
+            if (embed == null)
                 return;
 
             using (var db = new VbContext())
@@ -101,16 +103,28 @@ namespace VainBotDiscord.YouTube
                     existingRecord = new YouTubeRecord
                     {
                         PlaylistId = youTubeToCheck.PlaylistId,
-                        VideoId = videoList.Items[0].Id,
-                        PublishedAt = videoList.Items[0].Snippet.PublishedAt.UtcDateTime
+                        VideoId = video.Id,
+                        VideoTitle = video.Snippet.Title,
+                        VideoDescription = embed.Description,
+                        ImageUrl = embed.Image.Value.Url,
+                        AuthorName = embed.Author.Value.Name,
+                        AuthorUrl = embed.Author.Value.Url,
+                        AuthorIconUrl = embed.Author.Value.IconUrl,
+                        PublishedAt = video.Snippet.PublishedAt.UtcDateTime
                     };
 
                     db.YouTubeRecords.Add(existingRecord);
                 }
                 else
                 {
-                    existingRecord.VideoId = videoList.Items[0].Id;
-                    existingRecord.PublishedAt = videoList.Items[0].Snippet.PublishedAt.UtcDateTime;
+                    existingRecord.VideoId = video.Id;
+                    existingRecord.VideoTitle = video.Snippet.Title;
+                    existingRecord.VideoDescription = embed.Description;
+                    existingRecord.ImageUrl = embed.Image.Value.Url;
+                    existingRecord.AuthorName = embed.Author.Value.Name;
+                    existingRecord.AuthorUrl = embed.Author.Value.Url;
+                    existingRecord.AuthorIconUrl = embed.Author.Value.IconUrl;
+                    existingRecord.PublishedAt = video.Snippet.PublishedAt.UtcDateTime;
 
                     db.YouTubeRecords.Update(existingRecord);
                 }
@@ -119,7 +133,7 @@ namespace VainBotDiscord.YouTube
             }
         }
 
-        async Task<bool> SendMessageAsync(YouTubeToCheck youTubeToCheck, YouTubeVideoListItem video)
+        async Task<Embed> SendMessageAsync(YouTubeToCheck youTubeToCheck, YouTubeVideoListItem video)
         {
             var channel = (_client.GetChannel((ulong)youTubeToCheck.DiscordChannelId)) as SocketTextChannel;
 
@@ -127,11 +141,11 @@ namespace VainBotDiscord.YouTube
             if (embed == null)
             {
                 await channel.SendMessageAsync("Something broke when posting a new YouTube video. Bug vaindil about it. (error: e)");
-                return false;
+                return null;
             }
 
             await channel.SendMessageAsync($"{video.Snippet.ChannelTitle} posted a new YouTube video.", embed: embed);
-            return true;
+            return embed;
         }
 
         async Task<YouTubePlaylist> GetYouTubePlaylistAsync(string playlistId)

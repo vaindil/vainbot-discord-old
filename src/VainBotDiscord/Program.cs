@@ -1,5 +1,4 @@
 ﻿using Discord;
-using Discord.Audio;
 using Discord.Commands;
 using Discord.WebSocket;
 using System;
@@ -71,17 +70,17 @@ namespace VainBotDiscord
             client.UserLeft += UserLeavesEvent.UserLeavesAsync;
             client.Connected += async () =>
             {
-                await client.SetGameAsync("with ur mom :^)");
+                await client.SetGameAsync("inside a box");
 
                 var twitterSvc = new TwitterService(client, tz);
                 await twitterSvc.InitTwitterServiceAsync();
-                
+
+                var youTubeSvc = new YouTubeService(client, tz);
+                await youTubeSvc.InitYouTubeService();
+
                 if (!isDev)
                 {
-                    var youTubeSvc = new YouTubeService(client, tz);
                     var twitchSvc = new TwitchService(client, tz);
-
-                    await youTubeSvc.InitYouTubeService();
                     await twitchSvc.InitTwitchServiceAsync();
                 }
             };
