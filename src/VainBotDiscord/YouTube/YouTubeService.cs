@@ -212,8 +212,6 @@ namespace VainBotDiscord.YouTube
             embed.Description = shortDescription;
             embed.Url = "https://www.youtube.com/watch?v=" + video.Id;
 
-            embed.AddField(descriptionField);
-
             return embed.Build();
         }
     }
