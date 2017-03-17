@@ -23,7 +23,7 @@ namespace VainBotDiscord.Commands
         [Command]
         public async Task GetYouTube([Remainder]string unused = null)
         {
-            if (!_throttler.YouTubeAllowed(Context.Channel.Id))
+            if (!_throttler.CommandAllowed(ThrottleTypes.YouTube, Context.Channel.Id))
                 return;
 
             YouTubeRecord record;
@@ -42,7 +42,7 @@ namespace VainBotDiscord.Commands
             var embed = CreateEmbedAsync(record);
 
             await Context.Channel.SendMessageAsync("", embed: embed);
-            _throttler.ThrottleYouTube(Context.Channel.Id);
+            _throttler.Throttle(ThrottleTypes.YouTube, Context.Channel.Id);
         }
 
         Embed CreateEmbedAsync(YouTubeRecord record)

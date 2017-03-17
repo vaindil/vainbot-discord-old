@@ -6,68 +6,71 @@ namespace VainBotDiscord.Utils
 {
     public class ThrottlerService
     {
-        List<ChannelThrottler> _ytThrottles;
-        List<ChannelThrottler> _liveThrottles;
+        List<ThrottledChannel> _throttles;
 
         public ThrottlerService()
         {
-            _ytThrottles = new List<ChannelThrottler>();
-            _liveThrottles = new List<ChannelThrottler>();
+            _throttles = new List<ThrottledChannel>();
+        }
+        
+        public bool CommandAllowed(ThrottleTypes type, ulong channelId)
+        {
+            return !_throttles.Exists(t => t.Type == type && t.ChannelId == channelId);
         }
 
-        public bool YouTubeAllowed(ulong channelId)
+        public void Throttle(ThrottleTypes type, ulong channelId)
         {
-            return !_ytThrottles.Exists(t => t.ChannelId == channelId);
+            var throttleWrapper = new ThrottleWrapper(type, channelId);
+            var timer = new Timer(Unthrottle, throttleWrapper, TimeSpan.FromSeconds(60), Timeout.InfiniteTimeSpan);
+            _throttles.Add(new ThrottledChannel(type, channelId, timer));
         }
 
-        public bool LiveAllowed(ulong channelId)
+        public void Unthrottle(object throttleWrapperIn)
         {
-            return !_liveThrottles.Exists(t => t.ChannelId == channelId);
-        }
+            var throttleWrapper = (ThrottleWrapper)throttleWrapperIn;
 
-        public void ThrottleYouTube(ulong channelId)
-        {
-            var t = new Timer(UnthrottleYouTube, channelId, TimeSpan.FromSeconds(60), Timeout.InfiniteTimeSpan);
-            _ytThrottles.Add(new ChannelThrottler(channelId, t));
-        }
-
-        public void ThrottleLive(ulong channelId)
-        {
-            var t = new Timer(UnthrottleLive, channelId, TimeSpan.FromSeconds(30), Timeout.InfiniteTimeSpan);
-            _liveThrottles.Add(new ChannelThrottler(channelId, t));
-        }
-
-        void UnthrottleYouTube(object channelId)
-        {
-            var item = _ytThrottles.Find(t => t.ChannelId == (ulong)channelId);
+            var item = _throttles.Find(t => t.Type == throttleWrapper.Type && t.ChannelId == throttleWrapper.ChannelId);
             if (item == null)
                 return;
 
             item.Timer.Dispose();
-            _ytThrottles.Remove(item);
-        }
-
-        void UnthrottleLive(object channelId)
-        {
-            var item = _liveThrottles.Find(t => t.ChannelId == (ulong)channelId);
-            if (item == null)
-                return;
-
-            item.Timer.Dispose();
-            _liveThrottles.Remove(item);
+            _throttles.Remove(item);
         }
     }
 
-    class ChannelThrottler
+    public enum ThrottleTypes
     {
-        public ChannelThrottler(ulong channelId, Timer timer)
+        YouTube,
+        Twitter,
+        Live
+    }
+
+    class ThrottledChannel
+    {
+        public ThrottledChannel(ThrottleTypes type, ulong channelId, Timer timer)
         {
+            Type = type;
             ChannelId = channelId;
             Timer = timer;
         }
 
+        public ThrottleTypes Type { get; set; }
+
         public ulong ChannelId { get; set; }
 
         public Timer Timer { get; set; }
+    }
+
+    class ThrottleWrapper
+    {
+        public ThrottleWrapper(ThrottleTypes type, ulong channelId)
+        {
+            Type = type;
+            ChannelId = channelId;
+        }
+
+        public ThrottleTypes Type { get; set; }
+
+        public ulong ChannelId { get; set; }
     }
 }
