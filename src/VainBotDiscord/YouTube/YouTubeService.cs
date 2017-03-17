@@ -204,18 +204,12 @@ namespace VainBotDiscord.YouTube
             if (shortDescription.Length > 500)
                 shortDescription = shortDescription.Substring(0, 500) + "...";
 
-            var descriptionField = new EmbedFieldBuilder
-            {
-                Name = "Description",
-                Value = shortDescription,
-                IsInline = false
-            };
-
             embed.Author = author;
             embed.Footer = footer;
             embed.Color = new Color(205, 32, 31);
             embed.ImageUrl = video.Snippet.Thumbnails.Standard.Url;
             embed.Title = video.Snippet.Title;
+            embed.Description = shortDescription;
             embed.Url = "https://www.youtube.com/watch?v=" + video.Id;
 
             embed.AddField(descriptionField);
