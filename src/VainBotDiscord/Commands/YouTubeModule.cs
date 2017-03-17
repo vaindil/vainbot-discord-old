@@ -41,6 +41,8 @@ namespace VainBotDiscord.Commands
                 return;
             }
 
+            record.PublishedAt = DateTime.SpecifyKind(record.PublishedAt, DateTimeKind.Utc);
+
             var embed = CreateEmbedAsync(record);
 
             await Context.Channel.SendMessageAsync("", embed: embed);
