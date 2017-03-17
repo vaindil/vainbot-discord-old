@@ -23,6 +23,11 @@ namespace VainBotDiscord.Commands
         [Command]
         public async Task GetYouTube([Remainder]string unused = null)
         {
+            foreach (var tz in TimeZoneInfo.GetSystemTimeZones())
+            {
+                Console.WriteLine(tz.Id);
+            }
+
             if (!_throttler.CommandAllowed(ThrottleTypes.YouTube, Context.Channel.Id))
                 return;
 
