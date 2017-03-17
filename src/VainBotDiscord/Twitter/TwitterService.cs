@@ -173,7 +173,8 @@ namespace VainBotDiscord.Twitter
                 Text = "Posted on " +
                     tweet.CreatedAt.ToString("MMM d, yyyy") +
                     " at " +
-                    tweet.CreatedAt.ToString("H:mm")
+                    tweet.CreatedAt.ToString("H:mm") +
+                    " Central"
             };
 
             embed.Title = "Go to tweet";

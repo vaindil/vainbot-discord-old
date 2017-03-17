@@ -251,9 +251,13 @@ namespace VainBotDiscord.Twitch
             var totalHours = streamDuration.ToString("%h");
             var totalMinutes = streamDuration.ToString("%m");
 
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            var startTime = TimeZoneInfo.ConvertTime(record.StartTime, tz);
+            var stopTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, tz);
+
             var msg = new StringBuilder(streamToCheck.FriendlyUsername + " was live.\n\n");
-            msg.Append("**Started at:** " + record.StartTime.ToString("HH:mm") + "\n");
-            msg.Append("**Ended at:** " + DateTime.UtcNow.ToString("HH:mm") + "\n");
+            msg.Append("**Started at:** " + startTime.ToString("HH:mm") + "\n");
+            msg.Append("**Ended at:** " + stopTime.ToString("HH:mm") + "\n");
             msg.Append($"_(total of {totalHours} hours, {totalMinutes} minutes)_\n\n");
 
             msg.Append("__Games Played__");

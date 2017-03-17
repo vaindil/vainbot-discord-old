@@ -167,12 +167,16 @@ namespace VainBotDiscord.YouTube
                 IconUrl = channel.Snippet.Thumbnails.Default.Url
             };
 
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            var publishedAt = TimeZoneInfo.ConvertTime(video.Snippet.PublishedAt, tz);
+
             var footer = new EmbedFooterBuilder
             {
                 Text = "Posted on " +
-                video.Snippet.PublishedAt.ToString("MMM d, yyyy") +
+                publishedAt.ToString("MMM d, yyyy") +
                 " at " +
-                video.Snippet.PublishedAt.ToString("H:mm")
+                publishedAt.ToString("H:mm") +
+                " Central"
             };
 
             var shortDescription = video.Snippet.Description;

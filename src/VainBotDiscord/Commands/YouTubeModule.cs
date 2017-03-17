@@ -55,9 +55,16 @@ namespace VainBotDiscord.Commands
                 IconUrl = record.AuthorIconUrl
             };
 
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            var publishedAt = TimeZoneInfo.ConvertTime(record.PublishedAt, tz);
+
             var footer = new EmbedFooterBuilder
             {
-                Text = "Posted on " + record.PublishedAt.ToString("MMM d, yyyy") + " at " + record.PublishedAt.ToString("H:mm")
+                Text = "Posted on " +
+                    publishedAt.ToString("MMM d, yyyy") +
+                    " at " +
+                    publishedAt.ToString("H:mm") +
+                    " Central"
             };
 
             var descriptionField = new EmbedFieldBuilder
