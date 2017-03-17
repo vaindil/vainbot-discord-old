@@ -25,10 +25,12 @@ namespace VainBotDiscord.Twitter
         readonly string _path = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
         readonly DiscordSocketClient _client;
+        readonly TimeZoneInfo _tz;
+
         static HttpClient _httpClient = new HttpClient();
         List<Timer> _timerList;
 
-        public TwitterService(DiscordSocketClient client)
+        public TwitterService(DiscordSocketClient client, TimeZoneInfo tz)
         {
             _consumerKey = Environment.GetEnvironmentVariable("TWITTER_CONSUMER_KEY");
             _consumerSecret = Environment.GetEnvironmentVariable("TWITTER_CONSUMER_SECRET");
@@ -36,6 +38,7 @@ namespace VainBotDiscord.Twitter
             _accessTokenSecret = Environment.GetEnvironmentVariable("TWITTER_ACCESS_TOKEN_SECRET");
 
             _client = client;
+            _tz = tz;
         }
 
         public async Task InitTwitterServiceAsync()
@@ -168,12 +171,14 @@ namespace VainBotDiscord.Twitter
                 IconUrl = tweet.User.ProfileImageUrl
             };
 
+            var createdAt = TimeZoneInfo.ConvertTime(tweet.CreatedAt, _tz);
+
             var footer = new EmbedFooterBuilder
             {
                 Text = "Posted on " +
-                    tweet.CreatedAt.ToString("MMM d, yyyy") +
+                    createdAt.ToString("MMM d, yyyy") +
                     " at " +
-                    tweet.CreatedAt.ToString("H:mm") +
+                    createdAt.ToString("H:mm") +
                     " Central"
             };
 

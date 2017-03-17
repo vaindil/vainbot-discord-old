@@ -13,13 +13,16 @@ namespace VainBotDiscord.YouTube
     public class YouTubeService
     {
         readonly DiscordSocketClient _client;
+        readonly TimeZoneInfo _tz;
+
         static HttpClient _youTubeClient = new HttpClient();
         static string _youTubeApiKey;
         List<Timer> _timerList;
 
-        public YouTubeService(DiscordSocketClient client)
+        public YouTubeService(DiscordSocketClient client, TimeZoneInfo tz)
         {
             _client = client;
+            _tz = tz;
         }
 
         public async Task InitYouTubeService()
@@ -167,8 +170,7 @@ namespace VainBotDiscord.YouTube
                 IconUrl = channel.Snippet.Thumbnails.Default.Url
             };
 
-            var tz = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-            var publishedAt = TimeZoneInfo.ConvertTime(video.Snippet.PublishedAt, tz);
+            var publishedAt = TimeZoneInfo.ConvertTime(video.Snippet.PublishedAt, _tz);
 
             var footer = new EmbedFooterBuilder
             {

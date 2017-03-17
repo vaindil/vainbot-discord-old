@@ -14,20 +14,17 @@ namespace VainBotDiscord.Commands
     public class YouTubeModule : ModuleBase
     {
         readonly ThrottlerService _throttler;
+        readonly TimeZoneInfo _tz;
 
-        public YouTubeModule(ThrottlerService throttler)
+        public YouTubeModule(ThrottlerService throttler, TimeZoneInfo tz)
         {
             _throttler = throttler;
+            _tz = tz;
         }
 
         [Command]
         public async Task GetYouTube([Remainder]string unused = null)
         {
-            foreach (var tz in TimeZoneInfo.GetSystemTimeZones())
-            {
-                Console.WriteLine(tz.Id);
-            }
-
             if (!_throttler.CommandAllowed(ThrottleTypes.YouTube, Context.Channel.Id))
                 return;
 
@@ -60,8 +57,7 @@ namespace VainBotDiscord.Commands
                 IconUrl = record.AuthorIconUrl
             };
 
-            var tz = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-            var publishedAt = TimeZoneInfo.ConvertTime(record.PublishedAt, tz);
+            var publishedAt = TimeZoneInfo.ConvertTime(record.PublishedAt, _tz);
 
             var footer = new EmbedFooterBuilder
             {

@@ -17,13 +17,16 @@ namespace VainBotDiscord.Twitch
     public class TwitchService
     {
         readonly DiscordSocketClient _client;
+        readonly TimeZoneInfo _tz;
+
         static HttpClient _twitchClient = new HttpClient();
         List<TwitchCheckTimer> _checkTimerList;
         List<TwitchUpdateTimer> _updateTimerList;
 
-        public TwitchService(DiscordSocketClient client)
+        public TwitchService(DiscordSocketClient client, TimeZoneInfo tz)
         {
             _client = client;
+            _tz = tz;
         }
 
         public async Task InitTwitchServiceAsync()
@@ -251,9 +254,8 @@ namespace VainBotDiscord.Twitch
             var totalHours = streamDuration.ToString("%h");
             var totalMinutes = streamDuration.ToString("%m");
 
-            var tz = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-            var startTime = TimeZoneInfo.ConvertTime(record.StartTime, tz);
-            var stopTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, tz);
+            var startTime = TimeZoneInfo.ConvertTime(record.StartTime, _tz);
+            var stopTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, _tz);
 
             var msg = new StringBuilder(streamToCheck.FriendlyUsername + " was live.\n\n");
             msg.Append("**Started at:** " + startTime.ToString("HH:mm") + "\n");

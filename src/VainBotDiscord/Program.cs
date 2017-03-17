@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using VainBotDiscord.Events;
 using VainBotDiscord.Twitch;
@@ -49,7 +50,13 @@ namespace VainBotDiscord
             commands = new CommandService();
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("VainBot/1.0");
-            
+
+            TimeZoneInfo tz;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                tz = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            else
+                tz = TimeZoneInfo.FindSystemTimeZoneById("America/Chicago");
+
             map = new DependencyMap();
             map.Add(client);
             map.Add(commands);
@@ -57,6 +64,7 @@ namespace VainBotDiscord
             map.Add(new ThrottlerService());
             map.Add(new VbContext());
             map.Add(new Random());
+            map.Add(tz);
 
             client.MessageReceived += UserReactionEvent.AddReactionToUserAsync;
             client.MessageReceived += LolCounterEvent.LolCounterAsync;
@@ -65,13 +73,13 @@ namespace VainBotDiscord
             {
                 await client.SetGameAsync("with ur mom :^)");
 
-                var twitterSvc = new TwitterService(client);
+                var twitterSvc = new TwitterService(client, tz);
                 await twitterSvc.InitTwitterServiceAsync();
                 
                 if (!isDev)
                 {
-                    var youTubeSvc = new YouTubeService(client);
-                    var twitchSvc = new TwitchService(client);
+                    var youTubeSvc = new YouTubeService(client, tz);
+                    var twitchSvc = new TwitchService(client, tz);
 
                     await youTubeSvc.InitYouTubeService();
                     await twitchSvc.InitTwitchServiceAsync();
