@@ -4,6 +4,21 @@ using System.Collections.Generic;
 
 namespace VainBotDiscord
 {
+    public class ServerMainUser
+    {
+        public long DiscordServerId { get; set; }
+
+        public string FriendlyUsername { get; set; }
+
+        public long? TwitchUserId { get; set; }
+
+        public string StreamUrl { get; set; }
+
+        public string YouTubeChannelId { get; set; }
+
+        public long? TwitterUserId { get; set; }
+    }
+
     public class UserPoints
     {
         public ulong ServerId { get; set; }

@@ -9,6 +9,7 @@ namespace VainBotDiscord
 {
     public class VbContext : DbContext
     {
+        public DbSet<ServerMainUser> ServerMainUsers { get; set; }
         public DbSet<UserPoints> UserPoints { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
@@ -33,6 +34,19 @@ namespace VainBotDiscord
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ServerMainUser>(e =>
+            {
+                e.ToTable("server_main_user");
+                e.HasKey(s => s.DiscordServerId);
+
+                e.Property(s => s.DiscordServerId).HasColumnName("discord_server_id");
+                e.Property(s => s.FriendlyUsername).HasColumnName("friendly_username").IsRequired().HasMaxLength(100);
+                e.Property(s => s.TwitchUserId).HasColumnName("twitch_user_id");
+                e.Property(s => s.StreamUrl).HasColumnName("stream_url").HasMaxLength(150);
+                e.Property(s => s.YouTubeChannelId).HasColumnName("youtube_channel_id").HasMaxLength(50);
+                e.Property(s => s.TwitterUserId).HasColumnName("twitter_user_id");
+            });
+
             modelBuilder.Entity<UserPoints>(e =>
             {
                 e.ToTable("points");

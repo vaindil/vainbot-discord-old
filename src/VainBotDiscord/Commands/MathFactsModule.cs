@@ -9,7 +9,7 @@ namespace VainBotDiscord.Commands
     [Group("mathfact")]
     [Alias("mathfacts")]
     [CrendorServerOnly]
-    public class MathFactsModule : ModuleBase
+    public class MathFactsModule : ModuleBase<VbCommandContext>
     {
         readonly Random _rng;
 

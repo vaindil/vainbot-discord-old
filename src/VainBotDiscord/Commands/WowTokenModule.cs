@@ -11,7 +11,7 @@ namespace VainBotDiscord.Commands
     [Group("token")]
     [Alias("wowtoken")]
     [CrendorServerOnly]
-    public class WowTokenModule : ModuleBase
+    public class WowTokenModule : ModuleBase<VbCommandContext>
     {
         readonly HttpClient _client;
 

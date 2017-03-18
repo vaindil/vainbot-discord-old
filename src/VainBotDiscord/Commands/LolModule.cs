@@ -7,7 +7,7 @@ namespace VainBotDiscord.Commands
 {
     [Group("lol")]
     [CrendorServerOnly]
-    public class LolModule : ModuleBase
+    public class LolModule : ModuleBase<VbCommandContext>
     {
         readonly VbContext _context;
 

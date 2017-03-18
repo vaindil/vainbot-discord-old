@@ -10,7 +10,7 @@ namespace VainBotDiscord.Commands
     [Group("catfact")]
     [Alias("catfacts")]
     [CrendorServerOnly]
-    public class CatFactsModule : ModuleBase
+    public class CatFactsModule : ModuleBase<VbCommandContext>
     {
         readonly HttpClient _client;
 

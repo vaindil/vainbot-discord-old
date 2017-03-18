@@ -10,8 +10,7 @@ namespace VainBotDiscord.Commands
 {
     [Group("youtube")]
     [Alias("yt")]
-    [DestinyServerOnly]
-    public class YouTubeModule : ModuleBase
+    public class YouTubeModule : ModuleBase<VbCommandContext>
     {
         readonly ThrottlerService _throttler;
         readonly TimeZoneInfo _tz;
@@ -25,19 +24,21 @@ namespace VainBotDiscord.Commands
         [Command]
         public async Task GetYouTube([Remainder]string unused = null)
         {
-            if (!_throttler.CommandAllowed(ThrottleTypes.YouTube, Context.Channel.Id))
+            if (!Context.HasMainUser
+                || Context.MainUser.YouTubeChannelId == null
+                || !_throttler.CommandAllowed(ThrottleTypes.YouTube, Context.Channel.Id))
                 return;
 
             YouTubeRecord record;
 
             using (var db = new VbContext())
             {
-                record = await db.YouTubeRecords.FirstOrDefaultAsync(y => y.PlaylistId == "UU554eY5jNUfDq3yDOJYirOQ");
+                record = await db.YouTubeRecords.FirstOrDefaultAsync(y => y.PlaylistId == Context.MainUser.YouTubeChannelId);
             }
 
             if (record == null)
             {
-                await Context.Channel.SendMessageAsync("BOT IS ALL CUCKED UP! Pester vaindil about it.");
+                await ReplyAsync("BOT IS ALL CUCKED UP! Pester vaindil about it.");
                 return;
             }
 
@@ -45,7 +46,7 @@ namespace VainBotDiscord.Commands
 
             var embed = CreateEmbedAsync(record);
 
-            await Context.Channel.SendMessageAsync("", embed: embed);
+            await ReplyAsync("", embed: embed);
             _throttler.Throttle(ThrottleTypes.YouTube, Context.Channel.Id);
         }
 

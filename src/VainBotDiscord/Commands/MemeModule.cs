@@ -4,12 +4,11 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using VainBotDiscord;
 
 namespace VainBotDiscord.Commands
 {
     //[Group("meme")]
-    public class MemeModule : ModuleBase
+    public class MemeModule : ModuleBase<VbCommandContext>
     {
         readonly HttpClient _client;
         readonly Random _rng;

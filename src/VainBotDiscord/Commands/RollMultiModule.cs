@@ -9,7 +9,7 @@ namespace VainBotDiscord.Commands
     [Group("rollmulti")]
     [Alias("multiroll")]
     [CrendorServerOnly]
-    public class RollMultiModule : ModuleBase
+    public class RollMultiModule : ModuleBase<VbCommandContext>
     {
         readonly Random _rng;
 

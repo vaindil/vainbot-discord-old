@@ -8,7 +8,7 @@ namespace VainBotDiscord.Commands
 {
     [Group("roll")]
     [CrendorServerOnly]
-    public class RollModule : ModuleBase
+    public class RollModule : ModuleBase<VbCommandContext>
     {
         readonly Random _rng;
         static Regex validDie = new Regex(@"^-?\d*d-?\d+$", RegexOptions.IgnoreCase);

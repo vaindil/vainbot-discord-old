@@ -9,8 +9,7 @@ namespace VainBotDiscord.Commands
 {
     [Group("live")]
     [Alias("twitch")]
-    [DestinyServerOnly]
-    public class LiveModule : ModuleBase
+    public class LiveModule : ModuleBase<VbCommandContext>
     {
         ThrottlerService _throttler;
 
@@ -22,7 +21,9 @@ namespace VainBotDiscord.Commands
         [Command]
         public async Task GetLive([Remainder]string unused = null)
         {
-            if (!_throttler.CommandAllowed(ThrottleTypes.Live, Context.Channel.Id))
+            if (!Context.HasMainUser 
+                || Context.MainUser.TwitchUserId == null
+                || !_throttler.CommandAllowed(ThrottleTypes.Live, Context.Channel.Id))
                 return;
 
             StreamLastOnline lastOnline;
@@ -30,19 +31,21 @@ namespace VainBotDiscord.Commands
 
             using (var db = new VbContext())
             {
-                lastOnline = await db.StreamLastOnlines.FirstOrDefaultAsync(s => s.UserId == 18074328);
-                streamRecord = await db.StreamRecords.FirstOrDefaultAsync(s => s.UserId == 18074328);
+                lastOnline = await db.StreamLastOnlines.FirstOrDefaultAsync(s => s.UserId == Context.MainUser.TwitchUserId);
+                streamRecord = await db.StreamRecords.FirstOrDefaultAsync(s => s.UserId == Context.MainUser.TwitchUserId);
             }
 
             string msg;
 
             if (lastOnline == null && streamRecord == null)
-                msg = "I won't have this info until the next time the stream goes live. Sorry!";
+                msg = $"{Context.MainUser.FriendlyUsername} is offline. " +
+                    $"I'll have more info in the future, after the next time the stream goes live. " +
+                    $"Sorry!";
 
             else if (lastOnline == null && streamRecord != null)
             {
                 var duration = DateTime.UtcNow - streamRecord.StartTime;
-                msg = "Destiny is live! <:FerretLOL:271856531857735680> <https://www.destiny.gg/bigscreen>\n" +
+                msg = $"{Context.MainUser.FriendlyUsername} is live! {Context.MainUser.StreamUrl}\n" +
                     $"Currently playing {streamRecord.CurrentGame}\n" +
                     $"Live for {duration.ToFriendlyString()}";
             }
@@ -50,11 +53,11 @@ namespace VainBotDiscord.Commands
             else
             {
                 var duration = DateTime.UtcNow - lastOnline.LastOnlineAt;
-                msg = $"Destiny is offline. <:DaFeels:271856531572523010>\n" +
+                msg = $"{Context.MainUser.FriendlyUsername} is offline.\n" +
                     $"Last online {duration.ToFriendlyString()} ago, was playing {lastOnline.LastGame}.";
             }
 
-            await Context.Channel.SendMessageAsync(msg);
+            await ReplyAsync(msg);
 
             _throttler.Throttle(ThrottleTypes.Live, Context.Channel.Id);
         }

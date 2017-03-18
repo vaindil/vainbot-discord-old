@@ -12,7 +12,7 @@ namespace VainBotDiscord.Commands
     [Group("points")]
     [Alias("slothies", "point", "slothy")]
     [CrendorServerOnly]
-    public class PointsModule : ModuleBase
+    public class PointsModule : ModuleBase<VbCommandContext>
     {
         readonly VbContext _context;
 

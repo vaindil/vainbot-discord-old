@@ -10,8 +10,7 @@ namespace VainBotDiscord.Commands
 {
     [Group("twitter")]
     [Alias("tweet", "tweets")]
-    [DestinyServerOnly]
-    public class TwitterModule : ModuleBase
+    public class TwitterModule : ModuleBase<VbCommandContext>
     {
         readonly ThrottlerService _throttler;
         readonly TimeZoneInfo _tz;
@@ -25,19 +24,21 @@ namespace VainBotDiscord.Commands
         [Command]
         public async Task GetTwitter([Remainder]string unused = null)
         {
-            if (!_throttler.CommandAllowed(ThrottleTypes.Twitter, Context.Channel.Id))
+            if (!Context.HasMainUser
+                || Context.MainUser.TwitterUserId == null
+                || !_throttler.CommandAllowed(ThrottleTypes.Twitter, Context.Channel.Id))
                 return;
 
             TweetRecord record;
 
             using (var db = new VbContext())
             {
-                record = await db.TweetRecords.FirstOrDefaultAsync(y => y.UserId == 4726147296);
+                record = await db.TweetRecords.FirstOrDefaultAsync(y => y.UserId == Context.MainUser.TwitterUserId);
             }
 
             if (record == null)
             {
-                await Context.Channel.SendMessageAsync("BOT IS ALL CUCKED UP! Pester vaindil about it.");
+                await ReplyAsync("BOT IS ALL CUCKED UP! Pester vaindil about it.");
                 return;
             }
 
@@ -45,7 +46,7 @@ namespace VainBotDiscord.Commands
 
             var embed = CreateEmbed(record);
 
-            await Context.Channel.SendMessageAsync("", embed: embed);
+            await ReplyAsync("", embed: embed);
             _throttler.Throttle(ThrottleTypes.Twitter, Context.Channel.Id);
         }
 

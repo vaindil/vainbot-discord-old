@@ -10,7 +10,7 @@ namespace VainBotDiscord.Commands
 {
     //[Group("overwatch")]
     //[Alias("ow")]
-    public class OverwatchModule : ModuleBase
+    public class OverwatchModule : ModuleBase<VbCommandContext>
     {
         readonly HttpClient _client;
 

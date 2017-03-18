@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace VainBotDiscord.Commands
 {
     [Group("twitchid")]
-    public class TwitchIdModule : ModuleBase
+    public class TwitchIdModule : ModuleBase<VbCommandContext>
     {
         readonly VbContext _context;
         readonly HttpClient _client;

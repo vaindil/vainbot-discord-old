@@ -9,7 +9,7 @@ namespace VainBotDiscord.Commands
 {
     [Group("bet")]
     [CrendorServerOnly]
-    public class BetModule : ModuleBase
+    public class BetModule : ModuleBase<VbCommandContext>
     {
         readonly VbContext _context;
         readonly Random _rng;

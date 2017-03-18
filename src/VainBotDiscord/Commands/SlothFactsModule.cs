@@ -9,7 +9,7 @@ namespace VainBotDiscord.Commands
     [Group("slothfact")]
     [Alias("slothfacts")]
     [CrendorServerOnly]
-    public class SlothFactsModule : ModuleBase
+    public class SlothFactsModule : ModuleBase<VbCommandContext>
     {
         readonly Random _rng;
 

@@ -1,7 +1,9 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
@@ -23,6 +25,7 @@ namespace VainBotDiscord
         CommandService commands;
         DependencyMap map;
         static HttpClient httpClient;
+        static List<ServerMainUser> mainUsers;
 
         static void Main(string[] args) => new Program().Run().GetAwaiter().GetResult();
         
@@ -38,6 +41,11 @@ namespace VainBotDiscord
                 throw new ArgumentNullException(nameof(apiToken), "Discord API token not found");
 
             VerifyEnvironmentVariables();
+
+            using (var db = new VbContext())
+            {
+                mainUsers = await db.ServerMainUsers.ToListAsync();
+            }
 
             var clientConfig = new DiscordSocketConfig
             {
@@ -116,8 +124,12 @@ namespace VainBotDiscord
             if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(client.CurrentUser, ref argPos)))
                 return;
 
-            var context = new CommandContext(client, message);
+            var guildId = (message.Channel as SocketGuildChannel).Guild.Id;
+            var context = new VbCommandContext(client, message);
 
+            if (mainUsers.Exists(m => (ulong)m.DiscordServerId == guildId))
+                context.MainUser = mainUsers.Find(m => (ulong)m.DiscordServerId == guildId);
+            
             var result = await commands.ExecuteAsync(context, argPos, map);
         }
 

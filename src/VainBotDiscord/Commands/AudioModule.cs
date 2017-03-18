@@ -9,7 +9,7 @@ using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
-    public class AudioModule : ModuleBase
+    public class AudioModule : ModuleBase<VbCommandContext>
     {
         [Command("rainbow", RunMode = RunMode.Async)]
         [Alias("readingrainbow")]
