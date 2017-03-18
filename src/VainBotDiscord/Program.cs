@@ -66,7 +66,6 @@ namespace VainBotDiscord
 
             map = new DependencyMap();
             map.Add(client);
-            map.Add(commands);
             map.Add(httpClient);
             map.Add(new ThrottlerService());
             map.Add(new VbContext());
