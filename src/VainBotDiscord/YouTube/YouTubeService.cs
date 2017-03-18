@@ -47,7 +47,7 @@ namespace VainBotDiscord.YouTube
 
             foreach (var yt in youTubesToCheck)
             {
-                var t = new Timer(CheckYouTubeAsync, yt, new TimeSpan(0, 0, 20), new TimeSpan(0, 0, yt.Frequency));
+                var t = new Timer(CheckYouTubeAsync, yt, new TimeSpan(0, 0, 5), new TimeSpan(0, 0, yt.Frequency));
                 _timerList.Add(t);
             }
         }
