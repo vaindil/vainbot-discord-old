@@ -45,7 +45,7 @@ namespace VainBotDiscord.Commands
             else if (lastOnline == null && streamRecord != null)
             {
                 var duration = DateTime.UtcNow - streamRecord.StartTime;
-                msg = $"{Context.MainUser.FriendlyUsername} is live! {Context.MainUser.StreamUrl}\n" +
+                msg = $"{Context.MainUser.FriendlyUsername} is live! <{Context.MainUser.StreamUrl}>\n" +
                     $"Currently playing {streamRecord.CurrentGame}\n" +
                     $"Live for {duration.ToFriendlyString()}";
             }
