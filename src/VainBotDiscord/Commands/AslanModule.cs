@@ -20,7 +20,9 @@ namespace VainBotDiscord.Commands
         [Alias("command")]
         public async Task CommandList([Remainder]string unused = null)
         {
-            await Context.Channel.SendMessageAsync("!youtube/!yt: Get the most recent YouTube video posted");
+            await Context.Channel.SendMessageAsync(
+                "!youtube/!yt: Get the most recent YouTube video posted\n" +
+                "!twitter/!tweet: Get the most recent tweet posted");
         }
     }
 }
