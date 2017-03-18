@@ -71,15 +71,15 @@ namespace VainBotDiscord
             client.Connected += async () =>
             {
                 await client.SetGameAsync("inside a box");
-
-                var twitterSvc = new TwitterService(client, tz);
-                await twitterSvc.InitTwitterServiceAsync();
-
-                var youTubeSvc = new YouTubeService(client, tz);
-                await youTubeSvc.InitYouTubeService();
-
+                
                 if (!isDev)
                 {
+                    var twitterSvc = new TwitterService(client, tz);
+                    await twitterSvc.InitTwitterServiceAsync();
+
+                    var youTubeSvc = new YouTubeService(client, tz);
+                    await youTubeSvc.InitYouTubeService();
+
                     var twitchSvc = new TwitchService(client, tz);
                     await twitchSvc.InitTwitchServiceAsync();
                 }

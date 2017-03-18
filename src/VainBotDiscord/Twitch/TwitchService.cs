@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Twitch
 {
@@ -113,6 +114,9 @@ namespace VainBotDiscord.Twitch
                         StartTime = DateTime.UtcNow
                     });
 
+                    var lastOnlines = db.StreamLastOnlines.Where(s => s.UserId == streamToCheck.UserId);
+                    db.StreamLastOnlines.RemoveRange(lastOnlines);
+
                     await db.SaveChangesAsync();
                 }
 
@@ -151,8 +155,17 @@ namespace VainBotDiscord.Twitch
 
                 using (var db = new VbContext())
                 {
+                    db.StreamLastOnlines.Add(new StreamLastOnline
+                    {
+                        UserId = streamToCheck.UserId,
+                        FriendlyUsername = streamToCheck.FriendlyUsername,
+                        LastOnlineAt = DateTime.UtcNow,
+                        LastGame = existingRecord.CurrentGame
+                    });
+
                     var games = db.StreamGames.Where(g => g.StreamId == existingRecord.StreamId);
                     db.StreamGames.RemoveRange(games);
+
                     await db.SaveChangesAsync();
 
                     db.StreamRecords.Remove(existingRecord);
@@ -251,25 +264,20 @@ namespace VainBotDiscord.Twitch
             }
 
             var streamDuration = DateTime.UtcNow - record.StartTime;
-            var totalHours = streamDuration.ToString("%h");
-            var totalMinutes = streamDuration.ToString("%m");
-
             var startTime = TimeZoneInfo.ConvertTime(record.StartTime, _tz);
             var stopTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, _tz);
 
             var msg = new StringBuilder(streamToCheck.FriendlyUsername + " was live.\n\n");
-            msg.Append("**Started at:** " + startTime.ToString("HH:mm") + "\n");
-            msg.Append("**Ended at:** " + stopTime.ToString("HH:mm") + "\n");
-            msg.Append($"_(total of {totalHours} hours, {totalMinutes} minutes)_\n\n");
+            msg.Append("**Started at:** " + startTime.ToString("HH:mm") + " Central\n");
+            msg.Append("**Ended at:** " + stopTime.ToString("HH:mm") + " Central\n");
+            msg.Append($"_(total of {streamDuration.ToFriendlyString()})_\n\n");
 
             msg.Append("__Games Played__");
 
             foreach (var g in games)
             {
                 var duration = g.StopTime.Value - g.StartTime;
-                var hrs = duration.ToString("%h");
-                var mins = duration.ToString("%m");
-                msg.Append($"\n**{g.Game}:** {hrs} hrs, {mins} mins");
+                msg.Append($"\n**{g.Game}:** {duration.ToFriendlyString()}");
             }
 
             var channel = (_client.GetChannel((ulong)streamToCheck.DiscordChannelId)) as SocketTextChannel;

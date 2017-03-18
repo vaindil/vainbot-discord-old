@@ -29,6 +29,17 @@ namespace VainBotDiscord
         public string Value { get; set; }
     }
 
+    public class StreamLastOnline
+    {
+        public long UserId { get; set; }
+
+        public string FriendlyUsername { get; set; }
+
+        public DateTime LastOnlineAt { get; set; }
+
+        public string LastGame { get; set; }
+    }
+
     public class CatFacts
     {
         public List<string> Facts { get; set; }

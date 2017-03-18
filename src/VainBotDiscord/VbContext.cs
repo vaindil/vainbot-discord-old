@@ -12,6 +12,7 @@ namespace VainBotDiscord
         public DbSet<UserPoints> UserPoints { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
+        public DbSet<StreamLastOnline> StreamLastOnlines { get; set; }
         public DbSet<StreamToCheck> StreamsToCheck { get; set; }
         public DbSet<StreamRecord> StreamRecords { get; set; }
         public DbSet<StreamGame> StreamGames { get; set; }
@@ -59,6 +60,17 @@ namespace VainBotDiscord
 
                 e.Property(kv => kv.Key).HasColumnName("key");
                 e.Property(kv => kv.Value).IsRequired().HasColumnName("value");
+            });
+
+            modelBuilder.Entity<StreamLastOnline>(e =>
+            {
+                e.ToTable("stream_last_online");
+                e.HasKey(s => s.UserId);
+
+                e.Property(s => s.UserId).HasColumnName("user_id");
+                e.Property(s => s.FriendlyUsername).HasColumnName("friendly_username").IsRequired().HasMaxLength(100);
+                e.Property(s => s.LastOnlineAt).HasColumnName("last_online_at").IsRequired();
+                e.Property(s => s.LastGame).HasColumnName("last_game").IsRequired().HasMaxLength(200);
             });
 
             modelBuilder.Entity<StreamToCheck>(e =>
