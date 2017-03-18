@@ -44,6 +44,7 @@ namespace VainBotDiscord
                 e.Property(s => s.TwitchUserId).HasColumnName("twitch_user_id");
                 e.Property(s => s.StreamUrl).HasColumnName("stream_url").HasMaxLength(150);
                 e.Property(s => s.YouTubeChannelId).HasColumnName("youtube_channel_id").HasMaxLength(50);
+                e.Property(s => s.YouTubePlaylistId).HasColumnName("youtube_playlist_id").HasMaxLength(50);
                 e.Property(s => s.TwitterUserId).HasColumnName("twitter_user_id");
             });
 
@@ -133,6 +134,7 @@ namespace VainBotDiscord
 
                 e.Property(y => y.PlaylistId).HasMaxLength(30).HasColumnName("playlist_id");
                 e.Property(y => y.ChannelId).HasMaxLength(200).IsRequired().HasColumnName("channel_id");
+                e.Property(y => y.FriendlyUsername).HasMaxLength(100).IsRequired().HasColumnName("friendly_username");
                 e.Property(y => y.Frequency).IsRequired().HasColumnName("frequency");
                 e.Property(y => y.DiscordServerId).IsRequired().HasColumnName("discord_server_id");
                 e.Property(y => y.DiscordChannelId).IsRequired().HasColumnName("discord_channel_id");

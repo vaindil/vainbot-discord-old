@@ -33,7 +33,7 @@ namespace VainBotDiscord.Commands
 
             using (var db = new VbContext())
             {
-                record = await db.YouTubeRecords.FirstOrDefaultAsync(y => y.PlaylistId == Context.MainUser.YouTubeChannelId);
+                record = await db.YouTubeRecords.FirstOrDefaultAsync(y => y.PlaylistId == Context.MainUser.YouTubePlaylistId);
             }
 
             if (record == null)

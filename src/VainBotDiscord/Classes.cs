@@ -16,6 +16,8 @@ namespace VainBotDiscord
 
         public string YouTubeChannelId { get; set; }
 
+        public string YouTubePlaylistId { get; set; }
+
         public long? TwitterUserId { get; set; }
     }
 
