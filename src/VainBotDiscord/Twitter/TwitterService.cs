@@ -27,7 +27,7 @@ namespace VainBotDiscord.Twitter
         readonly DiscordSocketClient _client;
         readonly TimeZoneInfo _tz;
 
-        static HttpClient _httpClient = new HttpClient();
+        static HttpClient _httpClient;
         List<Timer> _timerList;
 
         public TwitterService(DiscordSocketClient client, TimeZoneInfo tz)
@@ -43,6 +43,7 @@ namespace VainBotDiscord.Twitter
 
         public async Task InitTwitterServiceAsync()
         {
+            _httpClient = new HttpClient();
             _timerList = new List<Timer>();
 
             _httpClient.Timeout = new TimeSpan(0, 0, 8);
@@ -61,6 +62,18 @@ namespace VainBotDiscord.Twitter
                 var timer = new Timer(CheckTwitterAsync, t, new TimeSpan(0, 0, 5), new TimeSpan(0, 0, t.Frequency));
                 _timerList.Add(timer);
             }
+        }
+
+        public async Task ReloadAsync()
+        {
+            foreach (var t in _timerList)
+            {
+                t.Dispose();
+            }
+
+            _timerList.Clear();
+
+            await InitTwitterServiceAsync();
         }
 
         async void CheckTwitterAsync(object twitterToCheckIn)

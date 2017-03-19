@@ -15,7 +15,7 @@ namespace VainBotDiscord.YouTube
         readonly DiscordSocketClient _client;
         readonly TimeZoneInfo _tz;
 
-        static HttpClient _youTubeClient = new HttpClient();
+        static HttpClient _youTubeClient;
         static string _youTubeApiKey;
         List<Timer> _timerList;
 
@@ -25,8 +25,9 @@ namespace VainBotDiscord.YouTube
             _tz = tz;
         }
 
-        public async Task InitYouTubeService()
+        public async Task InitYouTubeServiceAsync()
         {
+            _youTubeClient = new HttpClient();
             _timerList = new List<Timer>();
 
             // verified to exist in Program.Run()
@@ -50,6 +51,18 @@ namespace VainBotDiscord.YouTube
                 var t = new Timer(CheckYouTubeAsync, yt, new TimeSpan(0, 0, 5), new TimeSpan(0, 0, yt.Frequency));
                 _timerList.Add(t);
             }
+        }
+
+        public async Task ReloadAsync()
+        {
+            foreach (var t in _timerList)
+            {
+                t.Dispose();
+            }
+
+            _timerList.Clear();
+
+            await InitYouTubeServiceAsync();
         }
 
         async void CheckYouTubeAsync(object youTubeToCheckIn)

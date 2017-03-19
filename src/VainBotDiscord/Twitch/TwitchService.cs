@@ -20,7 +20,7 @@ namespace VainBotDiscord.Twitch
         readonly DiscordSocketClient _client;
         readonly TimeZoneInfo _tz;
 
-        static HttpClient _twitchClient = new HttpClient();
+        static HttpClient _twitchClient;
         List<TwitchCheckTimer> _checkTimerList;
         List<TwitchUpdateTimer> _updateTimerList;
 
@@ -32,6 +32,7 @@ namespace VainBotDiscord.Twitch
 
         public async Task InitTwitchServiceAsync()
         {
+            _twitchClient = new HttpClient();
             _checkTimerList = new List<TwitchCheckTimer>();
             _updateTimerList = new List<TwitchUpdateTimer>();
 
@@ -75,6 +76,25 @@ namespace VainBotDiscord.Twitch
                     _updateTimerList.Add(updateTimer);
                 }
             }
+        }
+
+        public async Task ReloadAsync()
+        {
+            foreach (var u in _updateTimerList)
+            {
+                u.Timer.Dispose();
+            }
+
+            _updateTimerList.Clear();
+
+            foreach (var c in _checkTimerList)
+            {
+                c.Timer.Dispose();
+            }
+
+            _checkTimerList.Clear();
+
+            await InitTwitchServiceAsync();
         }
 
         async void CheckTwitchAsync(object streamToCheckIn)
