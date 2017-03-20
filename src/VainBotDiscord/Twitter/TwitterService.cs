@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -129,7 +130,7 @@ namespace VainBotDiscord.Twitter
                     {
                         UserId = latestTweet.User.Id,
                         TweetId = latestTweet.Id,
-                        Text = latestTweet.Text,
+                        Text = WebUtility.HtmlDecode(latestTweet.Text),
                         AuthorName = latestTweet.User.Name,
                         AuthorUsername = latestTweet.User.Username,
                         ProfileImageUrl = latestTweet.User.ProfileImageUrl,
@@ -141,7 +142,7 @@ namespace VainBotDiscord.Twitter
                 else
                 {
                     existing.TweetId = latestTweet.Id;
-                    existing.Text = latestTweet.Text;
+                    existing.Text = WebUtility.HtmlDecode(latestTweet.Text);
                     existing.AuthorName = latestTweet.User.Name;
                     existing.AuthorUsername = latestTweet.User.Username;
                     existing.ProfileImageUrl = latestTweet.User.ProfileImageUrl;
@@ -196,7 +197,7 @@ namespace VainBotDiscord.Twitter
             };
 
             embed.Title = "Go to tweet";
-            embed.Description = tweet.Text;
+            embed.Description = WebUtility.HtmlDecode(tweet.Text);
             embed.Url = "https://twitter.com/" + tweet.User.Username + "/status/" + tweet.Id;
             embed.Color = new Color(29, 161, 242);
             embed.Author = author;
