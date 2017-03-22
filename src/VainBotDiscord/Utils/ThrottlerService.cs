@@ -25,7 +25,7 @@ namespace VainBotDiscord.Utils
             _throttles.Add(new ThrottledChannel(type, channelId, timer));
         }
 
-        public void Unthrottle(object throttleWrapperIn)
+        void Unthrottle(object throttleWrapperIn)
         {
             var throttleWrapper = (ThrottleWrapper)throttleWrapperIn;
 
@@ -42,7 +42,8 @@ namespace VainBotDiscord.Utils
     {
         YouTube,
         Twitter,
-        Live
+        Live,
+        WolframAlpha
     }
 
     class ThrottledChannel
