@@ -123,7 +123,10 @@ namespace VainBotDiscord
 
             var argPos = 0;
 
-            if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(client.CurrentUser, ref argPos)))
+            // HasStringPrefix needs to be first so that argPos is set correctly
+            if (!(message.HasStringPrefix("! ", ref argPos)
+                || message.HasCharPrefix('!', ref argPos)
+                || message.HasMentionPrefix(client.CurrentUser, ref argPos)))
                 return;
 
             var guildId = (message.Channel as SocketGuildChannel).Guild.Id;

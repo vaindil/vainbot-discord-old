@@ -43,7 +43,8 @@ namespace VainBotDiscord.Utils
         YouTube,
         Twitter,
         Live,
-        WolframAlpha
+        WolframAlpha,
+        Ferret,
     }
 
     class ThrottledChannel
