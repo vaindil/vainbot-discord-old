@@ -23,7 +23,9 @@ namespace VainBotDiscord.Commands
             await ReplyAsync(
                 "!live: Gets info about the current or most recent stream\n" +
                 "!youtube: Get the most recent YouTube video posted\n" +
-                "!twitter: Get the most recent tweet posted");
+                "!twitter: Get the most recent tweet posted\n" +
+                "! <:FerretLOL:271856531857735680> : Post a random ferret picture\n" +
+                "! <:ASLAN:271856531505545236> : Post a random Aslan picture");
         }
     }
 }

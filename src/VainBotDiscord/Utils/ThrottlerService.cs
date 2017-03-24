@@ -45,6 +45,7 @@ namespace VainBotDiscord.Utils
         Live,
         WolframAlpha,
         Ferret,
+        Cat
     }
 
     class ThrottledChannel

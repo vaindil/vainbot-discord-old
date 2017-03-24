@@ -160,6 +160,9 @@ namespace VainBotDiscord
 
             if (Environment.GetEnvironmentVariable("WOLFRAMALPHA_APPID") == null)
                 throw new ArgumentNullException("WolframAlpha AppID env var not found", innerException: null);
+
+            if (Environment.GetEnvironmentVariable("IMGUR_CLIENT_ID") == null)
+                throw new ArgumentNullException("Imgur client ID env var not found", innerException: null);
         }
     }
 }

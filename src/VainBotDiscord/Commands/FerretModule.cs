@@ -25,7 +25,7 @@ namespace VainBotDiscord.Commands
         }
 
         [Command]
-        public async Task Ferret()
+        public async Task Ferret([Remainder]string unused = null)
         {
             if (!_throttler.CommandAllowed(ThrottleTypes.Ferret, Context.Channel.Id))
                 return;
