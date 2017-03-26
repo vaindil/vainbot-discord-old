@@ -82,15 +82,15 @@ namespace VainBotDiscord
                 if (!isDev)
                 {
                     var twitchSvc = new TwitchService(client, tz);
-                    var youTubeSvc = new YouTubeService(client, tz);
-                    var twitterSvc = new TwitterService(client, tz);
-
                     map.Add(twitchSvc);
-                    map.Add(youTubeSvc);
-                    map.Add(twitterSvc);
-
                     await twitchSvc.InitTwitchServiceAsync();
+
+                    var youTubeSvc = new YouTubeService(client, tz);
+                    map.Add(youTubeSvc);
                     await youTubeSvc.InitYouTubeServiceAsync();
+
+                    var twitterSvc = new TwitterService(client, tz);
+                    map.Add(twitterSvc);
                     await twitterSvc.InitTwitterServiceAsync();
                 }
             };
