@@ -74,6 +74,7 @@ namespace VainBotDiscord
 
             client.MessageReceived += UserReactionEvent.AddReactionToUserAsync;
             client.MessageReceived += LolCounterEvent.LolCounterAsync;
+            client.MessageReceived += NoUCounterEvent.NoUCounterAsync;
             client.UserLeft += UserLeavesEvent.UserLeavesAsync;
             client.Connected += async () =>
             {

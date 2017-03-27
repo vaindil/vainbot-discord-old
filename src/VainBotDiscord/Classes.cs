@@ -177,6 +177,7 @@ namespace VainBotDiscord
         PointsNameSingular,
         PointsNamePlural,
         LolCounter,
+        NoUCounter,
         BettingAllowed,
         LastNaTokenUpdate,
         LastEuTokenUpdate,

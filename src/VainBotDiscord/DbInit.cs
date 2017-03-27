@@ -26,6 +26,32 @@ namespace VainBotDiscord
                     await db.SaveChangesAsync();
                 }
 
+                var lolCounterExists = await db.KeyValues
+                    .FirstOrDefaultAsync(kv => kv.Key == DbKey.LolCounter.ToString());
+                if (lolCounterExists == null)
+                {
+                    db.KeyValues.Add(new KeyValue
+                    {
+                        Key = DbKey.LolCounter.ToString(),
+                        Value = 0.ToString()
+                    });
+
+                    await db.SaveChangesAsync();
+                }
+
+                var noUCounterExists = await db.KeyValues
+                    .FirstOrDefaultAsync(kv => kv.Key == DbKey.NoUCounter.ToString());
+                if (noUCounterExists == null)
+                {
+                    db.KeyValues.Add(new KeyValue
+                    {
+                        Key = DbKey.NoUCounter.ToString(),
+                        Value = 0.ToString()
+                    });
+
+                    await db.SaveChangesAsync();
+                }
+
                 var lastTokenUpdateExists = await db.KeyValues
                     .FirstOrDefaultAsync(kv => kv.Key == DbKey.LastNaTokenUpdate.ToString());
                 if (lastTokenUpdateExists == null)
