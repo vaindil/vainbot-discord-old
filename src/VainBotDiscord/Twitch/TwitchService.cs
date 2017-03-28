@@ -283,6 +283,8 @@ namespace VainBotDiscord.Twitch
                 games = await db.StreamGames.Where(g => g.StreamId == record.StreamId).ToListAsync();
             }
 
+            record.StartTime = DateTime.SpecifyKind(record.StartTime, DateTimeKind.Utc);
+
             var streamDuration = DateTime.UtcNow - record.StartTime;
             var startTime = TimeZoneInfo.ConvertTime(record.StartTime, _tz);
             var stopTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, _tz);
