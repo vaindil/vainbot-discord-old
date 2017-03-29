@@ -148,17 +148,31 @@ namespace VainBotDiscord.YouTube
 
         async Task<Embed> SendMessageAsync(YouTubeToCheck youTubeToCheck, YouTubeVideoListItem video)
         {
-            var channel = (_client.GetChannel((ulong)youTubeToCheck.DiscordChannelId)) as SocketTextChannel;
-
-            var embed = await CreateEmbedAsync(video);
-            if (embed == null)
+            try
             {
-                await channel.SendMessageAsync("Something broke when posting a new YouTube video. Bug vaindil about it. (error: e)");
-                return null;
+                var channel = (_client.GetChannel((ulong)youTubeToCheck.DiscordChannelId)) as SocketTextChannel;
+
+                var embed = await CreateEmbedAsync(video);
+                if (embed == null)
+                {
+                    await channel.SendMessageAsync("Something broke when posting a new YouTube video. Bug vaindil about it. (error: e)");
+                    return null;
+                }
+
+                await channel.SendMessageAsync($"{video.Snippet.ChannelTitle} posted a new YouTube video.", embed: embed);
+
+                return embed;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("[" + DateTime.UtcNow.ToString() + "] YOUTUBE ERROR, SendMessageAsync");
+                Console.Error.WriteLine(ex.ToString());
+                Console.Error.WriteLine(ex.InnerException?.ToString());
+                Console.Error.WriteLine("------------");
+                Console.Error.WriteLine();
             }
 
-            await channel.SendMessageAsync($"{video.Snippet.ChannelTitle} posted a new YouTube video.", embed: embed);
-            return embed;
+            return null;
         }
 
         async Task<YouTubePlaylist> GetYouTubePlaylistAsync(string playlistId)

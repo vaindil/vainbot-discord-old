@@ -108,7 +108,19 @@ namespace VainBotDiscord.Twitter
                 }
 
                 var embed = CreateEmbed(tweet);
-                await channel.SendMessageAsync("", embed: embed);
+
+                try
+                {
+                    await channel.SendMessageAsync("", embed: embed);
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine("[" + DateTime.UtcNow.ToString() + "] TWITTER ERROR, CheckTwitterAsync");
+                    Console.Error.WriteLine(ex.ToString());
+                    Console.Error.WriteLine(ex.InnerException?.ToString());
+                    Console.Error.WriteLine("------------");
+                    Console.Error.WriteLine();
+                }
 
                 if (existing == null)
                 {

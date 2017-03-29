@@ -259,10 +259,21 @@ namespace VainBotDiscord.Twitch
 
             var embed = CreateEmbed(stream, (uint)streamToCheck.EmbedColor);
 
-            var channel = _client.GetChannel((ulong)streamToCheck.DiscordChannelId) as SocketTextChannel;
-            var msg = await channel.GetMessageAsync((ulong)record.DiscordMessageId) as RestUserMessage;
+            try
+            {
+                var channel = _client.GetChannel((ulong)streamToCheck.DiscordChannelId) as SocketTextChannel;
+                var msg = await channel.GetMessageAsync((ulong)record.DiscordMessageId) as RestUserMessage;
 
-            await msg.ModifyAsync(f => f.Embed = embed);
+                await msg.ModifyAsync(f => f.Embed = embed);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("[" + DateTime.UtcNow.ToString() + "] TWITCH ERROR, UpdateEmbedAsync");
+                Console.Error.WriteLine(ex.ToString());
+                Console.Error.WriteLine(ex.InnerException?.ToString());
+                Console.Error.WriteLine("------------");
+                Console.Error.WriteLine();
+            }
         }
 
         async Task FinalMessageUpdateAsync(StreamToCheck streamToCheck, StreamRecord record)
@@ -302,14 +313,25 @@ namespace VainBotDiscord.Twitch
                 msg.Append($"\n**{g.Game}:** {duration.ToFriendlyString()}");
             }
 
-            var channel = (_client.GetChannel((ulong)streamToCheck.DiscordChannelId)) as SocketTextChannel;
-            var existingMsg = await channel.GetMessageAsync((ulong)record.DiscordMessageId) as RestUserMessage;
-
-            await existingMsg.ModifyAsync(m =>
+            try
             {
-                m.Content = msg.ToString();
-                m.Embed = null;
-            });
+                var channel = (_client.GetChannel((ulong)streamToCheck.DiscordChannelId)) as SocketTextChannel;
+                var existingMsg = await channel.GetMessageAsync((ulong)record.DiscordMessageId) as RestUserMessage;
+
+                await existingMsg.ModifyAsync(m =>
+                {
+                    m.Content = msg.ToString();
+                    m.Embed = null;
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("[" + DateTime.UtcNow.ToString() + "] TWITCH ERROR, FinalMessageUpdateAsync");
+                Console.Error.WriteLine(ex.ToString());
+                Console.Error.WriteLine(ex.InnerException?.ToString());
+                Console.Error.WriteLine("------------");
+                Console.Error.WriteLine();
+            }
         }
 
         async Task<TwitchStream> GetTwitchStreamAsync(long userId)
