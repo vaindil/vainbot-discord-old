@@ -262,7 +262,7 @@ namespace VainBotDiscord.Twitch
             var channel = _client.GetChannel((ulong)streamToCheck.DiscordChannelId) as SocketTextChannel;
             var msg = await channel.GetMessageAsync((ulong)record.DiscordMessageId) as RestUserMessage;
 
-            await msg.ModifyAsync(f => f.Embed = embed, null);
+            await msg.ModifyAsync(f => f.Embed = embed);
         }
 
         async Task FinalMessageUpdateAsync(StreamToCheck streamToCheck, StreamRecord record)
@@ -343,7 +343,7 @@ namespace VainBotDiscord.Twitch
             var streamPlayingField = new EmbedFieldBuilder
             {
                 Name = "Playing",
-                Value = stream.Game,
+                Value = !string.IsNullOrWhiteSpace(stream.Game) ? stream.Game : "(no game)",
                 IsInline = true
             };
 
@@ -356,7 +356,7 @@ namespace VainBotDiscord.Twitch
             
             embed.Color = color;
             embed.ImageUrl = imgUrl;
-            embed.Title = stream.Channel.Status;
+            embed.Title = !string.IsNullOrWhiteSpace(stream.Channel.Status) ? stream.Channel.Status : "(no title)";
             embed.Url = stream.Channel.Url;
 
             if (stream.Channel.Id == 18074328)
