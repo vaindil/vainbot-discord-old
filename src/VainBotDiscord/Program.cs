@@ -159,9 +159,6 @@ namespace VainBotDiscord
             if (Environment.GetEnvironmentVariable("TWITTER_ACCESS_TOKEN_SECRET") == null)
                 throw new ArgumentNullException("Twitter access token secret env var not found", innerException: null);
 
-            if (Environment.GetEnvironmentVariable("WOLFRAMALPHA_APPID") == null)
-                throw new ArgumentNullException("WolframAlpha AppID env var not found", innerException: null);
-
             if (Environment.GetEnvironmentVariable("IMGUR_CLIENT_ID") == null)
                 throw new ArgumentNullException("Imgur client ID env var not found", innerException: null);
         }
