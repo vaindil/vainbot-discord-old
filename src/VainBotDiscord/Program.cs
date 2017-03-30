@@ -76,7 +76,7 @@ namespace VainBotDiscord
             client.MessageReceived += LolCounterEvent.LolCounterAsync;
             client.MessageReceived += NoUCounterEvent.NoUCounterAsync;
             client.UserLeft += UserLeavesEvent.UserLeavesAsync;
-            client.Connected += async () =>
+            client.Ready += async () =>
             {
                 await client.SetGameAsync("inside a box");
                 
