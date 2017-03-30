@@ -43,7 +43,6 @@ namespace VainBotDiscord.Utils
         YouTube,
         Twitter,
         Live,
-        WolframAlpha,
         Ferret,
         Cat
     }
