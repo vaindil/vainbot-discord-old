@@ -44,6 +44,8 @@ namespace VainBotDiscord.Commands
 
             else if (lastOnline == null && streamRecord != null)
             {
+                streamRecord.StartTime = DateTime.SpecifyKind(streamRecord.StartTime, DateTimeKind.Utc);
+
                 var duration = DateTime.UtcNow - streamRecord.StartTime;
                 msg = $"{Context.MainUser.FriendlyUsername} is live! <{Context.MainUser.StreamUrl}>\n" +
                     $"Currently playing {streamRecord.CurrentGame}\n" +
@@ -52,6 +54,8 @@ namespace VainBotDiscord.Commands
 
             else
             {
+                lastOnline.LastOnlineAt = DateTime.SpecifyKind(lastOnline.LastOnlineAt, DateTimeKind.Utc);
+
                 var duration = DateTime.UtcNow - lastOnline.LastOnlineAt;
                 msg = $"{Context.MainUser.FriendlyUsername} is offline.\n" +
                     $"Last online {duration.ToFriendlyString()} ago, was playing {lastOnline.LastGame}.";

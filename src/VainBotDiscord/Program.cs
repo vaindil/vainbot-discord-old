@@ -80,8 +80,8 @@ namespace VainBotDiscord
             {
                 await client.SetGameAsync("inside a box");
                 
-                if (!isDev)
-                {
+                //if (!isDev)
+                //{
                     var twitchSvc = new TwitchService(client, tz);
                     map.Add(twitchSvc);
                     await twitchSvc.InitTwitchServiceAsync();
@@ -93,7 +93,7 @@ namespace VainBotDiscord
                     var twitterSvc = new TwitterService(client, tz);
                     map.Add(twitterSvc);
                     await twitterSvc.InitTwitterServiceAsync();
-                }
+                //}
             };
             
             client.Log += (message) =>

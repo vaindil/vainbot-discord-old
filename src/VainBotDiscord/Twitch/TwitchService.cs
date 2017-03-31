@@ -110,6 +110,16 @@ namespace VainBotDiscord.Twitch
                 existingRecord = await db.StreamRecords.FirstOrDefaultAsync(sr => sr.UserId == streamToCheck.UserId);
             }
 
+            // if the streamer goes offline and comes online again quickly, the API
+            // may not ever show the offline status. this catches that and forces it to
+            // end the previous one, which will start the new one on the next run.
+            if (stream != null
+                && existingRecord != null
+                && stream.Id != existingRecord.StreamId)
+            {
+                stream = null;
+            }
+
             // live and was not previously live
             if (stream != null && existingRecord == null)
             {
@@ -309,6 +319,9 @@ namespace VainBotDiscord.Twitch
 
             foreach (var g in games)
             {
+                g.StopTime = DateTime.SpecifyKind(g.StopTime.Value, DateTimeKind.Utc);
+                g.StartTime = DateTime.SpecifyKind(g.StartTime, DateTimeKind.Utc);
+
                 var duration = g.StopTime.Value - g.StartTime;
                 msg.Append($"\n**{g.Game}:** {duration.ToFriendlyString()}");
             }
