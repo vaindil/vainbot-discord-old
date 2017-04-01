@@ -26,12 +26,13 @@ namespace VainBotDiscord
         DependencyMap map;
         static HttpClient httpClient;
         static List<ServerMainUser> mainUsers;
+        static bool isDev;
 
         static void Main(string[] args) => new Program().Run().GetAwaiter().GetResult();
         
         public async Task Run()
         {
-            var isDev = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VAINBOT_ISDEV"));
+            isDev = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VAINBOT_ISDEV"));
 
             if (!Directory.Exists("TTSTemp"))
                 Directory.CreateDirectory("TTSTemp");
@@ -80,8 +81,8 @@ namespace VainBotDiscord
             {
                 await client.SetGameAsync("inside a box");
                 
-                //if (!isDev)
-                //{
+                if (!isDev)
+                {
                     var twitchSvc = new TwitchService(client, tz);
                     map.Add(twitchSvc);
                     await twitchSvc.InitTwitchServiceAsync();
@@ -93,7 +94,7 @@ namespace VainBotDiscord
                     var twitterSvc = new TwitterService(client, tz);
                     map.Add(twitterSvc);
                     await twitterSvc.InitTwitterServiceAsync();
-                //}
+                }
             };
             
             client.Log += (message) =>
@@ -119,8 +120,16 @@ namespace VainBotDiscord
         public async Task HandleCommand(SocketMessage messageParam)
         {
             var message = messageParam as SocketUserMessage;
+            
             if (message == null || message.Author.Id == client.CurrentUser.Id)
                 return;
+
+            if (isDev)
+            {
+                var appInfo = await client.GetApplicationInfoAsync();
+                if (message.Author.Id != appInfo.Owner.Id)
+                    return;
+            }
 
             var argPos = 0;
 
