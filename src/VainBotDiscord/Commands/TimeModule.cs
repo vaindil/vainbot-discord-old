@@ -1,57 +1,66 @@
 ﻿using Discord.Commands;
 using NodaTime;
-using System.Collections.Generic;
-using System.Text;
+using System.Globalization;
 using System.Threading.Tasks;
-using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
     [Group("time")]
-    [IsOwner]
     public class TimeModule : ModuleBase<VbCommandContext>
     {
-        readonly ThrottlerService _throttler;
-
-        public TimeModule(ThrottlerService throttler)
-        {
-            _throttler = throttler;
-        }
-
         [Command("help")]
+        [Priority(10)]
         public async Task GetInfo([Remainder]string unused = null)
         {
-            await ReplyAsync("`!time timezone`: Gets the current time in the specified timezone.\n" +
-                "`!time timezone time`: Gets the specified time in the specified timezone.");
+            await ReplyAsync("`!time [timezone]`: Gets the current time in the specified timezone. " +
+                "Example: `!time America/Detroit`");
         }
 
         [Command("timezone")]
         [Alias("timezones", "list")]
+        [Priority(8)]
         public async Task GetTimezones([Remainder]string unused = null)
         {
-            var tzsCollection = DateTimeZoneProviders.Tzdb.Ids;
-            var tzs = new List<string>(tzsCollection );
-            tzs.Sort();
+            await ReplyAsync(
+                "The list of supported timezones is available here: <https://docs.nightbot.tv/commands/variables/time#timezones>");
+        }
 
-            var sb = new StringBuilder();
+        [Command]
+        [Priority(1)]
+        public async Task CurrentInTimezone([Remainder]string timezone = null)
+        {
+            var destiny = false;
 
-            foreach (var tz in tzs)
+            if (timezone == null || timezone.ToLower() == "steven" || timezone.ToLower() == "destiny")
             {
-                sb.Append(tz + "\n");
+                timezone = "America/Chicago";
+                destiny = true;
             }
 
-            var msg = sb.ToString();
-            var dmChannel = await Context.User.CreateDMChannelAsync();
-
-            while (msg.Length > 1000)
+            var tz = DateTimeZoneProviders.Tzdb.GetZoneOrNull(timezone);
+            if (tz == null)
             {
-                var thisMsg = msg.Substring(0, 1000);
-                await dmChannel.SendMessageAsync(thisMsg);
-
-                msg = msg.Substring(1000);
+                await ReplyAsync("Invalid timezone provided. Supported timezones are listed here: " +
+                    "<https://docs.nightbot.tv/commands/variables/time#timezones>");
+                return;
             }
-            
-            await dmChannel.SendMessageAsync(msg);
+
+            var curDt = SystemClock.Instance.GetCurrentInstant().InZone(tz);
+            var shortTz = destiny ? " Central Steven Time" : curDt.ToString(" x", CultureInfo.InvariantCulture);
+
+            await ReplyAsync($"Current time is {curDt.ToString("H:mm", CultureInfo.InvariantCulture)}{shortTz}.");
+        }
+    }
+
+    [Group("timezones")]
+    [Alias("timezone")]
+    public class TimezoneModule : ModuleBase<VbCommandContext>
+    {
+        [Command]
+        public async Task TimezoneLink([Remainder]string unused = null)
+        {
+            await ReplyAsync(
+                "The list of supported timezones is available here: <https://docs.nightbot.tv/commands/variables/time#timezones>");
         }
     }
 }
