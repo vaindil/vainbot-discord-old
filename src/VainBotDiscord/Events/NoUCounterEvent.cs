@@ -29,7 +29,7 @@ namespace VainBotDiscord.Events
 
             using (var db = new VbContext())
             {
-                var countKv = await db.KeyValues.FirstOrDefaultAsync(k => k.Key == DbKey.LolCounter.ToString());
+                var countKv = await db.KeyValues.FirstOrDefaultAsync(k => k.Key == DbKey.NoUCounter.ToString());
 
                 count = int.Parse(countKv.Value);
                 count += 1;
