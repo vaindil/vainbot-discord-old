@@ -32,19 +32,6 @@ namespace VainBotDiscord.Events
                 await msg.AddReactionAsync("🇦");
                 await msg.AddReactionAsync("🇾");
             }
-            else if (msg.Author.Id == 221480025025675265)
-            {
-                var r = _rng.Next(4);
-                if (r == 1)
-                {
-                    await msg.AddReactionAsync("DaFeels:271856531572523010");
-                    await msg.AddReactionAsync("🔫");
-                }
-                else if (r == 2)
-                {
-                    await msg.AddReactionAsync("PEPE:271856531845152771");
-                }
-            }
         }
     }
 }

@@ -319,6 +319,11 @@ namespace VainBotDiscord.Twitch
 
             foreach (var g in games)
             {
+                // i dunno why it's putting an empty game for 0 minutes first each time,
+                // but here's a quick fix lel
+                if (string.IsNullOrEmpty(g.Game))
+                    continue;
+
                 g.StopTime = DateTime.SpecifyKind(g.StopTime.Value, DateTimeKind.Utc);
                 g.StartTime = DateTime.SpecifyKind(g.StartTime, DateTimeKind.Utc);
 
