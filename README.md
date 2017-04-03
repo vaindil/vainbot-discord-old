@@ -1,6 +1,6 @@
 I'll get around to making a readme at some point, sorry.
 
-LICENSE
+License
 -------
 
 >This is free and unencumbered software released into the public domain.
