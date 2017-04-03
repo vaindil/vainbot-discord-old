@@ -13,7 +13,8 @@ namespace VainBotDiscord.Commands
     {
         [Command("rainbow", RunMode = RunMode.Async)]
         [Alias("readingrainbow")]
-        [CrendorServerOnly]
+        [IsOwner]
+        //[CrendorServerOnly]
         public async Task PlayReadingRainbow()
         {
             var channel = (Context.Message.Author as IGuildUser).VoiceChannel;
@@ -28,6 +29,7 @@ namespace VainBotDiscord.Commands
             await audioClient.StopAsync();
         }
 
+        [IsOwner]
         [Command("tts", RunMode = RunMode.Async)]
         public async Task TextToSpeech([Remainder]string words)
         {

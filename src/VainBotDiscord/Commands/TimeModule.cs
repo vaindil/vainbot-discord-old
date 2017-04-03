@@ -40,7 +40,7 @@ namespace VainBotDiscord.Commands
             var tz = DateTimeZoneProviders.Tzdb.GetZoneOrNull(timezone);
             if (tz == null)
             {
-                await ReplyAsync("Invalid timezone provided. Supported timezones are listed here: " +
+                await ReplyAsync("Invalid timezone provided. Use `!time help` for help. Supported timezones are listed here: " +
                     "<https://docs.nightbot.tv/commands/variables/time#timezones>");
                 return;
             }
