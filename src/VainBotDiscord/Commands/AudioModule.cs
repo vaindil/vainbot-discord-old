@@ -59,7 +59,7 @@ namespace VainBotDiscord.Commands
         }
 
         [IsAdmin]
-        [Command("tts", RunMode = RunMode.Async)]
+        [Command("ttsin", RunMode = RunMode.Async)]
         public async Task TextToSpeechWithChannel(IVoiceChannel channel, [Remainder]string words)
         {
             if (words.Length > 400)
