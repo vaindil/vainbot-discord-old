@@ -13,11 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net.Commands" Version="1.0.0-rc2-00677" />
-    <PackageReference Include="Discord.Net.Core" Version="1.0.0-rc2-00677" />
-    <PackageReference Include="Discord.Net.WebSocket" Version="1.0.0-rc2-00677" />
+    <PackageReference Include="Discord.Net.Commands" Version="1.0.0-rc2-00686" />
+    <PackageReference Include="Discord.Net.Core" Version="1.0.0-rc2-00686" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="1.0.0-rc2-00686" />
     <PackageReference Include="NodaTime" Version="2.0.0" />
-    <PackageReference Include="SapientGuardian.EntityFrameworkCore.MySql" Version="7.1.21" />
+    <PackageReference Include="SapientGuardian.EntityFrameworkCore.MySql" Version="7.1.23" />
   </ItemGroup>
 
 </Project>
