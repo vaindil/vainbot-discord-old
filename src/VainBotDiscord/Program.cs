@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using VainBotDiscord.Events;
 using VainBotDiscord.Twitch;
@@ -81,22 +82,86 @@ namespace VainBotDiscord
             {
                 await client.SetGameAsync("inside a box");
                 
-                if (!isDev)
+                
+            };
+
+            CancellationTokenSource twitchCancelToken = new CancellationTokenSource();
+            CancellationTokenSource youTubeCancelToken = new CancellationTokenSource();
+            CancellationTokenSource twitterCancelToken = new CancellationTokenSource();
+
+            client.Connected += async () =>
+            {
+                if (isDev)
+                    return;
+                
+                twitchCancelToken = new CancellationTokenSource();
+                youTubeCancelToken = new CancellationTokenSource();
+                twitterCancelToken = new CancellationTokenSource();
+
+                var twitchSvc = new TwitchService(client, tz, twitchCancelToken.Token);
+                map.Add(twitchSvc);
+                try
                 {
-                    var twitchSvc = new TwitchService(client, tz);
-                    map.Add(twitchSvc);
                     await twitchSvc.InitTwitchServiceAsync();
+                }
+                catch (Exception ex)
+                {
+                    if (ex is OperationCanceledException)
+                        Console.WriteLine("Twitch service canceled");
+                    else
+                        Console.WriteLine("Twitch service unhandled exception");
+                }
+                finally
+                {
+                    twitchCancelToken.Dispose();
+                }
 
-                    var youTubeSvc = new YouTubeService(client, tz);
-                    map.Add(youTubeSvc);
+                var youTubeSvc = new YouTubeService(client, tz, youTubeCancelToken.Token);
+                map.Add(youTubeSvc);
+                try
+                {
                     await youTubeSvc.InitYouTubeServiceAsync();
+                }
+                catch (Exception ex)
+                {
+                    if (ex is OperationCanceledException)
+                        Console.WriteLine("YouTube service canceled");
+                    else
+                        Console.WriteLine("YouTube service unhandled exception");
+                }
+                finally
+                {
+                    youTubeCancelToken.Dispose();
+                }
 
-                    var twitterSvc = new TwitterService(client, tz);
-                    map.Add(twitterSvc);
+                var twitterSvc = new TwitterService(client, tz, twitterCancelToken.Token);
+                map.Add(twitterSvc);
+                try
+                {
                     await twitterSvc.InitTwitterServiceAsync();
                 }
+                catch (Exception ex)
+                {
+                    if (ex is OperationCanceledException)
+                        Console.WriteLine("Twitter service canceled");
+                    else
+                        Console.WriteLine("Twitter service unhandled exception");
+                }
+                finally
+                {
+                    twitterCancelToken.Dispose();
+                }
             };
-            
+
+            client.Disconnected += (ex) =>
+            {
+                twitchCancelToken.Cancel();
+                youTubeCancelToken.Cancel();
+                twitterCancelToken.Cancel();
+
+                return Task.CompletedTask;
+            };
+
             client.Log += (message) =>
             {
                 Console.WriteLine($"{message.ToString()}");

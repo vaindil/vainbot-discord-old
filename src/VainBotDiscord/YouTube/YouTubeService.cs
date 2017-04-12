@@ -14,15 +14,17 @@ namespace VainBotDiscord.YouTube
     {
         readonly DiscordSocketClient _client;
         readonly TimeZoneInfo _tz;
+        readonly CancellationToken _cancellationToken;
 
         static HttpClient _youTubeClient;
         static string _youTubeApiKey;
         List<Timer> _timerList;
 
-        public YouTubeService(DiscordSocketClient client, TimeZoneInfo tz)
+        public YouTubeService(DiscordSocketClient client, TimeZoneInfo tz, CancellationToken cancellationToken)
         {
             _client = client;
             _tz = tz;
+            _cancellationToken = cancellationToken;
         }
 
         public async Task InitYouTubeServiceAsync()
@@ -67,6 +69,8 @@ namespace VainBotDiscord.YouTube
 
         async void CheckYouTubeAsync(object youTubeToCheckIn)
         {
+            _cancellationToken.ThrowIfCancellationRequested();
+
             var youTubeToCheck = (YouTubeToCheck)youTubeToCheckIn;
             var playlist = await GetYouTubePlaylistAsync(youTubeToCheck.PlaylistId);
 

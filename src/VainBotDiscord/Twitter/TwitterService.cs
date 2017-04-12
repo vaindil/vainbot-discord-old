@@ -27,11 +27,12 @@ namespace VainBotDiscord.Twitter
 
         readonly DiscordSocketClient _client;
         readonly TimeZoneInfo _tz;
+        readonly CancellationToken _cancellationToken;
 
         static HttpClient _httpClient;
         List<Timer> _timerList;
 
-        public TwitterService(DiscordSocketClient client, TimeZoneInfo tz)
+        public TwitterService(DiscordSocketClient client, TimeZoneInfo tz, CancellationToken cancellationToken)
         {
             _consumerKey = Environment.GetEnvironmentVariable("TWITTER_CONSUMER_KEY");
             _consumerSecret = Environment.GetEnvironmentVariable("TWITTER_CONSUMER_SECRET");
@@ -40,6 +41,7 @@ namespace VainBotDiscord.Twitter
 
             _client = client;
             _tz = tz;
+            _cancellationToken = cancellationToken;
         }
 
         public async Task InitTwitterServiceAsync()
@@ -79,6 +81,8 @@ namespace VainBotDiscord.Twitter
 
         async void CheckTwitterAsync(object twitterToCheckIn)
         {
+            _cancellationToken.ThrowIfCancellationRequested();
+
             var twitterToCheck = (TwitterToCheck)twitterToCheckIn;
             var channel = (_client.GetChannel((ulong)twitterToCheck.DiscordChannelId)) as SocketTextChannel;
 

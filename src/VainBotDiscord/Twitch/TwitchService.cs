@@ -19,15 +19,17 @@ namespace VainBotDiscord.Twitch
     {
         readonly DiscordSocketClient _client;
         readonly TimeZoneInfo _tz;
+        readonly CancellationToken _cancellationToken;
 
         static HttpClient _twitchClient;
         List<TwitchCheckTimer> _checkTimerList;
         List<TwitchUpdateTimer> _updateTimerList;
 
-        public TwitchService(DiscordSocketClient client, TimeZoneInfo tz)
+        public TwitchService(DiscordSocketClient client, TimeZoneInfo tz, CancellationToken cancellationToken)
         {
             _client = client;
             _tz = tz;
+            _cancellationToken = cancellationToken;
         }
 
         public async Task InitTwitchServiceAsync()
@@ -99,6 +101,8 @@ namespace VainBotDiscord.Twitch
 
         async void CheckTwitchAsync(object streamToCheckIn)
         {
+            _cancellationToken.ThrowIfCancellationRequested();
+
             var streamToCheck = (StreamToCheck)streamToCheckIn;
 
             var stream = await GetTwitchStreamAsync(streamToCheck.UserId);
