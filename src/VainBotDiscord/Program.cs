@@ -81,8 +81,6 @@ namespace VainBotDiscord
             client.Ready += async () =>
             {
                 await client.SetGameAsync("inside a box");
-                
-                
             };
 
             CancellationTokenSource twitchCancelToken = new CancellationTokenSource();
