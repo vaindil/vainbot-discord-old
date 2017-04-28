@@ -128,6 +128,16 @@ namespace VainBotDiscord.Twitch
             if (stream != null && existingRecord == null)
             {
                 var msgId = await SendMessageAsync(streamToCheck, stream);
+
+                if (streamToCheck.UserId == 18074328
+                    && streamToCheck.DiscordServerId == 265256381437706240
+                    && streamToCheck.DiscordChannelId == 291758537808412690)
+                {
+                    var channel = _client.GetChannel((ulong)streamToCheck.DiscordChannelId) as SocketTextChannel;
+                    await channel.SendMessageAsync(
+                        "Destiny is now live at <https://www.destiny.gg/bigscreen>. Check #destinyhub for all the deets.");
+                }
+
                 using (var db = new VbContext())
                 {
                     db.StreamRecords.Add(new StreamRecord
