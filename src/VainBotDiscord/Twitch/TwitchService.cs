@@ -133,7 +133,7 @@ namespace VainBotDiscord.Twitch
                     && streamToCheck.DiscordServerId == 265256381437706240
                     && streamToCheck.DiscordChannelId == 291758537808412690)
                 {
-                    var channel = _client.GetChannel((ulong)streamToCheck.DiscordChannelId) as SocketTextChannel;
+                    var channel = _client.GetChannel(265256381437706240) as SocketTextChannel;
                     await channel.SendMessageAsync(
                         "Destiny is now live at <https://www.destiny.gg/bigscreen>. Check #destinyhub for all the deets.");
                 }
