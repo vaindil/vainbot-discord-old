@@ -135,7 +135,7 @@ namespace VainBotDiscord.Twitch
                 {
                     var channel = _client.GetChannel(265256381437706240) as SocketTextChannel;
                     await channel.SendMessageAsync(
-                        "Destiny is now live at <https://www.destiny.gg/bigscreen>. Check #destinyhub for all the deets.");
+                        "Destiny is now live at <https://www.destiny.gg/bigscreen>. Check <#291758537808412690> for all the deets.");
                 }
 
                 using (var db = new VbContext())
