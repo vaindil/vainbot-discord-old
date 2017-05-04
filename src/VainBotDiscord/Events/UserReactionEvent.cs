@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace VainBotDiscord.Events
                 if (_rng.Next(51) != 1)
                     return;
 
-                await msg.AddReactionAsync("🇮");
+                await msg.AddReactionAsync(new Emote());
                 await msg.AddReactionAsync("🇲");
                 await msg.AddReactionAsync("🇬");
                 await msg.AddReactionAsync("🇦");

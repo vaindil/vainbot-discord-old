@@ -1,20 +1,19 @@
 ﻿using Discord.Commands;
+using System;
 using System.Threading.Tasks;
 
 namespace VainBotDiscord.Utils
 {
     public class DestinyServerOnlyAttribute : PreconditionAttribute
     {
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async override Task<PreconditionResult> CheckPermissions(ICommandContext context,
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        public override Task<PreconditionResult> CheckPermissions(ICommandContext context,
                                                                         CommandInfo command,
-                                                                        IDependencyMap map)
+                                                                        IServiceProvider services)
         {
             if (context.Guild.Id == 265256381437706240)
-                return PreconditionResult.FromSuccess();
+                return Task.FromResult(PreconditionResult.FromSuccess());
 
-            return PreconditionResult.FromError("");
+            return Task.FromResult(PreconditionResult.FromError(""));
         }
     }
 }

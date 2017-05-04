@@ -1,5 +1,6 @@
 ﻿using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 
 namespace VainBotDiscord.Utils
@@ -8,7 +9,7 @@ namespace VainBotDiscord.Utils
     {
         public async override Task<PreconditionResult> CheckPermissions(ICommandContext context,
                                                                         CommandInfo command,
-                                                                        IDependencyMap map)
+                                                                        IServiceProvider services)
         {
             using (var db = new VbContext())
             {
