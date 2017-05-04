@@ -28,7 +28,7 @@ namespace VainBotDiscord.Commands
             _throttler = throttler;
         }
 
-        [Command]
+        [Command(RunMode = RunMode.Async)]
         public async Task Cat([Remainder]string unused = null)
         {
             if (!_throttler.CommandAllowed(ThrottleTypes.Cat, Context.Channel.Id))
@@ -36,7 +36,7 @@ namespace VainBotDiscord.Commands
 
             var imgurClientId = Environment.GetEnvironmentVariable("IMGUR_CLIENT_ID");
 
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://api.imgur.com/3/album/hCR89/images");
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://api.imgur.com/3/album/ohOjC/images");
             request.Headers.Authorization = new AuthenticationHeaderValue("Client-ID", imgurClientId);
 
             var response = await _client.SendAsync(request);
