@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 
@@ -18,12 +19,12 @@ namespace VainBotDiscord.Events
                 if (_rng.Next(51) != 1)
                     return;
 
-                await msg.AddReactionAsync("🇮");
-                await msg.AddReactionAsync("🇲");
-                await msg.AddReactionAsync("🇬");
-                await msg.AddReactionAsync("🇦");
-                await msg.AddReactionAsync("🇾");
-                await msg.AddReactionAsync("gachiGASM:271856536282857472");
+                await msg.AddReactionAsync(new Emoji("🇮"));
+                await msg.AddReactionAsync(new Emoji("🇲"));
+                await msg.AddReactionAsync(new Emoji("🇬"));
+                await msg.AddReactionAsync(new Emoji("🇦"));
+                await msg.AddReactionAsync(new Emoji("🇾"));
+                await msg.AddReactionAsync(Emote.Parse("<:gachiGASM:271856536282857472>"));
             }
         }
     }

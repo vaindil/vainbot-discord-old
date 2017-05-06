@@ -2,13 +2,12 @@
 using System.Threading.Tasks;
 using VainBotDiscord.Twitch;
 using VainBotDiscord.Twitter;
-using VainBotDiscord.Utils;
 using VainBotDiscord.YouTube;
 
 namespace VainBotDiscord.Commands
 {
     [Group("reload")]
-    [IsOwner]
+    [RequireOwner]
     public class ReloadModule : ModuleBase<VbCommandContext>
     {
         readonly TwitchService _twitchSvc;

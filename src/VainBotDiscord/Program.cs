@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +25,7 @@ namespace VainBotDiscord
     {
         DiscordSocketClient client;
         CommandService commands;
-        DependencyMap map;
+        IServiceProvider services;
         static HttpClient httpClient;
         static List<ServerMainUser> mainUsers;
         static bool isDev;
@@ -66,13 +67,14 @@ namespace VainBotDiscord
             else
                 tz = TimeZoneInfo.FindSystemTimeZoneById("America/Chicago");
 
-            map = new DependencyMap();
-            map.Add(client);
-            map.Add(httpClient);
-            map.Add(new ThrottlerService());
-            map.Add(new VbContext());
-            map.Add(new Random());
-            map.Add(tz);
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddDbContext<VbContext>();
+            serviceCollection.AddSingleton(client);
+            serviceCollection.AddSingleton(httpClient);
+            serviceCollection.AddSingleton(new ThrottlerService());
+            serviceCollection.AddSingleton(new Random());
+            serviceCollection.AddSingleton(tz);
+            services = serviceCollection.BuildServiceProvider();
 
             client.MessageReceived += UserReactionEvent.AddReactionToUserAsync;
             client.MessageReceived += LolCounterEvent.LolCounterAsync;
@@ -97,7 +99,8 @@ namespace VainBotDiscord
                 twitterCancelToken = new CancellationTokenSource();
 
                 var twitchSvc = new TwitchService(client, tz, twitchCancelToken.Token);
-                map.Add(twitchSvc);
+                serviceCollection.AddSingleton(twitchSvc);
+                services = serviceCollection.BuildServiceProvider();
                 try
                 {
                     await twitchSvc.InitTwitchServiceAsync();
@@ -115,7 +118,8 @@ namespace VainBotDiscord
                 }
 
                 var youTubeSvc = new YouTubeService(client, tz, youTubeCancelToken.Token);
-                map.Add(youTubeSvc);
+                serviceCollection.AddSingleton(youTubeSvc);
+                services = serviceCollection.BuildServiceProvider();
                 try
                 {
                     await youTubeSvc.InitYouTubeServiceAsync();
@@ -133,7 +137,8 @@ namespace VainBotDiscord
                 }
 
                 var twitterSvc = new TwitterService(client, tz, twitterCancelToken.Token);
-                map.Add(twitterSvc);
+                serviceCollection.AddSingleton(twitterSvc);
+                services = serviceCollection.BuildServiceProvider();
                 try
                 {
                     await twitterSvc.InitTwitterServiceAsync();
@@ -208,7 +213,7 @@ namespace VainBotDiscord
             if (mainUsers.Exists(m => (ulong)m.DiscordServerId == guildId))
                 context.MainUser = mainUsers.Find(m => (ulong)m.DiscordServerId == guildId);
             
-            var result = await commands.ExecuteAsync(context, argPos, map);
+            var result = await commands.ExecuteAsync(context, argPos, services);
         }
 
         void VerifyEnvironmentVariables()

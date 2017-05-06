@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Text.RegularExpressions;
@@ -117,7 +118,7 @@ namespace VainBotDiscord.Commands
                     $"and now have {user.Points.GetNumberString()}.");
 
             if (trick)
-                await msg.AddReactionAsync("LUL:232582021493424128");
+                await msg.AddReactionAsync(Emote.Parse("LUL:232582021493424128"));
         }
 
         [Command("toggle")]

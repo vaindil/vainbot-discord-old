@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -38,7 +39,7 @@ namespace VainBotDiscord.Events
                 await db.SaveChangesAsync();
             }
 
-            await msg.AddReactionAsync("pepe:266080004897636352");
+            await msg.AddReactionAsync(Emote.Parse("pepe:266080004897636352"));
 
             if (count % 5 == 0 || count == 1)
                 await msg.Channel.SendMessageAsync(msg.Author.Username + " no u counter: " + count);

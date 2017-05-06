@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -42,7 +43,7 @@ namespace VainBotDiscord.Events
                 await db.SaveChangesAsync();
             }
 
-            await msg.AddReactionAsync("LUL:232582021493424128");
+            await msg.AddReactionAsync(Emote.Parse("LUL:232582021493424128"));
 
             if (count % 5 == 0)
                 await msg.Channel.SendMessageAsync(msg.Author.Username + " lol counter: " + count);
