@@ -7,8 +7,8 @@ namespace VainBotDiscord.Utils
     public class DestinyServerOnlyAttribute : PreconditionAttribute
     {
         public override Task<PreconditionResult> CheckPermissions(ICommandContext context,
-                                                                        CommandInfo command,
-                                                                        IServiceProvider services)
+                                                                  CommandInfo command,
+                                                                  IServiceProvider services)
         {
             if (context.Guild.Id == 265256381437706240)
                 return Task.FromResult(PreconditionResult.FromSuccess());
