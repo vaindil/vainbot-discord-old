@@ -76,7 +76,7 @@ namespace VainBotDiscord
             serviceCollection.AddSingleton(tz);
             services = serviceCollection.BuildServiceProvider();
 
-            client.MessageReceived += UserReactionEvent.AddReactionToUserAsync;
+            //client.MessageReceived += UserReactionEvent.AddReactionToUserAsync;
             client.MessageReceived += LolCounterEvent.LolCounterAsync;
             client.MessageReceived += NoUCounterEvent.NoUCounterAsync;
             client.UserLeft += UserLeavesEvent.UserLeavesAsync;
