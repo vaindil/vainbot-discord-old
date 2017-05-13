@@ -16,15 +16,13 @@ namespace VainBotDiscord.Commands
     public class CatModule : ModuleBase<VbCommandContext>
     {
         readonly HttpClient _client;
-        readonly Random _rng;
-
         readonly ThrottlerService _throttler;
 
-        public CatModule(HttpClient client, Random rng, ThrottlerService throttler)
+        Random _rng = new Random();
+
+        public CatModule(HttpClient client, ThrottlerService throttler)
         {
             _client = client;
-            _rng = rng;
-
             _throttler = throttler;
         }
 
