@@ -182,7 +182,7 @@ namespace VainBotDiscord.YouTube
         async Task<YouTubePlaylist> GetYouTubePlaylistAsync(string playlistId)
         {
             var response = await _youTubeClient
-                .GetAsync($"playlistItems?part=contentDetails&playlistId={playlistId}&maxResults=3&key={_youTubeApiKey}");
+                .GetAsync($"playlistItems?part=contentDetails&playlistId={playlistId}&maxResults=10&key={_youTubeApiKey}");
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<YouTubePlaylist>(responseString, Extensions.GetJsonSettings());
         }
