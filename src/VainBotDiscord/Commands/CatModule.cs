@@ -32,9 +32,6 @@ namespace VainBotDiscord.Commands
             if (!_throttler.CommandAllowed(ThrottleTypes.Cat, Context.Channel.Id))
                 return;
 
-            if (Context.Message.Author.Id == 120020139335745537)
-                return;
-
             var imgurClientId = Environment.GetEnvironmentVariable("IMGUR_CLIENT_ID");
 
             var request = new HttpRequestMessage(HttpMethod.Get, "https://api.imgur.com/3/album/ohOjC/images");
