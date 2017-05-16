@@ -30,8 +30,8 @@ namespace VainBotDiscord
         static List<ServerMainUser> mainUsers;
         static bool isDev;
 
-        static void Main(string[] args) => new Program().Run().GetAwaiter().GetResult();
-        
+        static void Main() => new Program().Run().GetAwaiter().GetResult();
+
         public async Task Run()
         {
             isDev = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VAINBOT_ISDEV"));
@@ -80,20 +80,17 @@ namespace VainBotDiscord
             client.MessageReceived += LolCounterEvent.LolCounterAsync;
             client.MessageReceived += NoUCounterEvent.NoUCounterAsync;
             client.UserLeft += UserLeavesEvent.UserLeavesAsync;
-            client.Ready += async () =>
-            {
-                await client.SetGameAsync("inside a box");
-            };
+            client.Ready += async () => await client.SetGameAsync("inside a box");
 
-            CancellationTokenSource twitchCancelToken = new CancellationTokenSource();
-            CancellationTokenSource youTubeCancelToken = new CancellationTokenSource();
-            CancellationTokenSource twitterCancelToken = new CancellationTokenSource();
+            var twitchCancelToken = new CancellationTokenSource();
+            var youTubeCancelToken = new CancellationTokenSource();
+            var twitterCancelToken = new CancellationTokenSource();
 
             client.Connected += async () =>
             {
                 if (isDev)
                     return;
-                
+
                 twitchCancelToken = new CancellationTokenSource();
                 youTubeCancelToken = new CancellationTokenSource();
                 twitterCancelToken = new CancellationTokenSource();
@@ -175,10 +172,10 @@ namespace VainBotDiscord
 
             await client.LoginAsync(TokenType.Bot, apiToken);
             await client.StartAsync();
-            
+
             await Task.Delay(-1);
         }
-        
+
         public async Task InstallCommands()
         {
             client.MessageReceived += HandleCommand;
@@ -188,7 +185,7 @@ namespace VainBotDiscord
         public async Task HandleCommand(SocketMessage messageParam)
         {
             var message = messageParam as SocketUserMessage;
-            
+
             if (message == null || message.Author.Id == client.CurrentUser.Id)
                 return;
 
@@ -212,7 +209,7 @@ namespace VainBotDiscord
 
             if (mainUsers.Exists(m => (ulong)m.DiscordServerId == guildId))
                 context.MainUser = mainUsers.Find(m => (ulong)m.DiscordServerId == guildId);
-            
+
             var result = await commands.ExecuteAsync(context, argPos, services);
         }
 

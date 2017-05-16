@@ -4,8 +4,9 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>VainBotDiscord</AssemblyName>
     <OutputType>Exe</OutputType>
+    <CodeAnalysisRuleSet>VainBotDiscord.ruleset</CodeAnalysisRuleSet>
     <PackageId>VainBotDiscord</PackageId>
-    <RuntimeFrameworkVersion>1.1.0</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>1.1.2</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
