@@ -81,7 +81,7 @@ namespace VainBotDiscord.Commands
                 points = 0;
             else
                 points = userPoint.Points;
-            
+
             var msgText = user.Username + " has " + (await points.GetCorrectPluralityAsync(_context)) + ".";
 
             if (userPoint.Points == 3.14M)
@@ -292,7 +292,7 @@ namespace VainBotDiscord.Commands
                 await ReplyAsync(user.Username + " is now allowed to edit slothies.");
                 return;
             }
-            
+
             target.Allow = false;
             await _context.SaveChangesAsync();
 

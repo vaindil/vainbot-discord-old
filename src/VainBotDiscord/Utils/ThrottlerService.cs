@@ -12,7 +12,7 @@ namespace VainBotDiscord.Utils
         {
             _throttles = new List<ThrottledChannel>();
         }
-        
+
         public bool CommandAllowed(ThrottleTypes type, ulong channelId)
         {
             return !_throttles.Exists(t => t.Type == type && t.ChannelId == channelId);

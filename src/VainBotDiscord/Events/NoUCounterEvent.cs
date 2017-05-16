@@ -33,7 +33,7 @@ namespace VainBotDiscord.Events
                 var countKv = await db.KeyValues.FirstOrDefaultAsync(k => k.Key == DbKey.NoUCounter.ToString());
 
                 count = int.Parse(countKv.Value);
-                count += 1;
+                count++;
                 countKv.Value = count.ToString();
 
                 await db.SaveChangesAsync();

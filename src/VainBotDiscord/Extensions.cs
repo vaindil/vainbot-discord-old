@@ -9,7 +9,7 @@ namespace VainBotDiscord
 {
     public static class Extensions
     {
-        static Regex validDie = new Regex(@"^-?\d*d-?\d+$", RegexOptions.IgnoreCase);
+        static readonly Regex validDie = new Regex(@"^-?\d*d-?\d+$", RegexOptions.IgnoreCase);
 
         public static async Task<string> GetValueAsync(this DbSet<KeyValue> dbSetKv, DbKey key)
         {
@@ -93,20 +93,19 @@ namespace VainBotDiscord
 
         public static JsonSerializerSettings GetJsonSettings()
         {
-            var settings = new JsonSerializerSettings();
-
-            var contractResolver = new DefaultContractResolver();
-            contractResolver.NamingStrategy = new SnakeCaseNamingStrategy(true, false);
-
-            settings.ContractResolver = contractResolver;
-            settings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-            settings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-            settings.Formatting = Formatting.Indented;
-            settings.MissingMemberHandling = MissingMemberHandling.Ignore;
-            settings.NullValueHandling = NullValueHandling.Ignore;
-            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-            return settings;
+            return new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new SnakeCaseNamingStrategy(true, false)
+                },
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                Formatting = Formatting.Indented,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
         }
     }
 }

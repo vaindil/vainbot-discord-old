@@ -17,8 +17,7 @@ namespace VainBotDiscord.Commands
     {
         readonly HttpClient _client;
         readonly ThrottlerService _throttler;
-
-        Random _rng = new Random();
+        readonly Random _rng = new Random();
 
         public CatModule(HttpClient client, ThrottlerService throttler)
         {

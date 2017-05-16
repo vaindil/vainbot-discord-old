@@ -46,7 +46,7 @@ namespace VainBotDiscord.Commands
                 return;
             }
 
-            var filePath = $"TTSTemp{Path.DirectorySeparatorChar}{DateTime.UtcNow.Ticks.ToString()}.wav";
+            var filePath = $"TTSTemp{Path.DirectorySeparatorChar}{DateTime.UtcNow.Ticks}.wav";
 
             CreateTtsFile(filePath, words);
 
@@ -67,7 +67,7 @@ namespace VainBotDiscord.Commands
                 return;
             }
 
-            var filePath = $"TTSTemp{Path.DirectorySeparatorChar}{DateTime.UtcNow.Ticks.ToString()}.wav";
+            var filePath = $"TTSTemp{Path.DirectorySeparatorChar}{DateTime.UtcNow.Ticks}.wav";
 
             CreateTtsFile(filePath, words);
 
@@ -107,7 +107,7 @@ namespace VainBotDiscord.Commands
             ffmpeg.WaitForExit();
             ffmpeg.Dispose();
         }
-        
+
         Process CreateStream(string path)
         {
             var ffmpeg = new ProcessStartInfo

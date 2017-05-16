@@ -23,7 +23,7 @@ namespace VainBotDiscord.Commands
         [Command]
         public async Task Current()
         {
-            bool needsUpdate = false;
+            var needsUpdate = false;
 
             using (var db = new VbContext())
             {

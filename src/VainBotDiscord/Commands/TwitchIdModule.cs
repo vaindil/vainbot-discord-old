@@ -11,7 +11,7 @@ namespace VainBotDiscord.Commands
     {
         readonly VbContext _context;
         readonly HttpClient _client;
-        
+
         public TwitchIdModule(VbContext context, HttpClient client)
         {
             _context = context;

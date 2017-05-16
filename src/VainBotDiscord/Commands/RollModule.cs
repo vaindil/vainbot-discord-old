@@ -11,7 +11,7 @@ namespace VainBotDiscord.Commands
     public class RollModule : ModuleBase<VbCommandContext>
     {
         readonly Random _rng;
-        static Regex validDie = new Regex(@"^-?\d*d-?\d+$", RegexOptions.IgnoreCase);
+        static readonly Regex validDie = new Regex(@"^-?\d*d-?\d+$", RegexOptions.IgnoreCase);
 
         public RollModule(Random rng)
         {
@@ -79,7 +79,7 @@ namespace VainBotDiscord.Commands
 
                 numSides = int.Parse(deezNuts[1]);
             }
-            
+
             for (var i = 0; i < numDice; i++)
             {
                 var datBoi = _rng.Next(1, numSides + 1);

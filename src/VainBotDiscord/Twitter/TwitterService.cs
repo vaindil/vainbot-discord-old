@@ -269,14 +269,14 @@ namespace VainBotDiscord.Twitter
         {
             var keyValues = new SortedDictionary<string, string>
             {
-                { "user_id", userId.ToString() },
-                { "count", "100" },
-                { "oauth_consumer_key", _consumerKey },
-                { "oauth_nonce", nonce },
-                { "oauth_signature_method", "HMAC-SHA1" },
-                { "oauth_timestamp", timestamp },
-                { "oauth_token", _accessToken },
-                { "oauth_version", "1.0" }
+                ["user_id"] = userId.ToString(),
+                ["count"] = "100",
+                ["oauth_consumer_key"] = _consumerKey,
+                ["oauth_nonce"] = nonce,
+                ["oauth_signature_method"] = "HMAC-SHA1",
+                ["oauth_timestamp"] = timestamp,
+                ["oauth_token"] = _accessToken,
+                ["oauth_version"] = "1.0"
             };
 
             if (sinceId.HasValue)

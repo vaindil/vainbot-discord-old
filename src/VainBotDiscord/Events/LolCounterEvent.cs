@@ -37,7 +37,7 @@ namespace VainBotDiscord.Events
                 }
 
                 count = int.Parse(countKv.Value);
-                count += 1;
+                count++;
                 countKv.Value = count.ToString();
 
                 await db.SaveChangesAsync();

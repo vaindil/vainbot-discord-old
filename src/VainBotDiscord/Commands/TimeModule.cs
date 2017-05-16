@@ -31,7 +31,9 @@ namespace VainBotDiscord.Commands
         {
             var destiny = false;
 
-            if (timezone == null || timezone.ToLower() == "steven" || timezone.ToLower() == "destiny")
+            if (timezone == null
+                || string.Equals(timezone, "steven", System.StringComparison.CurrentCultureIgnoreCase)
+                || string.Equals(timezone, "destiny", System.StringComparison.CurrentCultureIgnoreCase))
             {
                 timezone = "America/Chicago";
                 destiny = true;

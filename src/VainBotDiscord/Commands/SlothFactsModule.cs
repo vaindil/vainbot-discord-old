@@ -25,7 +25,7 @@ namespace VainBotDiscord.Commands
             await ReplyAsync(SlothFacts[i]);
         }
 
-        static List<string> SlothFacts = new List<string>
+        static readonly List<string> SlothFacts = new List<string>
         {
             "Sloths can sometimes maintain their grasp on limbs after death.",
             "Both two-toed and three-toed sloths grow to 1.5 to 2 feet long.",

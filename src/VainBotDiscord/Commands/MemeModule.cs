@@ -25,7 +25,7 @@ namespace VainBotDiscord.Commands
             var pageIndex = _rng.Next(0, 3);
 
             var result = await _client
-                .GetStringAsync("http://version1.api.memegenerator.net/Instances_Select_ByPopular" + 
+                .GetStringAsync("http://version1.api.memegenerator.net/Instances_Select_ByPopular" +
                                 $"?languageCode=en&pageIndex={pageIndex}&urlName=&days=1");
 
             var memeResult = JsonConvert.DeserializeObject<MemeResult>(result);

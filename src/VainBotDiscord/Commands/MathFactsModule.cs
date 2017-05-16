@@ -25,7 +25,7 @@ namespace VainBotDiscord.Commands
             await ReplyAsync(MathFacts[i]);
         }
 
-        static List<string> MathFacts = new List<string>
+        static readonly List<string> MathFacts = new List<string>
         {
             "If you put 23 people in a room, there is a 50% chance that two will share the same birthday. Read more: <https://en.wikipedia.org/wiki/Birthday_problem>",
             "Given a solid ball, it is possible to deconstruct the ball into a finite number of pieces that can then be put back together a different way to make two identical copies of the original ball. Read more: <https://en.wikipedia.org/wiki/Banach%E2%80%93Tarski_paradox>",

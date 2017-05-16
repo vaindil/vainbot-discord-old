@@ -14,8 +14,8 @@ namespace VainBotDiscord.Commands
     {
         readonly HttpClient _client;
 
-        static Regex _validBTag = new Regex(@"^[\p{L}\p{Mn}][\p{L}\p{Mn}0-9]{2,11}#[0-9]{4,5}$", RegexOptions.IgnoreCase);
-        static string _baseUrl = @"https://owapi.net/api/v3/u/";
+        static readonly Regex _validBTag = new Regex(@"^[\p{L}\p{Mn}][\p{L}\p{Mn}0-9]{2,11}#[0-9]{4,5}$", RegexOptions.IgnoreCase);
+        static readonly string _baseUrl = @"https://owapi.net/api/v3/u/";
 
         public OverwatchModule(HttpClient client)
         {

@@ -11,7 +11,7 @@ namespace VainBotDiscord.Commands
     [Alias("twitch")]
     public class LiveModule : ModuleBase<VbCommandContext>
     {
-        ThrottlerService _throttler;
+        readonly ThrottlerService _throttler;
 
         public LiveModule(ThrottlerService throttler)
         {
@@ -21,7 +21,7 @@ namespace VainBotDiscord.Commands
         [Command]
         public async Task GetLive([Remainder]string unused = null)
         {
-            if (!Context.HasMainUser 
+            if (!Context.HasMainUser
                 || Context.MainUser.TwitchUserId == null
                 || !_throttler.CommandAllowed(ThrottleTypes.Live, Context.Channel.Id))
                 return;
@@ -39,9 +39,8 @@ namespace VainBotDiscord.Commands
 
             if (lastOnline == null && streamRecord == null)
                 msg = $"{Context.MainUser.FriendlyUsername} is offline. " +
-                    $"I'll have more info in the future, after the next time the stream goes live. " +
-                    $"Sorry!";
-
+                    "I'll have more info in the future, after the next time the stream goes live. " +
+                    "Sorry!";
             else if (lastOnline == null && streamRecord != null)
             {
                 streamRecord.StartTime = DateTime.SpecifyKind(streamRecord.StartTime, DateTimeKind.Utc);
@@ -51,7 +50,6 @@ namespace VainBotDiscord.Commands
                     $"Currently playing {streamRecord.CurrentGame}\n" +
                     $"Live for {duration.ToFriendlyString()}";
             }
-
             else
             {
                 lastOnline.LastOnlineAt = DateTime.SpecifyKind(lastOnline.LastOnlineAt, DateTimeKind.Utc);

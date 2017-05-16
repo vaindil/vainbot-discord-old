@@ -45,7 +45,6 @@ namespace VainBotDiscord.YouTube
         public YouTubeVideoThumbnail Standard { get; set; }
 
         public YouTubeVideoThumbnail Maxres { get; set; }
-
     }
 
     public class YouTubeVideoThumbnail

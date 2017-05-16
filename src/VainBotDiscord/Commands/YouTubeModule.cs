@@ -44,13 +44,13 @@ namespace VainBotDiscord.Commands
 
             record.PublishedAt = DateTime.SpecifyKind(record.PublishedAt, DateTimeKind.Utc);
 
-            var embed = CreateEmbedAsync(record);
+            var embed = CreateEmbed(record);
 
             await ReplyAsync("", embed: embed);
             _throttler.Throttle(ThrottleTypes.YouTube, Context.Channel.Id);
         }
 
-        Embed CreateEmbedAsync(YouTubeRecord record)
+        Embed CreateEmbed(YouTubeRecord record)
         {
             var embed = new EmbedBuilder();
             var author = new EmbedAuthorBuilder

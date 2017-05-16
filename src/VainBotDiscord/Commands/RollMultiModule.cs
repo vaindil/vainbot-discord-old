@@ -58,7 +58,7 @@ namespace VainBotDiscord.Commands
                     numDice = 1;
                 else
                     numDice = int.Parse(deezNuts[0]);
-                
+
                 var numSides = int.Parse(deezNuts[1]);
 
                 reply += d + ": ";

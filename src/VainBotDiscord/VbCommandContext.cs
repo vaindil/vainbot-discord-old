@@ -13,10 +13,7 @@ namespace VainBotDiscord
 
         public bool HasMainUser
         {
-            get
-            {
-                return MainUser != null;
-            }
+            get { return MainUser != null; }
         }
     }
 }

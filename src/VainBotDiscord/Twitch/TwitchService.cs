@@ -69,7 +69,7 @@ namespace VainBotDiscord.Twitch
 
             foreach (var record in streamRecords)
             {
-                var thisStreamToCheck = streamsToCheck.FirstOrDefault(s => s.UserId == record.UserId);
+                var thisStreamToCheck = streamsToCheck.Find(s => s.UserId == record.UserId);
 
                 if (thisStreamToCheck.EmbedColor != 0)
                 {
@@ -216,7 +216,7 @@ namespace VainBotDiscord.Twitch
                     await db.SaveChangesAsync();
                 }
 
-                var updateTimer = _updateTimerList.FirstOrDefault(t => t.StreamId == existingRecord.StreamId);
+                var updateTimer = _updateTimerList.Find(t => t.StreamId == existingRecord.StreamId);
                 if (updateTimer == null)
                     return;
 
@@ -257,7 +257,7 @@ namespace VainBotDiscord.Twitch
 
             if (string.IsNullOrEmpty(stream.Game))
                 stream.Game = "(no game)";
-            
+
             if (record.CurrentGame != stream.Game)
             {
                 using (var db = new VbContext())
@@ -314,7 +314,7 @@ namespace VainBotDiscord.Twitch
                     latest.StopTime = DateTime.UtcNow;
                     await db.SaveChangesAsync();
                 }
-                
+
                 games = await db.StreamGames.Where(g => g.StreamId == record.StreamId).ToListAsync();
             }
 
@@ -393,7 +393,7 @@ namespace VainBotDiscord.Twitch
             author.Name = stream.Channel.DisplayName ?? stream.Channel.Name;
             author.Url = stream.Channel.Url;
             author.IconUrl = stream.Channel.Logo;
-            
+
             var streamPlayingField = new EmbedFieldBuilder
             {
                 Name = "Playing",
@@ -407,7 +407,7 @@ namespace VainBotDiscord.Twitch
                 Value = stream.Viewers.ToString(),
                 IsInline = true
             };
-            
+
             embed.Color = color;
             embed.ImageUrl = imgUrl;
             embed.Title = !string.IsNullOrWhiteSpace(stream.Channel.Status) ? stream.Channel.Status : "(no title)";
