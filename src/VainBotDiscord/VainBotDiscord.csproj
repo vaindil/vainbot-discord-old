@@ -17,6 +17,7 @@
     <PackageReference Include="Discord.Net.Commands" Version="1.0.0-rc3-00743" />
     <PackageReference Include="Discord.Net.Core" Version="1.0.0-rc3-00743" />
     <PackageReference Include="Discord.Net.WebSocket" Version="1.0.0-rc3-00743" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="2.1.0" />
     <PackageReference Include="NodaTime" Version="2.0.1" />
     <PackageReference Include="SapientGuardian.EntityFrameworkCore.MySql" Version="7.1.23" />
   </ItemGroup>
