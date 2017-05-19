@@ -7,10 +7,12 @@ namespace VainBotDiscord.Utils
     public class ThrottlerService
     {
         List<ThrottledChannel> _throttles;
+        bool _evalAllowed;
 
         public ThrottlerService()
         {
             _throttles = new List<ThrottledChannel>();
+            _evalAllowed = false;
         }
 
         public bool CommandAllowed(ThrottleTypes type, ulong channelId)
@@ -35,6 +37,21 @@ namespace VainBotDiscord.Utils
 
             item.Timer.Dispose();
             _throttles.Remove(item);
+        }
+
+        public bool EvalAllowed()
+        {
+            return _evalAllowed;
+        }
+
+        public void AllowEval()
+        {
+            _evalAllowed = true;
+        }
+
+        public void DisallowEval()
+        {
+            _evalAllowed = false;
         }
     }
 

@@ -4,10 +4,8 @@ using Discord.WebSocket;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using VainBotDiscord.Utils;
 
@@ -15,15 +13,43 @@ using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
+    [Group("eval")]
+    [Alias("evaluate", "cs", "c#", "csharp")]
     public class EvalModule : ModuleBase
     {
-        [Command("eval", RunMode = RunMode.Async)]
-        [Alias("evaluate", "cs", "c#", "csharp")]
+        readonly ThrottlerService _throttler;
+
+        public EvalModule(ThrottlerService throttler)
+        {
+            _throttler = throttler;
+        }
+
+        [Command("allow")]
+        public async Task AllowEval()
+        {
+            _throttler.AllowEval();
+            await ReplyAsync("eval is now allowed.");
+        }
+
+        [Command("disallow")]
+        public async Task DisallowEval()
+        {
+            _throttler.DisallowEval();
+            await ReplyAsync("eval is now disallowed.");
+        }
+
+        [Command(RunMode = RunMode.Async)]
         public async Task Evaluate([Remainder]string input)
         {
             if (Context.Guild.Id != 268547141721522178)
             {
                 await ReplyAsync("Can't use that in this server.");
+                return;
+            }
+
+            if (_throttler.EvalAllowed())
+            {
+                await ReplyAsync("Use of eval is currently prohibited.");
                 return;
             }
 
