@@ -50,7 +50,7 @@ namespace VainBotDiscord.Commands
                 return;
             }
 
-            if (_throttler.EvalAllowed())
+            if (!_throttler.EvalAllowed())
             {
                 await ReplyAsync("Use of eval is currently prohibited.");
                 return;
