@@ -25,7 +25,7 @@ namespace VainBotDiscord.Commands
         }
 
         [Command("allow")]
-        [Priority(1)]
+        [Priority(10)]
         public async Task AllowEval()
         {
             _throttler.AllowEval();
@@ -33,7 +33,7 @@ namespace VainBotDiscord.Commands
         }
 
         [Command("disallow")]
-        [Priority(2)]
+        [Priority(5)]
         public async Task DisallowEval()
         {
             _throttler.DisallowEval();
@@ -41,7 +41,7 @@ namespace VainBotDiscord.Commands
         }
 
         [Command(RunMode = RunMode.Async)]
-        [Priority(3)]
+        [Priority(1)]
         public async Task Evaluate([Remainder]string input)
         {
             if (Context.Guild.Id != 268547141721522178)
