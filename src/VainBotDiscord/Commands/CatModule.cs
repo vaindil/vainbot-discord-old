@@ -12,7 +12,7 @@ namespace VainBotDiscord.Commands
 {
     [Group("cat")]
     [Alias("<:ASLAN:271856531505545236>", "<:DJAslan:271856531505545216>")]
-    [DestinyServerOnly]
+    //[DestinyServerOnly]
     public class CatModule : ModuleBase<VbCommandContext>
     {
         readonly HttpClient _client;
