@@ -92,7 +92,8 @@ namespace VainBotDiscord.Commands
                         "System",
                         "System.Linq",
                         "System.Collections",
-                        "System.Collections.Generic"
+                        "System.Collections.Generic",
+                        "System.Threading.Tasks"
                     });
 
                 var result = await CSharpScript.EvaluateAsync(code, options, globals:
