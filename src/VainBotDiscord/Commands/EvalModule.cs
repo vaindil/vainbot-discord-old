@@ -15,6 +15,7 @@ namespace VainBotDiscord.Commands
 {
     [Group("eval")]
     [Alias("evaluate", "cs", "c#", "csharp")]
+    [RequireOwner]
     public class EvalModule : ModuleBase
     {
         readonly ThrottlerService _throttler;
@@ -44,12 +45,6 @@ namespace VainBotDiscord.Commands
         [Priority(1)]
         public async Task Evaluate([Remainder]string input)
         {
-            if (Context.Guild.Id != 268547141721522178)
-            {
-                await ReplyAsync("Can't use that in this server.");
-                return;
-            }
-
             if (!_throttler.EvalAllowed())
             {
                 await ReplyAsync("Use of eval is currently prohibited.");
