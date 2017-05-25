@@ -91,7 +91,7 @@ namespace VainBotDiscord.Commands
                         "System.Collections.Generic",
                         "System.Threading.Tasks"
                     });
-                
+
                 var result = await CSharpScript.EvaluateAsync(code, options, globals:
                     new RoslynGlobals
                     {
