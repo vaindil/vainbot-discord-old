@@ -83,6 +83,7 @@ namespace VainBotDiscord.Commands
                     {
                         "Discord",
                         "Discord.Commands",
+                        "Discord.Rest",
                         "Discord.WebSocket",
                         "System",
                         "System.Linq",
@@ -90,7 +91,7 @@ namespace VainBotDiscord.Commands
                         "System.Collections.Generic",
                         "System.Threading.Tasks"
                     });
-
+                
                 var result = await CSharpScript.EvaluateAsync(code, options, globals:
                     new RoslynGlobals
                     {
