@@ -11,7 +11,7 @@ namespace VainBotDiscord.Commands
 {
     public class AudioModule : ModuleBase<VbCommandContext>
     {
-        [Command("rainbow2", RunMode = RunMode.Async)]
+        [Command("rainbow", RunMode = RunMode.Async)]
         [Alias("readingrainbow")]
         [CrendorServerOnly]
         public async Task PlayReadingRainbow()
