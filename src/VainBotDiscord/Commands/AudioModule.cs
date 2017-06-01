@@ -11,7 +11,7 @@ namespace VainBotDiscord.Commands
 {
     public class AudioModule : ModuleBase<VbCommandContext>
     {
-        [Command("rainbow", RunMode = RunMode.Async)]
+        [Command("rainbow2", RunMode = RunMode.Async)]
         [Alias("readingrainbow")]
         [CrendorServerOnly]
         public async Task PlayReadingRainbow()
@@ -98,7 +98,7 @@ namespace VainBotDiscord.Commands
         {
             var ffmpeg = CreateStream(path);
             var output = ffmpeg.StandardOutput.BaseStream;
-            var discord = audioClient.CreatePCMStream(AudioApplication.Voice, 1920);
+            var discord = audioClient.CreatePCMStream(AudioApplication.Mixed);
 
             await output.CopyToAsync(discord);
             await discord.FlushAsync();
