@@ -270,6 +270,17 @@ namespace VainBotDiscord.Twitch
             }
 
             var stream = await GetTwitchStreamAsync(streamToCheck.UserId);
+            if (stream == null)
+            {
+                await Console.Error.WriteLineAsync("Stream is null in UpdateEmbedAsync");
+                using (var db = new VbContext())
+                {
+                    db.StreamRecords.Remove(record);
+                    await db.SaveChangesAsync();
+                }
+
+                return;
+            }
 
             if (string.IsNullOrEmpty(stream.Game))
                 stream.Game = "(no game)";
@@ -387,6 +398,9 @@ namespace VainBotDiscord.Twitch
             var response = await _twitchClient.GetAsync(userId.ToString());
             var responseString = await response.Content.ReadAsStringAsync();
             var streamResponse = JsonConvert.DeserializeObject<TwitchStreamResponse>(responseString, Extensions.GetJsonSettings());
+
+            if (streamResponse == null || streamResponse.Stream == null)
+                return null;
 
             return streamResponse.Stream;
         }
