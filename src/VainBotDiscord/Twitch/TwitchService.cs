@@ -179,9 +179,11 @@ namespace VainBotDiscord.Twitch
             // not live and was previously live
             if (stream == null && existingRecord != null)
             {
+                (DateTimeOffset first, long userId) fnr;
+
                 if (_firstNullResponse.Any(r => r.userId == existingRecord.UserId))
                 {
-                    var fnr = _firstNullResponse.First(r => r.userId == existingRecord.UserId);
+                    fnr = _firstNullResponse.First(r => r.userId == existingRecord.UserId);
                     if (fnr.first < DateTimeOffset.UtcNow.AddMinutes(-4))
                     {
                         return;
@@ -192,6 +194,8 @@ namespace VainBotDiscord.Twitch
                     _firstNullResponse.Add((DateTimeOffset.UtcNow, existingRecord.UserId));
                     return;
                 }
+
+                _firstNullResponse.Remove(fnr);
 
                 var channel = _client.GetChannel((ulong)streamToCheck.DiscordChannelId) as SocketTextChannel;
                 var msgId = existingRecord.DiscordMessageId;
