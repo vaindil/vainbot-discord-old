@@ -24,6 +24,7 @@ namespace VainBotDiscord.Twitch
         static HttpClient _twitchClient;
         List<TwitchCheckTimer> _checkTimerList;
         List<TwitchUpdateTimer> _updateTimerList;
+        List<(DateTimeOffset first, long userId)> _firstNullResponse;
 
         public TwitchService(DiscordSocketClient client, TimeZoneInfo tz, CancellationToken cancellationToken)
         {
@@ -37,6 +38,7 @@ namespace VainBotDiscord.Twitch
             _twitchClient = new HttpClient();
             _checkTimerList = new List<TwitchCheckTimer>();
             _updateTimerList = new List<TwitchUpdateTimer>();
+            _firstNullResponse = new List<(DateTimeOffset first, long userId)>();
 
             // verified to exist in Program.Run()
             var twitchClientId = Environment.GetEnvironmentVariable("TWITCH_CLIENT_ID");
@@ -177,6 +179,20 @@ namespace VainBotDiscord.Twitch
             // not live and was previously live
             if (stream == null && existingRecord != null)
             {
+                if (_firstNullResponse.Any(r => r.userId == existingRecord.UserId))
+                {
+                    var fnr = _firstNullResponse.First(r => r.userId == existingRecord.UserId);
+                    if (fnr.first < DateTimeOffset.UtcNow.AddMinutes(-4))
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    _firstNullResponse.Add((DateTimeOffset.UtcNow, existingRecord.UserId));
+                    return;
+                }
+
                 var channel = _client.GetChannel((ulong)streamToCheck.DiscordChannelId) as SocketTextChannel;
                 var msgId = existingRecord.DiscordMessageId;
 
