@@ -184,7 +184,7 @@ namespace VainBotDiscord.Twitch
                 if (_firstNullResponse.Any(r => r.userId == existingRecord.UserId))
                 {
                     fnr = _firstNullResponse.First(r => r.userId == existingRecord.UserId);
-                    if (fnr.first < DateTimeOffset.UtcNow.AddMinutes(-4))
+                    if (fnr.first > DateTimeOffset.UtcNow.AddMinutes(-4))
                     {
                         return;
                     }
