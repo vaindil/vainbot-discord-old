@@ -320,6 +320,9 @@ namespace VainBotDiscord.Twitch
                 var msg = await channel.GetMessageAsync((ulong)record.DiscordMessageId) as RestUserMessage;
 
                 await msg.ModifyAsync(f => f.Embed = embed);
+
+                if (_firstNullResponse.Any(f => f.userId == streamToCheck.UserId))
+                    _firstNullResponse.Remove(_firstNullResponse.First(f => f.userId == streamToCheck.UserId));
             }
             catch (Exception ex)
             {
