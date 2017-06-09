@@ -116,16 +116,6 @@ namespace VainBotDiscord.Twitch
                 existingRecord = await db.StreamRecords.FirstOrDefaultAsync(sr => sr.UserId == streamToCheck.UserId);
             }
 
-            // if the streamer goes offline and comes online again quickly, the API
-            // may not ever show the offline status. this catches that and forces it to
-            // end the previous one, which will start the new one on the next run.
-            if (stream != null
-                && existingRecord != null
-                && stream.Id != existingRecord.StreamId)
-            {
-                stream = null;
-            }
-
             // live and was not previously live
             if (stream != null && existingRecord == null)
             {
@@ -275,16 +265,7 @@ namespace VainBotDiscord.Twitch
 
             var stream = await GetTwitchStreamAsync(streamToCheck.UserId);
             if (stream == null)
-            {
-                await Console.Error.WriteLineAsync("Stream is null in UpdateEmbedAsync");
-                using (var db = new VbContext())
-                {
-                    db.StreamRecords.Remove(record);
-                    await db.SaveChangesAsync();
-                }
-
                 return;
-            }
 
             if (string.IsNullOrEmpty(stream.Game))
                 stream.Game = "(no game)";
