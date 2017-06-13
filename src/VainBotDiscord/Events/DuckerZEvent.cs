@@ -9,7 +9,7 @@ namespace VainBotDiscord.Events
         {
             var msg = inMsg as SocketUserMessage;
 
-            if (msg.Author.Id != 132714099241910273 && msg.Content != "got 'em")
+            if (msg.Author.Id != 132714099241910273 || msg.Content != "got 'em")
                 return;
 
             var guildId = ((SocketTextChannel)msg.Channel).Guild.Id;
