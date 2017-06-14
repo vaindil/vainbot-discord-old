@@ -1,8 +1,10 @@
 ﻿using Discord.Commands;
 using System.Threading.Tasks;
+using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
+    [CompSciChannelOnly]
     public class JustAskModule : ModuleBase
     {
         [Command("justask")]
