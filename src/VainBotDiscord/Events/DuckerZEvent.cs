@@ -12,17 +12,7 @@ namespace VainBotDiscord.Events
             if (msg.Author.Id != 132714099241910273 || msg.Content != "got 'em")
                 return;
 
-            var guildId = ((SocketTextChannel)msg.Channel).Guild.Id;
-            string emote;
-
-            if (guildId == 265256381437706240) // Destiny
-                emote = "<:DuckerZ:259886357596340224>";
-            else if (guildId == 149051954348294145) // Crendor
-                emote = "<:DuckerZ:259886357596340224>";
-            else
-                return;
-
-            await msg.Channel.SendMessageAsync(emote);
+            await msg.Channel.SendMessageAsync("<:DuckerZ:259886357596340224>");
         }
     }
 }

@@ -121,15 +121,6 @@ namespace VainBotDiscord.Twitch
             {
                 var msgId = await SendMessageAsync(streamToCheck, stream);
 
-                if (streamToCheck.UserId == 18074328
-                    && streamToCheck.DiscordServerId == 265256381437706240
-                    && streamToCheck.DiscordChannelId == 291758537808412690)
-                {
-                    var channel = _client.GetChannel(265256381437706240) as SocketTextChannel;
-                    await channel.SendMessageAsync(
-                        "Destiny is now live at <https://www.destiny.gg/bigscreen>. Check <#291758537808412690> for all the deets.");
-                }
-
                 using (var db = new VbContext())
                 {
                     db.StreamRecords.Add(new StreamRecord
@@ -430,13 +421,6 @@ namespace VainBotDiscord.Twitch
             embed.ImageUrl = imgUrl;
             embed.Title = !string.IsNullOrWhiteSpace(stream.Channel.Status) ? stream.Channel.Status : "(no title)";
             embed.Url = stream.Channel.Url;
-
-            if (stream.Channel.Id == 18074328)
-            {
-                author.Url = "https://www.destiny.gg/bigscreen";
-                embed.Url = "https://www.destiny.gg/bigscreen";
-            }
-
             embed.Author = author;
 
             embed.AddField(streamPlayingField);

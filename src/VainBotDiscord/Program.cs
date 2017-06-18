@@ -81,7 +81,7 @@ namespace VainBotDiscord
             client.MessageReceived += NoUCounterEvent.NoUCounterAsync;
             client.MessageReceived += DuckerZEvent.DuckerZAsync;
             client.UserLeft += UserLeavesEvent.UserLeavesAsync;
-            client.Ready += async () => await client.SetGameAsync("inside a box");
+            client.Ready += async () => await client.SetGameAsync("something");
 
             var twitchCancelToken = new CancellationTokenSource();
             var youTubeCancelToken = new CancellationTokenSource();
