@@ -400,8 +400,8 @@ namespace VainBotDiscord.Twitch
             var imgUrl = stream.Preview.Template.Replace("{width}", "640").Replace("{height}", "360") + "?" + cacheBuster;
 
             author.Name = stream.Channel.DisplayName ?? stream.Channel.Name;
-            author.Url = stream.Channel.Url;
-            author.IconUrl = stream.Channel.Logo;
+            author.Url = new Uri(stream.Channel.Url);
+            author.IconUrl = new Uri(stream.Channel.Logo);
 
             var streamPlayingField = new EmbedFieldBuilder
             {
@@ -418,9 +418,9 @@ namespace VainBotDiscord.Twitch
             };
 
             embed.Color = color;
-            embed.ImageUrl = imgUrl;
+            embed.ImageUrl = new Uri(imgUrl);
             embed.Title = !string.IsNullOrWhiteSpace(stream.Channel.Status) ? stream.Channel.Status : "(no title)";
-            embed.Url = stream.Channel.Url;
+            embed.Url = new Uri(stream.Channel.Url);
             embed.Author = author;
 
             embed.AddField(streamPlayingField);

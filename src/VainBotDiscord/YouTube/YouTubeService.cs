@@ -123,10 +123,10 @@ namespace VainBotDiscord.YouTube
                         VideoId = video.Id,
                         VideoTitle = video.Snippet.Title,
                         VideoDescription = embed.Description,
-                        ImageUrl = embed.Image.Value.Url,
+                        ImageUrl = embed.Image.Value.Url.ToString(),
                         AuthorName = embed.Author.Value.Name,
-                        AuthorUrl = embed.Author.Value.Url,
-                        AuthorIconUrl = embed.Author.Value.IconUrl,
+                        AuthorUrl = embed.Author.Value.Url.ToString(),
+                        AuthorIconUrl = embed.Author.Value.IconUrl.ToString(),
                         PublishedAt = video.Snippet.PublishedAt.UtcDateTime
                     };
 
@@ -137,10 +137,10 @@ namespace VainBotDiscord.YouTube
                     existingRecord.VideoId = video.Id;
                     existingRecord.VideoTitle = video.Snippet.Title;
                     existingRecord.VideoDescription = embed.Description;
-                    existingRecord.ImageUrl = embed.Image.Value.Url;
+                    existingRecord.ImageUrl = embed.Image.Value.Url.ToString();
                     existingRecord.AuthorName = embed.Author.Value.Name;
-                    existingRecord.AuthorUrl = embed.Author.Value.Url;
-                    existingRecord.AuthorIconUrl = embed.Author.Value.IconUrl;
+                    existingRecord.AuthorUrl = embed.Author.Value.Url.ToString();
+                    existingRecord.AuthorIconUrl = embed.Author.Value.IconUrl.ToString();
                     existingRecord.PublishedAt = video.Snippet.PublishedAt.UtcDateTime;
 
                     db.YouTubeRecords.Update(existingRecord);
@@ -211,8 +211,8 @@ namespace VainBotDiscord.YouTube
             var author = new EmbedAuthorBuilder
             {
                 Name = channel.Snippet.Title,
-                Url = "https://www.youtube.com/channel/" + channel.Id,
-                IconUrl = channel.Snippet.Thumbnails.Default.Url
+                Url = new Uri("https://www.youtube.com/channel/" + channel.Id),
+                IconUrl = new Uri(channel.Snippet.Thumbnails.Default.Url)
             };
 
             var publishedAt = TimeZoneInfo.ConvertTime(video.Snippet.PublishedAt, _tz);
@@ -238,10 +238,10 @@ namespace VainBotDiscord.YouTube
             embed.Author = author;
             embed.Footer = footer;
             embed.Color = new Color(205, 32, 31);
-            embed.ImageUrl = video.Snippet.Thumbnails.Standard.Url;
+            embed.ImageUrl = new Uri(video.Snippet.Thumbnails.Standard.Url);
             embed.Title = video.Snippet.Title;
             embed.Description = shortDescription;
-            embed.Url = "https://www.youtube.com/watch?v=" + video.Id;
+            embed.Url = new Uri("https://www.youtube.com/watch?v=" + video.Id);
 
             return embed.Build();
         }

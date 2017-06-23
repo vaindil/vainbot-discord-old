@@ -56,8 +56,8 @@ namespace VainBotDiscord.Commands
             var author = new EmbedAuthorBuilder
             {
                 Name = record.AuthorName,
-                Url = record.AuthorUrl,
-                IconUrl = record.AuthorIconUrl
+                Url = new Uri(record.AuthorUrl),
+                IconUrl = new Uri(record.AuthorIconUrl)
             };
 
             var publishedAt = TimeZoneInfo.ConvertTime(record.PublishedAt, _tz);
@@ -81,9 +81,9 @@ namespace VainBotDiscord.Commands
             embed.Author = author;
             embed.Footer = footer;
             embed.Color = new Color(205, 32, 31);
-            embed.ImageUrl = record.ImageUrl;
+            embed.ImageUrl = new Uri(record.ImageUrl);
             embed.Title = record.VideoTitle;
-            embed.Url = "https://www.youtube.com/watch?v=" + record.VideoId;
+            embed.Url = new Uri("https://www.youtube.com/watch?v=" + record.VideoId);
 
             embed.AddField(descriptionField);
 
