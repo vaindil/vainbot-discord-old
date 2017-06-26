@@ -24,6 +24,7 @@ namespace VainBotDiscord.Twitch
         static HttpClient _twitchClient;
         List<TwitchCheckTimer> _checkTimerList;
         List<TwitchUpdateTimer> _updateTimerList;
+        List<(DateTimeOffset first, long userId)> _firstNullResponse;
 
         public TwitchService(DiscordSocketClient client, TimeZoneInfo tz, CancellationToken cancellationToken)
         {
@@ -37,6 +38,7 @@ namespace VainBotDiscord.Twitch
             _twitchClient = new HttpClient();
             _checkTimerList = new List<TwitchCheckTimer>();
             _updateTimerList = new List<TwitchUpdateTimer>();
+            _firstNullResponse = new List<(DateTimeOffset first, long userId)>();
 
             // verified to exist in Program.Run()
             var twitchClientId = Environment.GetEnvironmentVariable("TWITCH_CLIENT_ID");
@@ -114,29 +116,10 @@ namespace VainBotDiscord.Twitch
                 existingRecord = await db.StreamRecords.FirstOrDefaultAsync(sr => sr.UserId == streamToCheck.UserId);
             }
 
-            // if the streamer goes offline and comes online again quickly, the API
-            // may not ever show the offline status. this catches that and forces it to
-            // end the previous one, which will start the new one on the next run.
-            if (stream != null
-                && existingRecord != null
-                && stream.Id != existingRecord.StreamId)
-            {
-                stream = null;
-            }
-
             // live and was not previously live
             if (stream != null && existingRecord == null)
             {
                 var msgId = await SendMessageAsync(streamToCheck, stream);
-
-                if (streamToCheck.UserId == 18074328
-                    && streamToCheck.DiscordServerId == 265256381437706240
-                    && streamToCheck.DiscordChannelId == 291758537808412690)
-                {
-                    var channel = _client.GetChannel(265256381437706240) as SocketTextChannel;
-                    await channel.SendMessageAsync(
-                        "Destiny is now live at <https://www.destiny.gg/bigscreen>. Check <#291758537808412690> for all the deets.");
-                }
 
                 using (var db = new VbContext())
                 {
@@ -177,6 +160,24 @@ namespace VainBotDiscord.Twitch
             // not live and was previously live
             if (stream == null && existingRecord != null)
             {
+                (DateTimeOffset first, long userId) fnr;
+
+                if (_firstNullResponse.Any(r => r.userId == existingRecord.UserId))
+                {
+                    fnr = _firstNullResponse.First(r => r.userId == existingRecord.UserId);
+                    if (fnr.first > DateTimeOffset.UtcNow.AddMinutes(-4))
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    _firstNullResponse.Add((DateTimeOffset.UtcNow, existingRecord.UserId));
+                    return;
+                }
+
+                _firstNullResponse.Remove(fnr);
+
                 var channel = _client.GetChannel((ulong)streamToCheck.DiscordChannelId) as SocketTextChannel;
                 var msgId = existingRecord.DiscordMessageId;
 
@@ -255,16 +256,7 @@ namespace VainBotDiscord.Twitch
 
             var stream = await GetTwitchStreamAsync(streamToCheck.UserId);
             if (stream == null)
-            {
-                await Console.Error.WriteLineAsync("Stream is null in UpdateEmbedAsync");
-                using (var db = new VbContext())
-                {
-                    db.StreamRecords.Remove(record);
-                    await db.SaveChangesAsync();
-                }
-
                 return;
-            }
 
             if (string.IsNullOrEmpty(stream.Game))
                 stream.Game = "(no game)";
@@ -300,6 +292,9 @@ namespace VainBotDiscord.Twitch
                 var msg = await channel.GetMessageAsync((ulong)record.DiscordMessageId) as RestUserMessage;
 
                 await msg.ModifyAsync(f => f.Embed = embed);
+
+                if (_firstNullResponse.Any(f => f.userId == streamToCheck.UserId))
+                    _firstNullResponse.Remove(_firstNullResponse.First(f => f.userId == streamToCheck.UserId));
             }
             catch (Exception ex)
             {
@@ -405,8 +400,8 @@ namespace VainBotDiscord.Twitch
             var imgUrl = stream.Preview.Template.Replace("{width}", "640").Replace("{height}", "360") + "?" + cacheBuster;
 
             author.Name = stream.Channel.DisplayName ?? stream.Channel.Name;
-            author.Url = stream.Channel.Url;
-            author.IconUrl = stream.Channel.Logo;
+            author.Url = new Uri(stream.Channel.Url);
+            author.IconUrl = new Uri(stream.Channel.Logo);
 
             var streamPlayingField = new EmbedFieldBuilder
             {
@@ -423,16 +418,9 @@ namespace VainBotDiscord.Twitch
             };
 
             embed.Color = color;
-            embed.ImageUrl = imgUrl;
+            embed.ImageUrl = new Uri(imgUrl);
             embed.Title = !string.IsNullOrWhiteSpace(stream.Channel.Status) ? stream.Channel.Status : "(no title)";
-            embed.Url = stream.Channel.Url;
-
-            if (stream.Channel.Id == 18074328)
-            {
-                author.Url = "https://www.destiny.gg/bigscreen";
-                embed.Url = "https://www.destiny.gg/bigscreen";
-            }
-
+            embed.Url = new Uri(stream.Channel.Url);
             embed.Author = author;
 
             embed.AddField(streamPlayingField);

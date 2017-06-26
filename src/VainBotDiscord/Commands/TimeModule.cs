@@ -29,14 +29,14 @@ namespace VainBotDiscord.Commands
         [Priority(1)]
         public async Task CurrentInTimezone([Remainder]string timezone = null)
         {
-            var destiny = false;
+            var crendor = false;
 
             if (timezone == null
-                || string.Equals(timezone, "steven", System.StringComparison.CurrentCultureIgnoreCase)
-                || string.Equals(timezone, "destiny", System.StringComparison.CurrentCultureIgnoreCase))
+                || string.Equals(timezone, "crendor", System.StringComparison.CurrentCultureIgnoreCase)
+                || string.Equals(timezone, "crendor", System.StringComparison.CurrentCultureIgnoreCase))
             {
                 timezone = "America/Chicago";
-                destiny = true;
+                crendor = true;
             }
 
             var tz = DateTimeZoneProviders.Tzdb.GetZoneOrNull(timezone);
@@ -48,7 +48,7 @@ namespace VainBotDiscord.Commands
             }
 
             var curDt = SystemClock.Instance.GetCurrentInstant().InZone(tz);
-            var shortTz = destiny ? " Central Steven Time" : curDt.ToString(" x", CultureInfo.InvariantCulture);
+            var shortTz = crendor ? " Central Crendor Time" : curDt.ToString(" x", CultureInfo.InvariantCulture);
 
             await ReplyAsync($"Current time is {curDt.ToString("H:mm", CultureInfo.InvariantCulture)}{shortTz}.");
         }

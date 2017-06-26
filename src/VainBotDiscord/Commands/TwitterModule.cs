@@ -57,8 +57,8 @@ namespace VainBotDiscord.Commands
             var author = new EmbedAuthorBuilder
             {
                 Name = tweet.AuthorUsername + " (" + tweet.AuthorName + ")",
-                Url = "https://twitter.com/" + tweet.AuthorUsername,
-                IconUrl = tweet.ProfileImageUrl
+                Url = new Uri("https://twitter.com/" + tweet.AuthorUsername),
+                IconUrl = new Uri(tweet.ProfileImageUrl)
             };
 
             var createdAt = TimeZoneInfo.ConvertTime(tweet.CreatedAt, _tz);
@@ -74,7 +74,7 @@ namespace VainBotDiscord.Commands
 
             embed.Title = "Go to tweet";
             embed.Description = tweet.Text;
-            embed.Url = "https://twitter.com/" + tweet.AuthorUsername + "/status/" + tweet.TweetId;
+            embed.Url = new Uri("https://twitter.com/" + tweet.AuthorUsername + "/status/" + tweet.TweetId);
             embed.Color = new Color(29, 161, 242);
             embed.Author = author;
             embed.Footer = footer;
