@@ -9,20 +9,18 @@ namespace VainBotDiscord.Commands
     [CrendorServerOnly]
     public class LolModule : ModuleBase<VbCommandContext>
     {
-        readonly VbContext _context;
-
-        public LolModule(VbContext context)
-        {
-            _context = context;
-        }
-
         [Command]
         public async Task LolCount()
         {
-            var count = int.Parse(await _context.KeyValues.GetValueAsync(DbKey.LolCounter));
-            var user = await Context.Client.GetUserAsync(110878826136907776);
+            int count;
 
-            await ReplyAsync(user.Username + " lol counter: " + count);
+            using (var db = new VbContext())
+            {
+                count = int.Parse(await db.KeyValues.GetValueAsync(DbKey.LolCounter));
+            }
+
+            var user = await Context.Client.GetUserAsync(110878826136907776);
+            await ReplyAsync($"{user.Username} lol counter: {count}");
         }
     }
 }
