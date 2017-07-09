@@ -173,7 +173,7 @@ namespace VainBotDiscord.Twitter
 
         async Task<List<Tweet>> GetTweetsAsync(long userId, long? sinceId)
         {
-            var path = _path + "?user_id=" + userId + "&count=100";
+            var path = _path + "?user_id=" + userId.ToString() + "&count=100";
             if (sinceId.HasValue)
                 path += "&since_id=" + sinceId.Value.ToString();
 
@@ -197,8 +197,8 @@ namespace VainBotDiscord.Twitter
             var author = new EmbedAuthorBuilder
             {
                 Name = tweet.User.Username + " (" + tweet.User.Name + ")",
-                Url = new Uri("https://twitter.com/" + tweet.User.Username),
-                IconUrl = new Uri(tweet.User.ProfileImageUrl)
+                Url = "https://twitter.com/" + tweet.User.Username,
+                IconUrl = tweet.User.ProfileImageUrl
             };
 
             var createdAt = TimeZoneInfo.ConvertTime(tweet.CreatedAt, _tz);
@@ -214,7 +214,7 @@ namespace VainBotDiscord.Twitter
 
             embed.Title = "Go to tweet";
             embed.Description = WebUtility.HtmlDecode(tweet.Text);
-            embed.Url = new Uri("https://twitter.com/" + tweet.User.Username + "/status/" + tweet.Id);
+            embed.Url = "https://twitter.com/" + tweet.User.Username + "/status/" + tweet.Id.ToString();
             embed.Color = new Color(29, 161, 242);
             embed.Author = author;
             embed.Footer = footer;

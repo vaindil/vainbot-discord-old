@@ -331,9 +331,15 @@ namespace VainBotDiscord.Twitch
             var stopTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, _tz);
 
             var msg = new StringBuilder(streamToCheck.FriendlyUsername + " was live.\n\n");
-            msg.Append("**Started at:** " + startTime.ToString("HH:mm") + " Central\n");
-            msg.Append("**Ended at:** " + stopTime.ToString("HH:mm") + " Central\n");
-            msg.Append($"_(total of {streamDuration.ToFriendlyString()})_\n\n");
+            msg.Append("**Started at:** ");
+            msg.Append(startTime.ToString("HH:mm"));
+            msg.Append(" Central\n");
+            msg.Append("**Ended at:** ");
+            msg.Append(stopTime.ToString("HH:mm"));
+            msg.Append(" Central\n");
+            msg.Append("_(total of ");
+            msg.Append(streamDuration.ToFriendlyString());
+            msg.Append(")_\n\n");
 
             msg.Append("__Games Played__");
 
@@ -348,7 +354,10 @@ namespace VainBotDiscord.Twitch
                 g.StartTime = DateTime.SpecifyKind(g.StartTime, DateTimeKind.Utc);
 
                 var duration = g.StopTime.Value - g.StartTime;
-                msg.Append($"\n**{g.Game}:** {duration.ToFriendlyString()}");
+                msg.Append("\n**");
+                msg.Append(g.Game);
+                msg.Append(":** ");
+                msg.Append(duration.ToFriendlyString());
             }
 
             try
@@ -400,8 +409,8 @@ namespace VainBotDiscord.Twitch
             var imgUrl = stream.Preview.Template.Replace("{width}", "640").Replace("{height}", "360") + "?" + cacheBuster;
 
             author.Name = stream.Channel.DisplayName ?? stream.Channel.Name;
-            author.Url = new Uri(stream.Channel.Url);
-            author.IconUrl = new Uri(stream.Channel.Logo);
+            author.Url = stream.Channel.Url;
+            author.IconUrl = stream.Channel.Logo;
 
             var streamPlayingField = new EmbedFieldBuilder
             {
@@ -418,9 +427,9 @@ namespace VainBotDiscord.Twitch
             };
 
             embed.Color = color;
-            embed.ImageUrl = new Uri(imgUrl);
+            embed.ImageUrl = imgUrl;
             embed.Title = !string.IsNullOrWhiteSpace(stream.Channel.Status) ? stream.Channel.Status : "(no title)";
-            embed.Url = new Uri(stream.Channel.Url);
+            embed.Url = stream.Channel.Url;
             embed.Author = author;
 
             embed.AddField(streamPlayingField);
