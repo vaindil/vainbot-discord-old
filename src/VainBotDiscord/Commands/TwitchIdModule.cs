@@ -9,12 +9,10 @@ namespace VainBotDiscord.Commands
     [Group("twitchid")]
     public class TwitchIdModule : ModuleBase<VbCommandContext>
     {
-        readonly VbContext _context;
         readonly HttpClient _client;
 
-        public TwitchIdModule(VbContext context, HttpClient client)
+        public TwitchIdModule(HttpClient client)
         {
-            _context = context;
             _client = client;
         }
 
@@ -33,7 +31,10 @@ namespace VainBotDiscord.Commands
                 return;
             }
 
-            var clientId = await _context.KeyValues.GetValueAsync(DbKey.TwitchClientId);
+            string clientId;
+
+            using (var db = new VbContext())
+                clientId = await db.KeyValues.GetValueAsync(DbKey.TwitchClientId);
 
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
