@@ -7,9 +7,9 @@ using VainBotDiscord.Utils;
 
 namespace VainBotDiscord.Commands
 {
-    [Group("catfact")]
-    [Alias("catfacts")]
-    [CrendorServerOnly]
+    //[Group("catfact")]
+    //[Alias("catfacts")]
+    //[CrendorServerOnly]
     public class CatFactsModule : ModuleBase<VbCommandContext>
     {
         readonly HttpClient _client;
@@ -19,7 +19,7 @@ namespace VainBotDiscord.Commands
             _client = client;
         }
 
-        [Command]
+        //[Command]
         public async Task CatFact()
         {
             var url = new Uri("https://catfacts-api.appspot.com/api/facts?number=1");
