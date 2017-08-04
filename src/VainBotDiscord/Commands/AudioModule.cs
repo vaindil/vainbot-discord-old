@@ -28,6 +28,21 @@ namespace VainBotDiscord.Commands
             await audioClient.StopAsync();
         }
 
+        [Command("dejavu", RunMode = RunMode.Async)]
+        public async Task PlayDejaVu()
+        {
+            var channel = (Context.Message.Author as IGuildUser).VoiceChannel;
+            if (channel == null)
+            {
+                await ReplyAsync("You're not in a voice channel, you nerd.");
+                return;
+            }
+
+            var audioClient = await channel.ConnectAsync();
+            await SendAudioAsync(audioClient, $"Audio{Path.DirectorySeparatorChar}dejavu.mp3");
+            await audioClient.StopAsync();
+        }
+
         // [CrendorServerOnly]
         [Command("tts", RunMode = RunMode.Async)]
         public async Task TextToSpeech([Remainder]string words)
