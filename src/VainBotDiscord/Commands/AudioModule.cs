@@ -13,34 +13,29 @@ namespace VainBotDiscord.Commands
     {
         [Command("rainbow", RunMode = RunMode.Async)]
         [Alias("readingrainbow")]
-        // [CrendorServerOnly]
         public async Task PlayReadingRainbow()
         {
-            var channel = (Context.Message.Author as IGuildUser).VoiceChannel;
-            if (channel == null)
-            {
-                await ReplyAsync("You're not in a voice channel, you nerd.");
-                return;
-            }
-
-            var audioClient = await channel.ConnectAsync();
-            await SendAudioAsync(audioClient, $"Audio{Path.DirectorySeparatorChar}readingrainbow.mp3");
-            await audioClient.StopAsync();
+            await PlayFile("readingrainbow.mp3");
         }
 
         [Command("dejavu", RunMode = RunMode.Async)]
         public async Task PlayDejaVu()
         {
-            var channel = (Context.Message.Author as IGuildUser).VoiceChannel;
-            if (channel == null)
-            {
-                await ReplyAsync("You're not in a voice channel, you nerd.");
-                return;
-            }
+            await PlayFile("dejavu.mp3");
+        }
 
-            var audioClient = await channel.ConnectAsync();
-            await SendAudioAsync(audioClient, $"Audio{Path.DirectorySeparatorChar}dejavu.mp3");
-            await audioClient.StopAsync();
+        [Command("witchdoctor", RunMode = RunMode.Async)]
+        [Alias("magicword", "magicwords")]
+        public async Task PlayWitchDoctor()
+        {
+            await PlayFile("witchdoctor.mp3");
+        }
+
+        [Command("airhorn", RunMode = RunMode.Async)]
+        [Alias("horn")]
+        public async Task PlayAirhorn()
+        {
+            await PlayFile("airhorn.mp3");
         }
 
         // [CrendorServerOnly]
@@ -93,6 +88,20 @@ namespace VainBotDiscord.Commands
             File.Delete(filePath);
         }
 
+        async Task PlayFile(string filePath)
+        {
+            var channel = (Context.Message.Author as IGuildUser)?.VoiceChannel;
+            if (channel == null)
+            {
+                await ReplyAsync("You're not in a voice channel, you nerd.");
+                return;
+            }
+
+            var audioClient = await channel.ConnectAsync();
+            await SendAudioAsync(audioClient, $"Audio{Path.DirectorySeparatorChar}{filePath}");
+            await audioClient.StopAsync();
+        }
+
         void CreateTtsFile(string filePath, string words)
         {
             words = words.Replace("\"", "").Replace("'", "");
@@ -118,7 +127,9 @@ namespace VainBotDiscord.Commands
             await output.CopyToAsync(discord);
             await discord.FlushAsync();
 
-            ffmpeg.Kill();
+            if (!ffmpeg.HasExited)
+                ffmpeg.Kill();
+
             ffmpeg.WaitForExit();
             ffmpeg.Dispose();
         }
