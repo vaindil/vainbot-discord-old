@@ -66,7 +66,7 @@ namespace VainBotDiscord.Commands
                 Title = "Evaluation",
                 Color = new Color(205, 101, 28),
                 Description = "Evaluating..."
-            });
+            }.Build());
 
             try
             {
