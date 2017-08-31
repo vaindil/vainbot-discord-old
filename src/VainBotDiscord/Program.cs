@@ -52,7 +52,8 @@ namespace VainBotDiscord
 
             var clientConfig = new DiscordSocketConfig
             {
-                LogLevel = isDev ? LogSeverity.Info : LogSeverity.Warning
+                LogLevel = isDev ? LogSeverity.Info : LogSeverity.Warning,
+                AlwaysDownloadUsers = true
             };
 
             client = new DiscordSocketClient(clientConfig);
