@@ -10,7 +10,7 @@ using VainBotDiscord.Utils;
 namespace VainBotDiscord.Commands
 {
     [Group("points")]
-    [Alias("slothies", "point", "slothy")]
+    [Alias("slothies2", "point", "slothy")]
     [CrendorServerOnly]
     public class PointsModule : ModuleBase<VbCommandContext>
     {
@@ -84,7 +84,7 @@ namespace VainBotDiscord.Commands
 
             var msgText = user.Username + " has " + (await points.GetCorrectPluralityAsync(_context)) + ".";
 
-            if (userPoint.Points == 3.14M)
+            if (points == 3.14M)
             {
                 await Context.Channel.SendFileAsync(
                     Extensions.GetImagePath("SoDoge.png"),
