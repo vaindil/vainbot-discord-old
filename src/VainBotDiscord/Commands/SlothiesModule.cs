@@ -10,7 +10,7 @@ using VainBotDiscord.Utils;
 namespace VainBotDiscord.Commands
 {
     [Group("points")]
-    [Alias("slothies2", "point", "slothy")]
+    [Alias("slothies", "point", "slothy")]
     [CrendorServerOnly]
     public class PointsModule : ModuleBase<VbCommandContext>
     {
