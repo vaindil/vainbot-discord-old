@@ -12,9 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net.Commands" Version="2.0.0-alpha-build-00823" />
-    <PackageReference Include="Discord.Net.Core" Version="2.0.0-alpha-build-00823" />
-    <PackageReference Include="Discord.Net.WebSocket" Version="2.0.0-alpha-build-00823" />
+    <PackageReference Include="Discord.Net.Commands" Version="2.0.0-alpha-build-00827" />
+    <PackageReference Include="Discord.Net.Core" Version="2.0.0-alpha-build-00827" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="2.0.0-alpha-build-00827" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="2.3.1" />
     <PackageReference Include="NodaTime" Version="2.2.0" />
     <PackageReference Include="SapientGuardian.EntityFrameworkCore.MySql" Version="7.1.23" />
