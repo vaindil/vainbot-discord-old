@@ -7,7 +7,6 @@ using VainBotDiscord.Utils;
 namespace VainBotDiscord.Commands
 {
     [Group("roll")]
-    [CrendorServerOnly]
     public class RollModule : ModuleBase<VbCommandContext>
     {
         readonly Random _rng;
