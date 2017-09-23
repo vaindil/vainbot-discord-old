@@ -244,8 +244,17 @@ namespace VainBotDiscord.Twitch
 
         async void UpdateEmbedAsync(object streamToCheckIn)
         {
-            var streamToCheck = (StreamToCheck)streamToCheckIn;
+            StreamToCheck streamToCheck;
             StreamRecord record;
+            try
+            {
+                streamToCheck = (StreamToCheck)streamToCheckIn;
+            }
+            catch
+            {
+                Console.Error.WriteLine("TWITCH: STREAMTOCHECK IS NULL");
+                return;
+            }
 
             using (var db = new VbContext())
             {
