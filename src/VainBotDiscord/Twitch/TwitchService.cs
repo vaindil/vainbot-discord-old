@@ -116,6 +116,23 @@ namespace VainBotDiscord.Twitch
                 existingRecord = await db.StreamRecords.FirstOrDefaultAsync(sr => sr.UserId == streamToCheck.UserId);
             }
 
+            // something glitched out, wipe it all and start over
+            if (stream != null && existingRecord != null && stream.Id != existingRecord.StreamId)
+            {
+                using (var db = new VbContext())
+                {
+                    var games = db.StreamGames.Where(sg => sg.StreamId == existingRecord.StreamId);
+                    var records = db.StreamRecords.Where(sr => sr.UserId == streamToCheck.UserId);
+
+                    db.StreamGames.RemoveRange(games);
+                    db.StreamRecords.RemoveRange(records);
+
+                    await db.SaveChangesAsync();
+                }
+
+                existingRecord = null;
+            }
+
             // live and was not previously live
             if (stream != null && existingRecord == null)
             {
@@ -244,17 +261,8 @@ namespace VainBotDiscord.Twitch
 
         async void UpdateEmbedAsync(object streamToCheckIn)
         {
-            StreamToCheck streamToCheck;
             StreamRecord record;
-            try
-            {
-                streamToCheck = (StreamToCheck)streamToCheckIn;
-            }
-            catch
-            {
-                Console.Error.WriteLine("TWITCH: STREAMTOCHECK IS NULL");
-                return;
-            }
+            var streamToCheck = (StreamToCheck)streamToCheckIn;
 
             using (var db = new VbContext())
             {
@@ -276,6 +284,8 @@ namespace VainBotDiscord.Twitch
                 {
                     var streamGame = await db.StreamGames
                         .FirstOrDefaultAsync(g => g.StreamId == stream.Id && g.StopTime == null);
+                    if (streamGame == null)
+                        return;
 
                     streamGame.StopTime = DateTime.UtcNow;
                     record.CurrentGame = stream.Game;
